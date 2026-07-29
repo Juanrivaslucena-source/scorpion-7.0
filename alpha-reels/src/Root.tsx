@@ -38,6 +38,114 @@ export const RemotionRoot: React.FC = () => {
         }}
       />
       <Composition
+        id="79Bike"
+        component={BrandShowcase}
+        durationInFrames={showcaseDuration(3)}
+        fps={FPS}
+        width={WIDTH}
+        height={HEIGHT}
+        defaultProps={{
+          brand: '79BIKE',
+          tagline: 'Built to ride',
+          items: [
+            { src: 'brands/03.jpg', model: 'FALCON', spec: 'City commuter · 10kW', fit: 'cover' as const },
+            { src: '79bike/ex1.jpg', model: 'VIPER', spec: 'All-terrain · 15kW', fit: 'contain' as const },
+            { src: '79bike/ex2.jpg', model: 'EAGLE', spec: 'Performance sport · 20kW', fit: 'contain' as const },
+          ],
+        }}
+      />
+      <Composition
+        id="VentusOnePlus"
+        component={BrandShowcase}
+        durationInFrames={showcaseDuration(1)}
+        fps={FPS}
+        width={WIDTH}
+        height={HEIGHT}
+        defaultProps={{
+          brand: 'VENTUS',
+          tagline: 'Precision engineering',
+          items: [
+            { src: 'brands/04.jpg', model: 'ONE PLUS', spec: '12kW · 60V 100Ah · all-terrain', fit: 'cover' as const },
+          ],
+        }}
+      />
+      <Composition
+        id="YozmaIN10Pro"
+        component={BrandShowcase}
+        durationInFrames={showcaseDuration(1)}
+        fps={FPS}
+        width={WIDTH}
+        height={HEIGHT}
+        defaultProps={{
+          brand: 'YOZMA',
+          tagline: 'For the ride',
+          items: [
+            { src: 'brands/05.jpg', model: 'IN 10 PRO', spec: '10kW · 72V · portable powerhouse', fit: 'cover' as const },
+          ],
+        }}
+      />
+      <Composition
+        id="eRideProSS"
+        component={BrandShowcase}
+        durationInFrames={showcaseDuration(1)}
+        fps={FPS}
+        width={WIDTH}
+        height={HEIGHT}
+        defaultProps={{
+          brand: 'eRIDE',
+          tagline: 'Go electric',
+          items: [
+            { src: 'brands/06.jpg', model: 'PRO SS', spec: '8kW · 48V 60Ah · street sport', fit: 'cover' as const },
+          ],
+        }}
+      />
+      <Composition
+        id="SurRonUltraBee"
+        component={BrandShowcase}
+        durationInFrames={showcaseDuration(2)}
+        fps={FPS}
+        width={WIDTH}
+        height={HEIGHT}
+        defaultProps={{
+          brand: 'SUR-RON',
+          tagline: 'Legendary performance',
+          items: [
+            { src: 'brands/07.jpg', model: 'ULTRA BEE', spec: 'Street & trail · 8kW', fit: 'cover' as const },
+            { src: 'real/ultrabee.jpg', model: 'ULTRA BEE SPORT', spec: 'High-performance · 10kW', fit: 'contain' as const },
+          ],
+        }}
+      />
+      <Composition
+        id="YVolt"
+        component={BrandShowcase}
+        durationInFrames={showcaseDuration(1)}
+        fps={FPS}
+        width={WIDTH}
+        height={HEIGHT}
+        defaultProps={{
+          brand: 'Y-VOLT',
+          tagline: 'Ride fast, ride far',
+          items: [
+            { src: 'brands/08.jpg', model: 'Y-VOLT MAX', spec: '5kW · 48V · commuter', fit: 'cover' as const },
+          ],
+        }}
+      />
+      <Composition
+        id="AltisSigma"
+        component={BrandShowcase}
+        durationInFrames={showcaseDuration(1)}
+        fps={FPS}
+        width={WIDTH}
+        height={HEIGHT}
+        defaultProps={{
+          brand: 'ALTIS',
+          tagline: 'Engineered for power',
+          items: [
+            { src: 'brands/02.jpg', model: 'SIGMA', spec: '8kW · 52V 60Ah · Sport Trail', fit: 'cover' as const },
+          ],
+        }}
+      />
+      <Composition
         id="RealBrandReel"
         component={RealBrandReel}
         durationInFrames={8 * 54 + 55}
