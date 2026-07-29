@@ -28,6 +28,23 @@ That's the entire contract between frontend and backend.
 
 ---
 
+## Screens
+
+![Dashboard](docs/screenshots/dashboard.png)
+*Dashboard — KPIs, 30-day revenue chart, live task queue, system status*
+
+| Product Scout | Content Studio |
+|---|---|
+| ![Scout](docs/screenshots/scout.png) | ![Studio](docs/screenshots/studio.png) |
+
+| Sales Tracker | Model Registry |
+|---|---|
+| ![Sales](docs/screenshots/sales.png) | ![Models](docs/screenshots/models.png) |
+
+More in [`docs/screenshots/`](docs/screenshots/), including mobile and the auth gate.
+
+---
+
 ## Quick start
 
 ```bash

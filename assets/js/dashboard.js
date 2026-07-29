@@ -141,13 +141,17 @@
         kpi('Content reach', API.compact((content.totals || {}).views), 'i-film',
             '<span style="color:var(--text-faint)">' + pct((content.totals || {}).clickThroughRatePct) + ' CTR</span>');
 
+      var runningCount = active.filter(function (t) { return t.status === 'running'; }).length;
+      var queuedCount = active.length - runningCount;
+      var activeLabel = runningCount + ' running' + (queuedCount ? ' · ' + queuedCount + ' queued' : '');
+
       var activeHtml = active.length
         ? active.map(taskRow).join('')
         : empty('i-check', 'No active tasks', 'The orchestrator is idle. Run a cycle to queue work.',
             '<button class="btn btn-primary" data-action="run-cycle">' + icon('i-play') + ' Run cycle</button>');
 
       var topHtml = top.length
-        ? '<div class="table-wrap"><table class="data"><thead><tr>' +
+        ? '<div class="table-wrap"><table class="data compact"><thead><tr>' +
             '<th>Product</th><th>Stage</th><th class="num">Revenue</th><th class="num">Margin</th>' +
           '</tr></thead><tbody>' +
           top.map(function (p) {
@@ -176,7 +180,7 @@
           '</div>' +
           '<div class="card">' +
             '<div class="card-head"><h2>Active tasks</h2><span class="spacer"></span>' +
-              badge(active.length + ' running', active.length ? 'active' : 'neutral') + '</div>' +
+              badge(active.length ? activeLabel : 'idle', active.length ? 'active' : 'neutral') + '</div>' +
             activeHtml +
           '</div>' +
         '</div>' +
