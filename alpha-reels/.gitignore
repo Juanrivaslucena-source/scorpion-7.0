@@ -1,0 +1,5 @@
+node_modules/
+out/
+# uploaded media (keep large binaries out of git)
+public/clips/
+public/logo.png
