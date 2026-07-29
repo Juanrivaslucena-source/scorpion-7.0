@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Scorpion — Website Builder</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="app-bar">
+    <div class="brand">
+      <span class="logo" aria-hidden="true">🦂</span>
+      <span class="brand-name">Scorpion</span>
+      <span class="brand-sub">Website Builder</span>
+    </div>
+    <div class="app-actions">
+      <button id="btn-preview" class="btn btn-ghost" type="button">Preview</button>
+      <button id="btn-export" class="btn btn-ghost" type="button">Export HTML</button>
+      <button id="btn-clear" class="btn btn-ghost btn-danger" type="button">Clear</button>
+      <span id="save-status" class="save-status" aria-live="polite">Saved</span>
+    </div>
+  </header>
+
+  <main class="workspace">
+    <aside class="palette" aria-label="Blocks">
+      <h2 class="palette-title">Blocks</h2>
+      <p class="palette-hint">Drag a block onto the canvas, or click to append.</p>
+      <div id="palette-list" class="palette-list"></div>
+    </aside>
+
+    <section class="canvas-wrap">
+      <div id="canvas" class="canvas" aria-label="Page canvas">
+        <div id="empty-state" class="empty-state">
+          <p>Your page is empty.</p>
+          <p class="muted">Drag a block here from the left to begin.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Preview modal -->
+  <div id="preview-modal" class="modal" hidden>
+    <div class="modal-inner">
+      <div class="modal-head">
+        <strong>Preview</strong>
+        <button id="btn-close-preview" class="btn btn-ghost" type="button">Close</button>
+      </div>
+      <iframe id="preview-frame" class="preview-frame" title="Preview"></iframe>
+    </div>
+  </div>
+
+  <script src="blocks.js"></script>
+  <script src="builder.js"></script>
+</body>
+</html>
