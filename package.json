@@ -1,0 +1,14 @@
+{
+  "name": "scorpion-ai",
+  "version": "0.1.0",
+  "description": "Text → Image → Video pipeline using OmniRoute (AI gateway) and Higgsfield.",
+  "main": "scorpion.js",
+  "scripts": {
+    "start": "node scorpion.js"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "axios": "^1.7.0",
+    "dotenv": "^16.4.0"
+  }
+}
