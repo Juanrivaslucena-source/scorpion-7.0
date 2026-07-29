@@ -32,7 +32,49 @@ to their card processor. We trade a big cheque for a durable relationship.
 customer worth >$150, (c) a weak, dated, or missing site. If they have all three
 and still won't pay $300/mo, they were never a client.
 
-## Prospecting (free tools we already have)
+## Acquisition engine — inbound at volume (primary)
+
+Cold outreach is 1-to-1 and doesn't pay at a $300/mo price point. The engine
+that does is **content → keyword trigger → auto-DM → AI qualification → call**.
+Reference: `@downey.ai` — one reel, ~7.4K likes and ~3.9K comments, nearly all
+of them the trigger word. That comment wall *is* the lead list.
+
+### The loop
+
+1. **Post proof, not promises.** Short vertical video of a real build — the
+   Lumen page scrolling, the before/after slider, the sound toggle. The work is
+   the hook; we have something most competitors can't show.
+2. **Trigger.** "Comment «WORD» and I'll send you the site." One word, low
+   friction, publicly visible — the comment count is itself social proof.
+3. **Auto-DM.** The commenter receives the demo link + one line of context.
+4. **Qualify in DM.** Three questions: what's the business, what's a customer
+   worth, do you have a site now? Qualified → book the 15-minute call.
+5. **Close on the call** (structure below), fulfil, ask for the referral.
+
+### Why this beats cold email for us
+
+- The demo is **visual** — it performs natively as short-form video.
+- Local SMB owners live on Instagram; they don't read cold email.
+- One post can produce hundreds of inbound leads who **opted in**, so we are
+  never the pushy stranger. That fits SOUL: never pushy, never salesy.
+
+### Hard compliance rules (account-ending if ignored)
+
+- Comment-to-DM automation **must** run through a Meta-approved platform on the
+  official Graph API, inside the 24-hour messaging window.
+- **Never mass-DM** people who did not trigger the keyword. That is a ban.
+- One follow-up maximum. No sequences that pester.
+- Every automated conversation hands off to a human when it stops being simple.
+- Never imply the demo is a paying client's site.
+
+### Honest gap to close
+
+`@l0stindsauce` is currently 381 followers and 2 posts. The funnel is worthless
+without content volume feeding it. Sequence: **content cadence first**, trigger
+automation second, paid tooling third. Build the posting habit (build-in-public
+clips of real work) before wiring any automation.
+
+## Prospecting (outbound, secondary)
 
 Web search + browser automation. For a target city:
 1. Search the vertical + city; collect businesses with strong reviews but weak sites.
