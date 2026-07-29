@@ -1,0 +1,204 @@
+{
+  "version": "1.0.0",
+  "updated": "2026-07-29",
+  "routingPolicy": {
+    "strategy": "capability-match-then-cost",
+    "fallbackModel": "claude-sonnet",
+    "maxRetries": 2,
+    "costCeilingUsdPerTask": 0.45
+  },
+  "models": [
+    {
+      "id": "claude-sonnet",
+      "label": "Claude Sonnet",
+      "vendor": "anthropic",
+      "provider": "arena",
+      "capabilities": [
+        "reasoning",
+        "long-form-writing",
+        "code",
+        "analysis",
+        "structured-output"
+      ],
+      "strengths": "Director-layer synthesis, listing copy, nuanced judgement calls.",
+      "contextWindow": 200000,
+      "costPer1kTokensUsd": 0.009,
+      "latencyMs": 4200,
+      "quality": 0.94,
+      "status": "available"
+    },
+    {
+      "id": "gpt-5-thinking",
+      "label": "GPT-5 Thinking",
+      "vendor": "openai",
+      "provider": "arena",
+      "capabilities": [
+        "reasoning",
+        "analysis",
+        "margin-analysis",
+        "structured-output",
+        "code"
+      ],
+      "strengths": "Co-director. Numeric reasoning, unit economics, saturation scoring.",
+      "contextWindow": 256000,
+      "costPer1kTokensUsd": 0.011,
+      "latencyMs": 5100,
+      "quality": 0.95,
+      "status": "available"
+    },
+    {
+      "id": "perplexity-sonar",
+      "label": "Perplexity Sonar",
+      "vendor": "perplexity",
+      "provider": "arena",
+      "capabilities": [
+        "live-search",
+        "trend-research",
+        "citations",
+        "competitor-research"
+      ],
+      "strengths": "Live web knowledge with sources. First stop for trend discovery.",
+      "contextWindow": 128000,
+      "costPer1kTokensUsd": 0.004,
+      "latencyMs": 3300,
+      "quality": 0.86,
+      "status": "available"
+    },
+    {
+      "id": "gemini-flash",
+      "label": "Gemini Flash",
+      "vendor": "google",
+      "provider": "arena",
+      "capabilities": [
+        "vision",
+        "image-analysis",
+        "fast-classification",
+        "structured-output"
+      ],
+      "strengths": "Cheap, fast multimodal. Product image QA and thumbnail scoring.",
+      "contextWindow": 1000000,
+      "costPer1kTokensUsd": 0.0008,
+      "latencyMs": 1400,
+      "quality": 0.81,
+      "status": "available"
+    },
+    {
+      "id": "gpt-4o-mini",
+      "label": "GPT-4o mini",
+      "vendor": "openai",
+      "provider": "arena",
+      "capabilities": [
+        "copywriting",
+        "hooks",
+        "fast-classification",
+        "structured-output"
+      ],
+      "strengths": "High-volume hook generation at near-zero cost.",
+      "contextWindow": 128000,
+      "costPer1kTokensUsd": 0.0006,
+      "latencyMs": 1200,
+      "quality": 0.78,
+      "status": "available"
+    },
+    {
+      "id": "llama-3-70b",
+      "label": "Llama 3 70B",
+      "vendor": "meta",
+      "provider": "arena",
+      "capabilities": [
+        "copywriting",
+        "summarization",
+        "structured-output"
+      ],
+      "strengths": "Open-weight fallback when budget is tight.",
+      "contextWindow": 128000,
+      "costPer1kTokensUsd": 0.0005,
+      "latencyMs": 1900,
+      "quality": 0.74,
+      "status": "available"
+    },
+    {
+      "id": "fable-5",
+      "label": "Fable 5 Browser Agent",
+      "vendor": "fable",
+      "provider": "fable",
+      "capabilities": [
+        "browser-automation",
+        "scraping",
+        "screenshot",
+        "price-verification",
+        "supplier-audit"
+      ],
+      "strengths": "Live AliExpress / TikTok / Amazon interaction. Metered — use sparingly.",
+      "contextWindow": 0,
+      "costPerRunUsd": 0.35,
+      "latencyMs": 42000,
+      "quality": 0.88,
+      "status": "metered",
+      "spendLimitUsd": 12,
+      "spendUsedUsd": 3.15
+    },
+    {
+      "id": "runway-gen3",
+      "label": "RunwayML Gen-3",
+      "vendor": "runwayml",
+      "provider": "runway",
+      "capabilities": [
+        "video-generation",
+        "image-to-video",
+        "b-roll"
+      ],
+      "strengths": "5s and 10s clip generation for hook and reveal shots.",
+      "creditsPerSecond": 5,
+      "creditBalance": 35,
+      "latencyMs": 90000,
+      "quality": 0.83,
+      "status": "metered"
+    }
+  ],
+  "taskRoutes": {
+    "trend-research": {
+      "primary": "perplexity-sonar",
+      "fallback": "gpt-5-thinking",
+      "escalate": "fable-5"
+    },
+    "product-scout": {
+      "primary": "perplexity-sonar",
+      "fallback": "claude-sonnet",
+      "escalate": "fable-5"
+    },
+    "supplier-verification": {
+      "primary": "fable-5",
+      "fallback": "perplexity-sonar"
+    },
+    "margin-analysis": {
+      "primary": "gpt-5-thinking",
+      "fallback": "claude-sonnet"
+    },
+    "saturation-check": {
+      "primary": "gpt-5-thinking",
+      "fallback": "perplexity-sonar",
+      "escalate": "fable-5"
+    },
+    "image-analysis": {
+      "primary": "gemini-flash",
+      "fallback": "claude-sonnet"
+    },
+    "hook-generation": {
+      "primary": "gpt-4o-mini",
+      "fallback": "llama-3-70b"
+    },
+    "listing-copy": {
+      "primary": "claude-sonnet",
+      "fallback": "gpt-5-thinking"
+    },
+    "video-generation": {
+      "primary": "runway-gen3",
+      "fallback": null
+    },
+    "sales-analysis": {
+      "primary": "gpt-5-thinking",
+      "fallback": "claude-sonnet"
+    }
+  }
+}

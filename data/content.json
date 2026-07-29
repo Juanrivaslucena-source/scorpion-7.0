@@ -1,0 +1,698 @@
+{
+  "updatedAt": "2026-07-29T20:40:25.496Z",
+  "count": 15,
+  "totals": {
+    "views": 1185600,
+    "clicks": 24780,
+    "published": 6,
+    "clickThroughRatePct": 2.09
+  },
+  "clips": [
+    {
+      "id": "clp_grt001",
+      "productId": "prd_grout01",
+      "hook": "My landlord said the grout was 'just old'",
+      "script": [
+        {
+          "t": "0-3s",
+          "shot": "Close-up on stained brown grout line, phone light raking across",
+          "text": "My landlord said the grout was 'just old'",
+          "sfx": "record scratch"
+        },
+        {
+          "t": "3-8s",
+          "shot": "Single continuous pen swipe, half line white / half brown",
+          "text": "It was never old. It was dirty.",
+          "sfx": "satisfying marker squeak"
+        },
+        {
+          "t": "8-14s",
+          "shot": "Pull back to full floor, before/after wipe transition",
+          "text": "$3 pen. 20 minutes. Whole bathroom.",
+          "sfx": "beat drop"
+        }
+      ],
+      "platform": "tiktok",
+      "format": "transformation",
+      "status": "published",
+      "renderEngine": "manual",
+      "runwayCreditsUsed": 0,
+      "durationSec": 14,
+      "soundtrack": "sped-up ambient house",
+      "hashtags": [
+        "#cleantok",
+        "#groutcleaning",
+        "#renterfriendly",
+        "#satisfying"
+      ],
+      "metrics": {
+        "views": 412000,
+        "likes": 38400,
+        "shares": 6100,
+        "clicks": 9840,
+        "conversionRatePct": 3.9
+      },
+      "publishedAt": "2026-07-11T18:30:00.000Z",
+      "createdAt": "2026-07-10T12:00:00.000Z"
+    },
+    {
+      "id": "clp_grt002",
+      "productId": "prd_grout01",
+      "hook": "They quoted me $600 to regrout this",
+      "script": [
+        {
+          "t": "0-3s",
+          "shot": "Screenshot of contractor quote, zoom on total",
+          "text": "They quoted me $600 to regrout this",
+          "sfx": "cash register"
+        },
+        {
+          "t": "3-9s",
+          "shot": "Hands unbox pen, uncap, prime tip on paper towel",
+          "text": "I bought this instead",
+          "sfx": "click"
+        },
+        {
+          "t": "9-15s",
+          "shot": "Split screen: quote vs finished floor",
+          "text": "Same result. 1% of the price.",
+          "sfx": "whoosh"
+        }
+      ],
+      "platform": "reels",
+      "format": "problem-solution",
+      "status": "published",
+      "renderEngine": "manual",
+      "runwayCreditsUsed": 0,
+      "durationSec": 15,
+      "soundtrack": "trending lo-fi flip",
+      "hashtags": [
+        "#homehacks",
+        "#diy",
+        "#budgetreno"
+      ],
+      "metrics": {
+        "views": 187500,
+        "likes": 14200,
+        "shares": 2380,
+        "clicks": 4120,
+        "conversionRatePct": 3.1
+      },
+      "publishedAt": "2026-07-17T16:00:00.000Z",
+      "createdAt": "2026-07-16T09:20:00.000Z"
+    },
+    {
+      "id": "clp_grt003",
+      "productId": "prd_grout01",
+      "hook": "ASMR: one grout line, zero scrubbing",
+      "script": [
+        {
+          "t": "0-3s",
+          "shot": "Macro lens on tip meeting grout, shallow depth of field",
+          "text": "no talking. just the line.",
+          "sfx": "mic-close squeak"
+        },
+        {
+          "t": "3-12s",
+          "shot": "Slow tracking pull along a 4-foot run",
+          "text": "",
+          "sfx": "ambient room tone"
+        },
+        {
+          "t": "12-18s",
+          "shot": "Rack focus to full grid of restored tile",
+          "text": "link in bio before it sells out again",
+          "sfx": "soft chime"
+        }
+      ],
+      "platform": "tiktok",
+      "format": "satisfying-demo",
+      "status": "queued",
+      "renderEngine": "runway-gen3",
+      "runwayCreditsUsed": 25,
+      "durationSec": 18,
+      "soundtrack": "ASMR raw audio",
+      "hashtags": [
+        "#asmr",
+        "#oddlysatisfying",
+        "#cleantok"
+      ],
+      "metrics": {
+        "views": 0,
+        "likes": 0,
+        "shares": 0,
+        "clicks": 0,
+        "conversionRatePct": 0
+      },
+      "publishedAt": null,
+      "createdAt": "2026-07-28T14:45:00.000Z"
+    },
+    {
+      "id": "clp_car001",
+      "productId": "prd_cargel1",
+      "hook": "The dust in your vents has been there since 2019",
+      "script": [
+        {
+          "t": "0-3s",
+          "shot": "Overhead of filthy dashboard vents",
+          "text": "since 2019.",
+          "sfx": "sub bass hit"
+        },
+        {
+          "t": "3-9s",
+          "shot": "Gel pressed into vent slats, slow peel",
+          "text": "watch it lift",
+          "sfx": "sticky peel"
+        },
+        {
+          "t": "9-13s",
+          "shot": "Gel held to camera, debris visible inside",
+          "text": "that was all in the air you breathe",
+          "sfx": "impact"
+        }
+      ],
+      "platform": "tiktok",
+      "format": "satisfying-demo",
+      "status": "published",
+      "renderEngine": "manual",
+      "runwayCreditsUsed": 0,
+      "durationSec": 13,
+      "soundtrack": "phonk",
+      "hashtags": [
+        "#cartok",
+        "#detailing",
+        "#satisfying"
+      ],
+      "metrics": {
+        "views": 268000,
+        "likes": 21100,
+        "shares": 3040,
+        "clicks": 5360,
+        "conversionRatePct": 2.8
+      },
+      "publishedAt": "2026-07-13T20:10:00.000Z",
+      "createdAt": "2026-07-12T10:00:00.000Z"
+    },
+    {
+      "id": "clp_car002",
+      "productId": "prd_cargel1",
+      "hook": "Detailers charge $80 for this 4-minute job",
+      "script": [
+        {
+          "t": "0-3s",
+          "shot": "Invoice line item on phone screen",
+          "text": "$80 for 'interior vent service'",
+          "sfx": "typewriter"
+        },
+        {
+          "t": "3-10s",
+          "shot": "Speed-run through cupholders, seams, gearshift",
+          "text": "4 minutes with a $2 blob",
+          "sfx": "sped-up clicks"
+        },
+        {
+          "t": "10-14s",
+          "shot": "Clean interior beauty pan",
+          "text": "keep the $78",
+          "sfx": "cash whoosh"
+        }
+      ],
+      "platform": "reels",
+      "format": "problem-solution",
+      "status": "published",
+      "renderEngine": "manual",
+      "runwayCreditsUsed": 0,
+      "durationSec": 14,
+      "soundtrack": "upbeat funk loop",
+      "hashtags": [
+        "#carcleaning",
+        "#lifehack",
+        "#detailing"
+      ],
+      "metrics": {
+        "views": 94300,
+        "likes": 6800,
+        "shares": 1120,
+        "clicks": 1980,
+        "conversionRatePct": 2.2
+      },
+      "publishedAt": "2026-07-20T15:25:00.000Z",
+      "createdAt": "2026-07-19T11:40:00.000Z"
+    },
+    {
+      "id": "clp_car003",
+      "productId": "prd_cargel1",
+      "hook": "Rating my car's filthiest crevices 1-10",
+      "script": [
+        {
+          "t": "0-3s",
+          "shot": "Handheld pan across messy console",
+          "text": "rating my crevices by how gross they are",
+          "sfx": "playful pluck"
+        },
+        {
+          "t": "3-11s",
+          "shot": "Three quick gel presses with rating overlays",
+          "text": "cupholder: 9/10 disgusting",
+          "sfx": "ding per rating"
+        },
+        {
+          "t": "11-16s",
+          "shot": "Final wide of spotless interior",
+          "text": "all of it. one blob.",
+          "sfx": "sparkle"
+        }
+      ],
+      "platform": "shorts",
+      "format": "ugc-testimonial",
+      "status": "draft",
+      "renderEngine": "manual",
+      "runwayCreditsUsed": 0,
+      "durationSec": 16,
+      "soundtrack": "trending comedy audio",
+      "hashtags": [
+        "#cartok",
+        "#cleaningtiktok"
+      ],
+      "metrics": {
+        "views": 0,
+        "likes": 0,
+        "shares": 0,
+        "clicks": 0,
+        "conversionRatePct": 0
+      },
+      "publishedAt": null,
+      "createdAt": "2026-07-26T13:10:00.000Z"
+    },
+    {
+      "id": "clp_pos001",
+      "productId": "prd_posture",
+      "hook": "Your tech neck is aging you faster than the sun",
+      "script": [
+        {
+          "t": "0-3s",
+          "shot": "Side-profile silhouette at a desk, forward head posture",
+          "text": "this is what 8 hours a day does",
+          "sfx": "low drone"
+        },
+        {
+          "t": "3-10s",
+          "shot": "Strap on, shoulders roll back, spine straightens",
+          "text": "14 days, 2 hours a day",
+          "sfx": "velcro"
+        },
+        {
+          "t": "10-15s",
+          "shot": "Before/after side-by-side profile",
+          "text": "same person. same week.",
+          "sfx": "camera shutter"
+        }
+      ],
+      "platform": "tiktok",
+      "format": "transformation",
+      "status": "published",
+      "renderEngine": "manual",
+      "runwayCreditsUsed": 0,
+      "durationSec": 15,
+      "soundtrack": "cinematic swell",
+      "hashtags": [
+        "#posture",
+        "#deskjob",
+        "#techneck"
+      ],
+      "metrics": {
+        "views": 76400,
+        "likes": 4900,
+        "shares": 810,
+        "clicks": 1450,
+        "conversionRatePct": 2.1
+      },
+      "publishedAt": "2026-07-14T17:00:00.000Z",
+      "createdAt": "2026-07-13T08:30:00.000Z"
+    },
+    {
+      "id": "clp_pos002",
+      "productId": "prd_posture",
+      "hook": "A physio told me slouching costs you an inch",
+      "script": [
+        {
+          "t": "0-3s",
+          "shot": "Talking head, measuring tape against wall",
+          "text": "you're shorter than you think",
+          "sfx": "tape snap"
+        },
+        {
+          "t": "3-9s",
+          "shot": "Measure slouched vs corrected height",
+          "text": "1.1 inches. same body.",
+          "sfx": "ding"
+        },
+        {
+          "t": "9-14s",
+          "shot": "Product close-up, adjustable straps",
+          "text": "wear it while you work",
+          "sfx": "soft pad"
+        }
+      ],
+      "platform": "reels",
+      "format": "problem-solution",
+      "status": "published",
+      "renderEngine": "manual",
+      "runwayCreditsUsed": 0,
+      "durationSec": 14,
+      "soundtrack": "clean corporate beat",
+      "hashtags": [
+        "#physio",
+        "#posturecorrection",
+        "#wfh"
+      ],
+      "metrics": {
+        "views": 41200,
+        "likes": 2600,
+        "shares": 430,
+        "clicks": 690,
+        "conversionRatePct": 1.6
+      },
+      "publishedAt": "2026-07-22T14:15:00.000Z",
+      "createdAt": "2026-07-21T09:50:00.000Z"
+    },
+    {
+      "id": "clp_pos003",
+      "productId": "prd_posture",
+      "hook": "POV: your chiropractor sees your desk setup",
+      "script": [
+        {
+          "t": "0-3s",
+          "shot": "Comedic reaction shot at laptop on couch",
+          "text": "he physically recoiled",
+          "sfx": "gasp"
+        },
+        {
+          "t": "3-9s",
+          "shot": "Quick cuts of bad ergonomics",
+          "text": "every single thing wrong",
+          "sfx": "error buzz"
+        },
+        {
+          "t": "9-15s",
+          "shot": "Corrector on, seated upright",
+          "text": "the $25 fix he actually recommended",
+          "sfx": "chime"
+        }
+      ],
+      "platform": "tiktok",
+      "format": "ugc-testimonial",
+      "status": "archived",
+      "renderEngine": "manual",
+      "runwayCreditsUsed": 0,
+      "durationSec": 15,
+      "soundtrack": "comedy sting",
+      "hashtags": [
+        "#chiropractor",
+        "#desksetup"
+      ],
+      "metrics": {
+        "views": 18900,
+        "likes": 940,
+        "shares": 120,
+        "clicks": 210,
+        "conversionRatePct": 0.9
+      },
+      "publishedAt": "2026-07-06T19:40:00.000Z",
+      "createdAt": "2026-07-05T15:00:00.000Z"
+    },
+    {
+      "id": "clp_led001",
+      "productId": "prd_ledmask",
+      "hook": "$1,200 clinic session vs the mask on my nightstand",
+      "script": [
+        {
+          "t": "0-3s",
+          "shot": "Clinic invoice, then cut to mask glowing red in dark room",
+          "text": "$1,200 vs $60",
+          "sfx": "electric hum"
+        },
+        {
+          "t": "3-10s",
+          "shot": "Mask on, red glow across face, timer overlay",
+          "text": "10 minutes a night",
+          "sfx": "ambient pad"
+        },
+        {
+          "t": "10-16s",
+          "shot": "Day 1 / Day 30 skin close-ups",
+          "text": "30 nights later",
+          "sfx": "soft riser"
+        }
+      ],
+      "platform": "tiktok",
+      "format": "transformation",
+      "status": "queued",
+      "renderEngine": "runway-gen3",
+      "runwayCreditsUsed": 40,
+      "durationSec": 16,
+      "soundtrack": "ethereal synth",
+      "hashtags": [
+        "#beautytok",
+        "#ledmask",
+        "#skincareroutine"
+      ],
+      "metrics": {
+        "views": 0,
+        "likes": 0,
+        "shares": 0,
+        "clicks": 0,
+        "conversionRatePct": 0
+      },
+      "publishedAt": null,
+      "createdAt": "2026-07-27T10:30:00.000Z"
+    },
+    {
+      "id": "clp_led002",
+      "productId": "prd_ledmask",
+      "hook": "Nobody talks about the blue setting",
+      "script": [
+        {
+          "t": "0-3s",
+          "shot": "Cycle through color modes fast, stop on blue",
+          "text": "everyone uses red. wrong one.",
+          "sfx": "mode click"
+        },
+        {
+          "t": "3-10s",
+          "shot": "Explainer overlay on what blue targets",
+          "text": "blue is for the breakouts",
+          "sfx": "typing"
+        },
+        {
+          "t": "10-15s",
+          "shot": "Jawline before/after",
+          "text": "two weeks, blue only",
+          "sfx": "chime"
+        }
+      ],
+      "platform": "reels",
+      "format": "reveal",
+      "status": "draft",
+      "renderEngine": "runway-gen3",
+      "runwayCreditsUsed": 0,
+      "durationSec": 15,
+      "soundtrack": "minimal electronic",
+      "hashtags": [
+        "#skincaretips",
+        "#acne",
+        "#ledtherapy"
+      ],
+      "metrics": {
+        "views": 0,
+        "likes": 0,
+        "shares": 0,
+        "clicks": 0,
+        "conversionRatePct": 0
+      },
+      "publishedAt": null,
+      "createdAt": "2026-07-29T07:15:00.000Z"
+    },
+    {
+      "id": "clp_led003",
+      "productId": "prd_ledmask",
+      "hook": "Esthetician reacts to my $60 LED mask",
+      "script": [
+        {
+          "t": "0-3s",
+          "shot": "Duet-style frame, esthetician squinting at mask",
+          "text": "she was NOT optimistic",
+          "sfx": "skeptical hmm"
+        },
+        {
+          "t": "3-11s",
+          "shot": "Spec sheet overlay: wavelength, LED count",
+          "text": "then she read the specs",
+          "sfx": "page turn"
+        },
+        {
+          "t": "11-17s",
+          "shot": "Verdict card on screen",
+          "text": "'honestly? buy it.'",
+          "sfx": "stamp"
+        }
+      ],
+      "platform": "tiktok",
+      "format": "ugc-testimonial",
+      "status": "draft",
+      "renderEngine": "manual",
+      "runwayCreditsUsed": 0,
+      "durationSec": 17,
+      "soundtrack": "conversational raw audio",
+      "hashtags": [
+        "#esthetician",
+        "#skincarereview"
+      ],
+      "metrics": {
+        "views": 0,
+        "likes": 0,
+        "shares": 0,
+        "clicks": 0,
+        "conversionRatePct": 0
+      },
+      "publishedAt": null,
+      "createdAt": "2026-07-29T08:00:00.000Z"
+    },
+    {
+      "id": "clp_pet001",
+      "productId": "prd_petbrsh",
+      "hook": "The fur that came off my cat in 60 seconds",
+      "script": [
+        {
+          "t": "0-3s",
+          "shot": "Cat on couch, visible loose undercoat",
+          "text": "60 seconds. one brush.",
+          "sfx": "meow"
+        },
+        {
+          "t": "3-10s",
+          "shot": "Brushing montage, fur accumulating",
+          "text": "it keeps coming",
+          "sfx": "brush strokes"
+        },
+        {
+          "t": "10-14s",
+          "shot": "Button press, fur mat ejects clean",
+          "text": "and it empties itself",
+          "sfx": "click + whoosh"
+        }
+      ],
+      "platform": "tiktok",
+      "format": "satisfying-demo",
+      "status": "archived",
+      "renderEngine": "manual",
+      "runwayCreditsUsed": 0,
+      "durationSec": 14,
+      "soundtrack": "cute plucky loop",
+      "hashtags": [
+        "#pettok",
+        "#catsoftiktok",
+        "#grooming"
+      ],
+      "metrics": {
+        "views": 52100,
+        "likes": 3400,
+        "shares": 520,
+        "clicks": 780,
+        "conversionRatePct": 1.2
+      },
+      "publishedAt": "2026-07-01T16:20:00.000Z",
+      "createdAt": "2026-06-30T12:00:00.000Z"
+    },
+    {
+      "id": "clp_pet002",
+      "productId": "prd_petbrsh",
+      "hook": "Vacuum vs brush: which pulls more undercoat?",
+      "script": [
+        {
+          "t": "0-3s",
+          "shot": "Two piles side by side, empty",
+          "text": "science time",
+          "sfx": "lab beep"
+        },
+        {
+          "t": "3-11s",
+          "shot": "Alternating vacuum and brush passes",
+          "text": "same dog, same 2 minutes",
+          "sfx": "vacuum hum"
+        },
+        {
+          "t": "11-15s",
+          "shot": "Weigh both piles on kitchen scale",
+          "text": "not even close",
+          "sfx": "scale beep"
+        }
+      ],
+      "platform": "reels",
+      "format": "reveal",
+      "status": "archived",
+      "renderEngine": "manual",
+      "runwayCreditsUsed": 0,
+      "durationSec": 15,
+      "soundtrack": "curious quirky beat",
+      "hashtags": [
+        "#dogsoftiktok",
+        "#petgrooming"
+      ],
+      "metrics": {
+        "views": 23800,
+        "likes": 1210,
+        "shares": 190,
+        "clicks": 260,
+        "conversionRatePct": 0.8
+      },
+      "publishedAt": "2026-07-04T13:45:00.000Z",
+      "createdAt": "2026-07-03T10:20:00.000Z"
+    },
+    {
+      "id": "clp_pet003",
+      "productId": "prd_petbrsh",
+      "hook": "My couch was 40% cat",
+      "script": [
+        {
+          "t": "0-3s",
+          "shot": "Wide of fur-covered sectional",
+          "text": "40% cat by volume",
+          "sfx": "sad trombone"
+        },
+        {
+          "t": "3-10s",
+          "shot": "Brush passes over upholstery",
+          "text": "it works on furniture too",
+          "sfx": "fabric drag"
+        },
+        {
+          "t": "10-14s",
+          "shot": "Clean cushion reveal",
+          "text": "i can have guests again",
+          "sfx": "sparkle"
+        }
+      ],
+      "platform": "shorts",
+      "format": "transformation",
+      "status": "archived",
+      "renderEngine": "manual",
+      "runwayCreditsUsed": 0,
+      "durationSec": 14,
+      "soundtrack": "chill house",
+      "hashtags": [
+        "#cleantok",
+        "#pethacks"
+      ],
+      "metrics": {
+        "views": 11400,
+        "likes": 520,
+        "shares": 60,
+        "clicks": 90,
+        "conversionRatePct": 0.5
+      },
+      "publishedAt": "2026-07-09T18:00:00.000Z",
+      "createdAt": "2026-07-08T14:30:00.000Z"
+    }
+  ]
+}

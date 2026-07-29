@@ -1,0 +1,46 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "scorpion/clip",
+  "title": "Scorpion Content Clip",
+  "type": "object",
+  "required": ["id", "productId", "hook", "platform", "status", "createdAt"],
+  "properties": {
+    "id": { "type": "string", "pattern": "^clp_[a-z0-9]{6,}$" },
+    "productId": { "type": "string" },
+    "hook": { "type": "string", "maxLength": 120, "description": "First 3 seconds of on-screen text." },
+    "script": {
+      "type": "array",
+      "description": "Ordered beats of the short-form clip.",
+      "items": {
+        "type": "object",
+        "required": ["t", "shot", "text"],
+        "properties": {
+          "t": { "type": "string", "description": "Timecode label, e.g. 0-3s." },
+          "shot": { "type": "string" },
+          "text": { "type": "string" },
+          "sfx": { "type": "string" }
+        }
+      }
+    },
+    "platform": { "type": "string", "enum": ["tiktok", "reels", "shorts"] },
+    "format": { "type": "string", "enum": ["transformation", "reveal", "satisfying-demo", "ugc-testimonial", "problem-solution"] },
+    "status": { "type": "string", "enum": ["draft", "queued", "rendering", "published", "archived"] },
+    "renderEngine": { "type": "string", "enum": ["runway-gen3", "manual", "capcut"] },
+    "runwayCreditsUsed": { "type": "integer", "minimum": 0 },
+    "durationSec": { "type": "number", "minimum": 3, "maximum": 60 },
+    "soundtrack": { "type": "string" },
+    "hashtags": { "type": "array", "items": { "type": "string" } },
+    "metrics": {
+      "type": "object",
+      "properties": {
+        "views": { "type": "integer", "minimum": 0 },
+        "likes": { "type": "integer", "minimum": 0 },
+        "shares": { "type": "integer", "minimum": 0 },
+        "clicks": { "type": "integer", "minimum": 0 },
+        "conversionRatePct": { "type": "number", "minimum": 0, "maximum": 100 }
+      }
+    },
+    "publishedAt": { "type": ["string", "null"], "format": "date-time" },
+    "createdAt": { "type": "string", "format": "date-time" }
+  }
+}

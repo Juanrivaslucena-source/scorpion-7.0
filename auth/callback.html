@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Signing in — Scorpion</title>
+<link rel="stylesheet" href="../assets/css/dashboard.css" />
+</head>
+<body>
+<div class="login-screen">
+  <div class="login-card">
+    <div class="brand-mark" style="width:46px;height:46px">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:26px;height:26px">
+        <path d="M4 8v3a4 4 0 0 0 4 4h6"/><path d="M20 6v5a6 6 0 0 1-2 4.5"/><path d="M14 15l3 3"/><circle cx="18.5" cy="19.5" r="1.8"/><path d="M4 8 2 6"/><path d="M8 8 6 5"/>
+      </svg>
+    </div>
+    <h1 id="title">Signing you in…</h1>
+    <p id="msg">Exchanging your GitHub authorization code.</p>
+
+    <div id="spinner" style="margin:22px auto">
+      <div class="skeleton sk-line w80" style="margin:0 auto 9px"></div>
+      <div class="skeleton sk-line w60" style="margin:0 auto"></div>
+    </div>
+
+    <div class="login-error" id="err"></div>
+    <a class="btn btn-ghost btn-block" id="back" href="../index.html" style="display:none">Back to sign in</a>
+  </div>
+</div>
+
+<script src="../assets/js/api.js"></script>
+<script src="../assets/js/auth.js"></script>
+<script>
+(function () {
+  var title = document.getElementById('title');
+  var msg = document.getElementById('msg');
+  var err = document.getElementById('err');
+  var spinner = document.getElementById('spinner');
+  var back = document.getElementById('back');
+
+  function fail(message) {
+    spinner.style.display = 'none';
+    title.textContent = 'Sign-in failed';
+    msg.textContent = 'Scorpion could not complete the GitHub handshake.';
+    err.textContent = message;
+    err.classList.add('show');
+    back.style.display = 'inline-flex';
+  }
+
+  ScorpionAuth.handleCallback()
+    .then(function (session) {
+      spinner.style.display = 'none';
+      title.textContent = 'Welcome, ' + (session.user.name || session.user.login);
+      msg.textContent = 'Redirecting to your console…';
+      setTimeout(function () { location.replace(ScorpionAuth.returnUrl()); }, 700);
+    })
+    .catch(function (e) { fail(e.message); });
+})();
+</script>
+</body>
+</html>

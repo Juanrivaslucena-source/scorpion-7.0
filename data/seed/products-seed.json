@@ -1,0 +1,217 @@
+[
+  {
+    "id": "prd_grout01",
+    "name": "Grout Restore Pen (10-Color)",
+    "slug": "grout-restore-pen",
+    "category": "home",
+    "stage": "winning",
+    "cost": 2.66,
+    "salePrice": 19.95,
+    "marginPct": 86.7,
+    "supplier": {
+      "platform": "aliexpress",
+      "url": "https://www.aliexpress.us/item/3256811827741618.html",
+      "sellerRating": 4.9,
+      "unitsSold": 2000,
+      "shipDaysMin": 8,
+      "shipDaysMax": 13
+    },
+    "trend": {
+      "source": "TikTok #cleantok",
+      "hashtag": "#groutcleaning",
+      "momentum": "rising",
+      "evidence": "Grout restoration demos recirculating hard on CleanTok; TikTok Shop carries multiple grout colorant pens with heavy creator-pick placement."
+    },
+    "saturation": {
+      "score": "medium",
+      "activeSellers": 7,
+      "evidence": "Several TikTok Shop listings for grout paint pens, but few branded stores running dedicated organic content."
+    },
+    "contentAngles": [
+      "POV: your landlord said the grout was 'just old'",
+      "$3 pen vs $600 professional regrouting quote",
+      "One swipe. No scrubbing. Watch the line change color."
+    ],
+    "risks": [
+      "Cheap tips clog — sample before scaling",
+      "8-13 day shipping needs clear ETA on the PDP",
+      "Color-match complaints if buyer expects pure white"
+    ],
+    "metrics": { "unitsSold": 96, "revenue": 1915.2, "refundRatePct": 2.1, "conversionRatePct": 3.4 },
+    "scoutScore": 91,
+    "createdAt": "2026-07-02T14:10:00.000Z",
+    "updatedAt": "2026-07-29T09:05:00.000Z"
+  },
+  {
+    "id": "prd_cargel1",
+    "name": "Car Detailing Cleaning Gel",
+    "slug": "car-cleaning-gel",
+    "category": "auto",
+    "stage": "active",
+    "cost": 1.33,
+    "salePrice": 14.95,
+    "marginPct": 91.1,
+    "supplier": {
+      "platform": "aliexpress",
+      "url": "https://www.aliexpress.us/item/3256808158408968.html",
+      "sellerRating": 4.9,
+      "unitsSold": 1000,
+      "shipDaysMin": 9,
+      "shipDaysMax": 15
+    },
+    "trend": {
+      "source": "TikTok #cartok",
+      "hashtag": "#detailing",
+      "momentum": "peaking",
+      "evidence": "Vent-dust lift shots remain a staple of satisfying auto content; steady evergreen demand rather than a spike."
+    },
+    "saturation": {
+      "score": "high",
+      "activeSellers": 20,
+      "evidence": "Long-running dropship staple with dozens of storefronts and heavy Amazon presence."
+    },
+    "contentAngles": [
+      "The dust in your vents has been there since 2019",
+      "Press. Peel. Look at what came out.",
+      "Detailer's $2 trick they don't put on the invoice"
+    ],
+    "risks": [
+      "Saturation compresses price to sub-$12",
+      "Gel dries out in transit during summer heat",
+      "Low AOV — needs bundling to be worth the ad-free grind"
+    ],
+    "metrics": { "unitsSold": 71, "revenue": 1061.45, "refundRatePct": 3.4, "conversionRatePct": 2.6 },
+    "scoutScore": 68,
+    "createdAt": "2026-07-05T11:30:00.000Z",
+    "updatedAt": "2026-07-28T16:40:00.000Z"
+  },
+  {
+    "id": "prd_posture",
+    "name": "Adjustable Posture Corrector",
+    "slug": "posture-corrector",
+    "category": "fitness",
+    "stage": "active",
+    "cost": 3.85,
+    "salePrice": 24.95,
+    "marginPct": 84.6,
+    "supplier": {
+      "platform": "aliexpress",
+      "url": "https://www.aliexpress.com/w/wholesale-posture-corrector.html",
+      "sellerRating": 4.7,
+      "unitsSold": 5000,
+      "shipDaysMin": 10,
+      "shipDaysMax": 18
+    },
+    "trend": {
+      "source": "Amazon Health & Household",
+      "hashtag": "#deskjob",
+      "momentum": "flat",
+      "evidence": "Evergreen remote-work category; consistent search demand without a current viral spike."
+    },
+    "saturation": {
+      "score": "high",
+      "activeSellers": 25,
+      "evidence": "Mature category with entrenched Amazon brands and review moats."
+    },
+    "contentAngles": [
+      "Your 'tech neck' is aging your face faster than the sun",
+      "Before/after side profile after 14 days",
+      "Physio explains why slouching costs you an inch of height"
+    ],
+    "risks": [
+      "Sizing returns are the #1 refund driver",
+      "Health claims need careful compliance wording",
+      "Hard to differentiate visually in 3 seconds"
+    ],
+    "metrics": { "unitsSold": 38, "revenue": 948.1, "refundRatePct": 7.8, "conversionRatePct": 1.9 },
+    "scoutScore": 54,
+    "createdAt": "2026-07-08T09:00:00.000Z",
+    "updatedAt": "2026-07-27T12:15:00.000Z"
+  },
+  {
+    "id": "prd_ledmask",
+    "name": "7-Color LED Therapy Face Mask",
+    "slug": "led-face-mask",
+    "category": "beauty",
+    "stage": "sourcing",
+    "cost": 12.4,
+    "salePrice": 59.95,
+    "marginPct": 79.3,
+    "supplier": {
+      "platform": "aliexpress",
+      "url": "https://www.aliexpress.com/w/wholesale-led-face-mask.html",
+      "sellerRating": 4.6,
+      "unitsSold": 800,
+      "shipDaysMin": 12,
+      "shipDaysMax": 20
+    },
+    "trend": {
+      "source": "TikTok #beautytok",
+      "hashtag": "#ledmask",
+      "momentum": "rising",
+      "evidence": "At-home beauty-tech keeps climbing; high perceived value versus in-clinic pricing."
+    },
+    "saturation": {
+      "score": "medium",
+      "activeSellers": 12,
+      "evidence": "Premium tier is brand-dominated, but the sub-$70 dropship tier still has room."
+    },
+    "contentAngles": [
+      "$1,200 clinic session vs the mask on my nightstand",
+      "Red light for 10 minutes — 30-day skin diary",
+      "The blue setting is the one nobody talks about"
+    ],
+    "risks": [
+      "FDA-adjacent claims risk — avoid medical language",
+      "Highest unit cost in the catalog, ties up float",
+      "Electronics DOA rate demands a tested supplier"
+    ],
+    "metrics": { "unitsSold": 4, "revenue": 239.8, "refundRatePct": 0, "conversionRatePct": 1.1 },
+    "scoutScore": 76,
+    "createdAt": "2026-07-19T15:45:00.000Z",
+    "updatedAt": "2026-07-29T08:20:00.000Z"
+  },
+  {
+    "id": "prd_petbrsh",
+    "name": "Self-Cleaning Pet Grooming Brush",
+    "slug": "pet-grooming-brush",
+    "category": "pets",
+    "stage": "dead",
+    "cost": 2.1,
+    "salePrice": 16.95,
+    "marginPct": 87.6,
+    "supplier": {
+      "platform": "aliexpress",
+      "url": "https://www.aliexpress.com/w/wholesale-self-cleaning-pet-brush.html",
+      "sellerRating": 4.4,
+      "unitsSold": 3000,
+      "shipDaysMin": 11,
+      "shipDaysMax": 19
+    },
+    "trend": {
+      "source": "TikTok #pettok",
+      "hashtag": "#petgrooming",
+      "momentum": "cooling",
+      "evidence": "Peaked in prior cycles; current creator output is mostly reposted older footage."
+    },
+    "saturation": {
+      "score": "high",
+      "activeSellers": 30,
+      "evidence": "Commodity item sold below $10 on Amazon with Prime shipping — unwinnable on price."
+    },
+    "contentAngles": [
+      "The fur that came off my couch cat in 60 seconds",
+      "One button and the whole brush empties itself",
+      "Vacuum vs brush: which pulls more undercoat?"
+    ],
+    "risks": [
+      "Amazon Prime undercuts price and delivery",
+      "Bristle-quality complaints drove refunds",
+      "No differentiation left in the creative"
+    ],
+    "metrics": { "unitsSold": 12, "revenue": 203.4, "refundRatePct": 16.7, "conversionRatePct": 0.7 },
+    "scoutScore": 28,
+    "createdAt": "2026-06-28T10:05:00.000Z",
+    "updatedAt": "2026-07-16T13:00:00.000Z"
+  }
+]

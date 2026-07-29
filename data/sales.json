@@ -1,0 +1,2118 @@
+{
+  "currency": "USD",
+  "updatedAt": "2026-07-29T06:00:00.000Z",
+  "periodStart": "2026-06-29",
+  "periodEnd": "2026-07-28",
+  "totals": {
+    "revenue": 4142.55,
+    "cogs": 544.76,
+    "grossProfit": 3597.79,
+    "orders": 178,
+    "averageOrderValue": 23.27,
+    "marginPct": 86.85
+  },
+  "byChannel": {
+    "shopify": {
+      "revenue": 2145.75,
+      "orders": 92
+    },
+    "tiktok-shop": {
+      "revenue": 1996.8,
+      "orders": 87
+    }
+  },
+  "daily": [
+    {
+      "date": "2026-06-29",
+      "revenue": 39.9,
+      "orders": 2,
+      "cogs": 5.18,
+      "channels": {
+        "shopify": 39.9,
+        "tiktok-shop": 0
+      }
+    },
+    {
+      "date": "2026-06-30",
+      "revenue": 44.9,
+      "orders": 2,
+      "cogs": 6.51,
+      "channels": {
+        "shopify": 19.95,
+        "tiktok-shop": 24.95
+      }
+    },
+    {
+      "date": "2026-07-01",
+      "revenue": 29.9,
+      "orders": 2,
+      "cogs": 2.66,
+      "channels": {
+        "shopify": 0,
+        "tiktok-shop": 29.9
+      }
+    },
+    {
+      "date": "2026-07-02",
+      "revenue": 34.9,
+      "orders": 2,
+      "cogs": 3.99,
+      "channels": {
+        "shopify": 19.95,
+        "tiktok-shop": 14.95
+      }
+    },
+    {
+      "date": "2026-07-03",
+      "revenue": 64.85,
+      "orders": 3,
+      "cogs": 9.03,
+      "channels": {
+        "shopify": 64.85,
+        "tiktok-shop": 0
+      }
+    },
+    {
+      "date": "2026-07-04",
+      "revenue": 44.85,
+      "orders": 2,
+      "cogs": 3.99,
+      "channels": {
+        "shopify": 44.85,
+        "tiktok-shop": 0
+      }
+    },
+    {
+      "date": "2026-07-05",
+      "revenue": 51.85,
+      "orders": 3,
+      "cogs": 6.09,
+      "channels": {
+        "shopify": 19.95,
+        "tiktok-shop": 31.9
+      }
+    },
+    {
+      "date": "2026-07-06",
+      "revenue": 64.8,
+      "orders": 3,
+      "cogs": 6.65,
+      "channels": {
+        "shopify": 64.8,
+        "tiktok-shop": 0
+      }
+    },
+    {
+      "date": "2026-07-07",
+      "revenue": 71.8,
+      "orders": 4,
+      "cogs": 8.75,
+      "channels": {
+        "shopify": 51.85,
+        "tiktok-shop": 19.95
+      }
+    },
+    {
+      "date": "2026-07-08",
+      "revenue": 76.8,
+      "orders": 4,
+      "cogs": 10.08,
+      "channels": {
+        "shopify": 59.85,
+        "tiktok-shop": 16.95
+      }
+    },
+    {
+      "date": "2026-07-09",
+      "revenue": 69.85,
+      "orders": 3,
+      "cogs": 10.36,
+      "channels": {
+        "shopify": 0,
+        "tiktok-shop": 69.85
+      }
+    },
+    {
+      "date": "2026-07-10",
+      "revenue": 109.75,
+      "orders": 3,
+      "cogs": 15.68,
+      "channels": {
+        "shopify": 59.85,
+        "tiktok-shop": 49.9
+      }
+    },
+    {
+      "date": "2026-07-11",
+      "revenue": 223.4,
+      "orders": 9,
+      "cogs": 27.72,
+      "channels": {
+        "shopify": 128.7,
+        "tiktok-shop": 94.7
+      }
+    },
+    {
+      "date": "2026-07-12",
+      "revenue": 159.55,
+      "orders": 9,
+      "cogs": 18.62,
+      "channels": {
+        "shopify": 89.75,
+        "tiktok-shop": 69.8
+      }
+    },
+    {
+      "date": "2026-07-13",
+      "revenue": 134.7,
+      "orders": 4,
+      "cogs": 19.53,
+      "channels": {
+        "shopify": 39.9,
+        "tiktok-shop": 94.8
+      }
+    },
+    {
+      "date": "2026-07-14",
+      "revenue": 113.7,
+      "orders": 4,
+      "cogs": 14.7,
+      "channels": {
+        "shopify": 24.95,
+        "tiktok-shop": 88.75
+      }
+    },
+    {
+      "date": "2026-07-15",
+      "revenue": 83.75,
+      "orders": 4,
+      "cogs": 9.52,
+      "channels": {
+        "shopify": 29.9,
+        "tiktok-shop": 53.85
+      }
+    },
+    {
+      "date": "2026-07-16",
+      "revenue": 124.7,
+      "orders": 5,
+      "cogs": 17.01,
+      "channels": {
+        "shopify": 14.95,
+        "tiktok-shop": 109.75
+      }
+    },
+    {
+      "date": "2026-07-17",
+      "revenue": 134.7,
+      "orders": 5,
+      "cogs": 19.53,
+      "channels": {
+        "shopify": 39.9,
+        "tiktok-shop": 94.8
+      }
+    },
+    {
+      "date": "2026-07-18",
+      "revenue": 149.6,
+      "orders": 7,
+      "cogs": 18.48,
+      "channels": {
+        "shopify": 64.85,
+        "tiktok-shop": 84.75
+      }
+    },
+    {
+      "date": "2026-07-19",
+      "revenue": 259.35,
+      "orders": 11,
+      "cogs": 34.44,
+      "channels": {
+        "shopify": 184.55,
+        "tiktok-shop": 74.8
+      }
+    },
+    {
+      "date": "2026-07-20",
+      "revenue": 219.45,
+      "orders": 9,
+      "cogs": 29.26,
+      "channels": {
+        "shopify": 79.8,
+        "tiktok-shop": 139.65
+      }
+    },
+    {
+      "date": "2026-07-21",
+      "revenue": 174.55,
+      "orders": 9,
+      "cogs": 22.47,
+      "channels": {
+        "shopify": 59.85,
+        "tiktok-shop": 114.7
+      }
+    },
+    {
+      "date": "2026-07-22",
+      "revenue": 254.35,
+      "orders": 11,
+      "cogs": 33.25,
+      "channels": {
+        "shopify": 134.65,
+        "tiktok-shop": 119.7
+      }
+    },
+    {
+      "date": "2026-07-23",
+      "revenue": 174.55,
+      "orders": 9,
+      "cogs": 22.61,
+      "channels": {
+        "shopify": 134.65,
+        "tiktok-shop": 39.9
+      }
+    },
+    {
+      "date": "2026-07-24",
+      "revenue": 189.45,
+      "orders": 9,
+      "cogs": 21.28,
+      "channels": {
+        "shopify": 84.75,
+        "tiktok-shop": 104.7
+      }
+    },
+    {
+      "date": "2026-07-25",
+      "revenue": 269.4,
+      "orders": 10,
+      "cogs": 39,
+      "channels": {
+        "shopify": 134.75,
+        "tiktok-shop": 134.65
+      }
+    },
+    {
+      "date": "2026-07-26",
+      "revenue": 289.3,
+      "orders": 13,
+      "cogs": 39.34,
+      "channels": {
+        "shopify": 199.55,
+        "tiktok-shop": 89.75
+      }
+    },
+    {
+      "date": "2026-07-27",
+      "revenue": 294.35,
+      "orders": 11,
+      "cogs": 42.71,
+      "channels": {
+        "shopify": 124.8,
+        "tiktok-shop": 169.55
+      }
+    },
+    {
+      "date": "2026-07-28",
+      "revenue": 189.55,
+      "orders": 7,
+      "cogs": 26.32,
+      "channels": {
+        "shopify": 129.7,
+        "tiktok-shop": 59.85
+      }
+    }
+  ],
+  "orders": [
+    {
+      "id": "ord_06290001",
+      "date": "2026-06-29",
+      "productId": "prd_posture",
+      "channel": "shopify",
+      "quantity": 1,
+      "unitPrice": 24.95,
+      "unitCost": 3.85,
+      "status": "delivered"
+    },
+    {
+      "id": "ord_06290002",
+      "date": "2026-06-29",
+      "productId": "prd_cargel1",
+      "channel": "shopify",
+      "quantity": 1,
+      "unitPrice": 14.95,
+      "unitCost": 1.33,
+      "status": "delivered"
+    },
+    {
+      "id": "ord_06300003",
+      "date": "2026-06-30",
+      "productId": "prd_posture",
+      "channel": "tiktok-shop",
+      "quantity": 1,
+      "unitPrice": 24.95,
+      "unitCost": 3.85,
+      "status": "shipped"
+    },
+    {
+      "id": "ord_06300004",
+      "date": "2026-06-30",
+      "productId": "prd_grout01",
+      "channel": "shopify",
+      "quantity": 1,
+      "unitPrice": 19.95,
+      "unitCost": 2.66,
+      "status": "delivered"
+    },
+    {
+      "id": "ord_07010005",
+      "date": "2026-07-01",
+      "productId": "prd_cargel1",
+      "channel": "tiktok-shop",
+      "quantity": 1,
+      "unitPrice": 14.95,
+      "unitCost": 1.33,
+      "status": "delivered"
+    },
+    {
+      "id": "ord_07010006",
+      "date": "2026-07-01",
+      "productId": "prd_cargel1",
+      "channel": "tiktok-shop",
+      "quantity": 1,
+      "unitPrice": 14.95,
+      "unitCost": 1.33,
+      "status": "shipped"
+    },
+    {
+      "id": "ord_07020007",
+      "date": "2026-07-02",
+      "productId": "prd_grout01",
+      "channel": "shopify",
+      "quantity": 1,
+      "unitPrice": 19.95,
+      "unitCost": 2.66,
+      "status": "shipped"
+    },
+    {
+      "id": "ord_07020008",
+      "date": "2026-07-02",
+      "productId": "prd_cargel1",
+      "channel": "tiktok-shop",
+      "quantity": 1,
+      "unitPrice": 14.95,
+      "unitCost": 1.33,
+      "status": "delivered"
+    },
+    {
+      "id": "ord_07030009",
+      "date": "2026-07-03",
+      "productId": "prd_cargel1",
+      "channel": "shopify",
+      "quantity": 1,
+      "unitPrice": 14.95,
+      "unitCost": 1.33,
+      "status": "delivered"
+    },
+    {
+      "id": "ord_07030010",
+      "date": "2026-07-03",
+      "productId": "prd_posture",
+      "channel": "shopify",
+      "quantity": 1,
+      "unitPrice": 24.95,
+      "unitCost": 3.85,
+      "status": "delivered"
+    },
+    {
+      "id": "ord_07030011",
+      "date": "2026-07-03",
+      "productId": "prd_posture",
+      "channel": "shopify",
+      "quantity": 1,
+      "unitPrice": 24.95,
+      "unitCost": 3.85,
+      "status": "delivered"
+    },
+    {
+      "id": "ord_07040012",
+      "date": "2026-07-04",
+      "productId": "prd_cargel1",
+      "channel": "shopify",
+      "quantity": 1,
+      "unitPrice": 14.95,
+      "unitCost": 1.33,
+      "status": "delivered"
+    },
+    {
+      "id": "ord_07040013",
+      "date": "2026-07-04",
+      "productId": "prd_cargel1",
+      "channel": "shopify",
+      "quantity": 2,
+      "unitPrice": 14.95,
+      "unitCost": 1.33,
+      "status": "delivered"
+    },
+    {
+      "id": "ord_07050014",
+      "date": "2026-07-05",
+      "productId": "prd_petbrsh",
+      "channel": "tiktok-shop",
+      "quantity": 1,
+      "unitPrice": 16.95,
+      "unitCost": 2.1,
+      "status": "shipped"
+    },
+    {
+      "id": "ord_07050015",
+      "date": "2026-07-05",
+      "productId": "prd_grout01",
+      "channel": "shopify",
+      "quantity": 1,
+      "unitPrice": 19.95,
+      "unitCost": 2.66,
+      "status": "delivered"
+    },
+    {
+      "id": "ord_07050016",
+      "date": "2026-07-05",
+      "productId": "prd_cargel1",
+      "channel": "tiktok-shop",
+      "quantity": 1,
+      "unitPrice": 14.95,
+      "unitCost": 1.33,
+      "status": "delivered"
+    },
+    {
+      "id": "ord_07060017",
+      "date": "2026-07-06",
+      "productId": "prd_cargel1",
+      "channel": "shopify",
+      "quantity": 1,
+      "unitPrice": 14.95,
+      "unitCost": 1.33,
+      "status": "shipped"
+    },
+    {
+      "id": "ord_07060018",
+      "date": "2026-07-06",
+      "productId": "prd_grout01",
+      "channel": "shopify",
+      "quantity": 1,
+      "unitPrice": 19.95,
+      "unitCost": 2.66,
+      "status": "delivered"
+    },
+    {
+      "id": "ord_07060019",
+      "date": "2026-07-06",
+      "productId": "prd_cargel1",
+      "channel": "shopify",
+      "quantity": 2,
+      "unitPrice": 14.95,
+      "unitCost": 1.33,
+      "status": "delivered"
+    },
+    {
+      "id": "ord_07070020",
+      "date": "2026-07-07",
+      "productId": "prd_cargel1",
+      "channel": "shopify",
+      "quantity": 1,
+      "unitPrice": 14.95,
+      "unitCost": 1.33,
+      "status": "shipped"
+    },
+    {
+      "id": "ord_07070021",
+      "date": "2026-07-07",
+      "productId": "prd_petbrsh",
+      "channel": "shopify",
+      "quantity": 1,
+      "unitPrice": 16.95,
+      "unitCost": 2.1,
+      "status": "delivered"
+    },
+    {
+      "id": "ord_07070022",
+      "date": "2026-07-07",
+      "productId": "prd_grout01",
+      "channel": "shopify",
+      "quantity": 1,
+      "unitPrice": 19.95,
+      "unitCost": 2.66,
+      "status": "delivered"
+    },
+    {
+      "id": "ord_07070023",
+      "date": "2026-07-07",
+      "productId": "prd_grout01",
+      "channel": "tiktok-shop",
+      "quantity": 1,
+      "unitPrice": 19.95,
+      "unitCost": 2.66,
+      "status": "delivered"
+    },
+    {
+      "id": "ord_07080024",
+      "date": "2026-07-08",
+      "productId": "prd_grout01",
+      "channel": "shopify",
+      "quantity": 1,
+      "unitPrice": 19.95,
+      "unitCost": 2.66,
+      "status": "delivered"
+    },
+    {
+      "id": "ord_07080025",
+      "date": "2026-07-08",
+      "productId": "prd_grout01",
+      "channel": "shopify",
+      "quantity": 1,
+      "unitPrice": 19.95,
+      "unitCost": 2.66,
+      "status": "delivered"
+    },
+    {
+      "id": "ord_07080026",
+      "date": "2026-07-08",
+      "productId": "prd_grout01",
+      "channel": "shopify",
+      "quantity": 1,
+      "unitPrice": 19.95,
+      "unitCost": 2.66,
+      "status": "delivered"
+    },
+    {
+      "id": "ord_07080027",
+      "date": "2026-07-08",
+      "productId": "prd_petbrsh",
+      "channel": "tiktok-shop",
+      "quantity": 1,
+      "unitPrice": 16.95,
+      "unitCost": 2.1,
+      "status": "delivered"
+    },
+    {
+      "id": "ord_07090028",
+      "date": "2026-07-09",
+      "productId": "prd_posture",
+      "channel": "tiktok-shop",
+      "quantity": 1,
+      "unitPrice": 24.95,
+      "unitCost": 3.85,
+      "status": "delivered"
+    },
+    {
+      "id": "ord_07090029",
+      "date": "2026-07-09",
+      "productId": "prd_grout01",
+      "channel": "tiktok-shop",
+      "quantity": 1,
+      "unitPrice": 19.95,
+      "unitCost": 2.66,
+      "status": "shipped"
+    },
+    {
+      "id": "ord_07090030",
+      "date": "2026-07-09",
+      "productId": "prd_posture",
+      "channel": "tiktok-shop",
+      "quantity": 1,
+      "unitPrice": 24.95,
+      "unitCost": 3.85,
+      "status": "delivered"
+    },
+    {
+      "id": "ord_07100031",
+      "date": "2026-07-10",
+      "productId": "prd_posture",
+      "channel": "tiktok-shop",
+      "quantity": 2,
+      "unitPrice": 24.95,
+      "unitCost": 3.85,
+      "status": "shipped"
+    },
+    {
+      "id": "ord_07100032",
+      "date": "2026-07-10",
+      "productId": "prd_grout01",
+      "channel": "shopify",
+      "quantity": 1,
+      "unitPrice": 19.95,
+      "unitCost": 2.66,
+      "status": "delivered"
+    },
+    {
+      "id": "ord_07100033",
+      "date": "2026-07-10",
+      "productId": "prd_grout01",
+      "channel": "shopify",
+      "quantity": 2,
+      "unitPrice": 19.95,
+      "unitCost": 2.66,
+      "status": "delivered"
+    },
+    {
+      "id": "ord_07110034",
+      "date": "2026-07-11",
+      "productId": "prd_grout01",
+      "channel": "shopify",
+      "quantity": 1,
+      "unitPrice": 19.95,
+      "unitCost": 2.66,
+      "status": "shipped"
+    },
+    {
+      "id": "ord_07110035",
+      "date": "2026-07-11",
+      "productId": "prd_cargel1",
+      "channel": "tiktok-shop",
+      "quantity": 2,
+      "unitPrice": 14.95,
+      "unitCost": 1.33,
+      "status": "delivered"
+    },
+    {
+      "id": "ord_07110036",
+      "date": "2026-07-11",
+      "productId": "prd_cargel1",
+      "channel": "tiktok-shop",
+      "quantity": 1,
+      "unitPrice": 14.95,
+      "unitCost": 1.33,
+      "status": "delivered"
+    },
+    {
+      "id": "ord_07110037",
+      "date": "2026-07-11",
+      "productId": "prd_cargel1",
+      "channel": "tiktok-shop",
+      "quantity": 1,
+      "unitPrice": 14.95,
+      "unitCost": 1.33,
+      "status": "shipped"
+    },
+    {
+      "id": "ord_07110038",
+      "date": "2026-07-11",
+      "productId": "prd_cargel1",
+      "channel": "tiktok-shop",
+      "quantity": 1,
+      "unitPrice": 14.95,
+      "unitCost": 1.33,
+      "status": "delivered"
+    },
+    {
+      "id": "ord_07110039",
+      "date": "2026-07-11",
+      "productId": "prd_grout01",
+      "channel": "tiktok-shop",
+      "quantity": 1,
+      "unitPrice": 19.95,
+      "unitCost": 2.66,
+      "status": "shipped"
+    },
+    {
+      "id": "ord_07110040",
+      "date": "2026-07-11",
+      "productId": "prd_posture",
+      "channel": "shopify",
+      "quantity": 1,
+      "unitPrice": 24.95,
+      "unitCost": 3.85,
+      "status": "shipped"
+    },
+    {
+      "id": "ord_07110041",
+      "date": "2026-07-11",
+      "productId": "prd_petbrsh",
+      "channel": "shopify",
+      "quantity": 2,
+      "unitPrice": 16.95,
+      "unitCost": 2.1,
+      "status": "delivered"
+    },
+    {
+      "id": "ord_07110042",
+      "date": "2026-07-11",
+      "productId": "prd_posture",
+      "channel": "shopify",
+      "quantity": 2,
+      "unitPrice": 24.95,
+      "unitCost": 3.85,
+      "status": "shipped"
+    },
+    {
+      "id": "ord_07120043",
+      "date": "2026-07-12",
+      "productId": "prd_grout01",
+      "channel": "shopify",
+      "quantity": 1,
+      "unitPrice": 19.95,
+      "unitCost": 2.66,
+      "status": "shipped"
+    },
+    {
+      "id": "ord_07120044",
+      "date": "2026-07-12",
+      "productId": "prd_cargel1",
+      "channel": "shopify",
+      "quantity": 1,
+      "unitPrice": 14.95,
+      "unitCost": 1.33,
+      "status": "delivered"
+    },
+    {
+      "id": "ord_07120045",
+      "date": "2026-07-12",
+      "productId": "prd_grout01",
+      "channel": "tiktok-shop",
+      "quantity": 1,
+      "unitPrice": 19.95,
+      "unitCost": 2.66,
+      "status": "delivered"
+    },
+    {
+      "id": "ord_07120046",
+      "date": "2026-07-12",
+      "productId": "prd_grout01",
+      "channel": "tiktok-shop",
+      "quantity": 1,
+      "unitPrice": 19.95,
+      "unitCost": 2.66,
+      "status": "delivered"
+    },
+    {
+      "id": "ord_07120047",
+      "date": "2026-07-12",
+      "productId": "prd_grout01",
+      "channel": "shopify",
+      "quantity": 1,
+      "unitPrice": 19.95,
+      "unitCost": 2.66,
+      "status": "shipped"
+    },
+    {
+      "id": "ord_07120048",
+      "date": "2026-07-12",
+      "productId": "prd_cargel1",
+      "channel": "tiktok-shop",
+      "quantity": 1,
+      "unitPrice": 14.95,
+      "unitCost": 1.33,
+      "status": "delivered"
+    },
+    {
+      "id": "ord_07120049",
+      "date": "2026-07-12",
+      "productId": "prd_grout01",
+      "channel": "shopify",
+      "quantity": 1,
+      "unitPrice": 19.95,
+      "unitCost": 2.66,
+      "status": "delivered"
+    },
+    {
+      "id": "ord_07120050",
+      "date": "2026-07-12",
+      "productId": "prd_cargel1",
+      "channel": "shopify",
+      "quantity": 1,
+      "unitPrice": 14.95,
+      "unitCost": 1.33,
+      "status": "delivered"
+    },
+    {
+      "id": "ord_07120051",
+      "date": "2026-07-12",
+      "productId": "prd_cargel1",
+      "channel": "tiktok-shop",
+      "quantity": 1,
+      "unitPrice": 14.95,
+      "unitCost": 1.33,
+      "status": "delivered"
+    },
+    {
+      "id": "ord_07130052",
+      "date": "2026-07-13",
+      "productId": "prd_posture",
+      "channel": "tiktok-shop",
+      "quantity": 2,
+      "unitPrice": 24.95,
+      "unitCost": 3.85,
+      "status": "delivered"
+    },
+    {
+      "id": "ord_07130053",
+      "date": "2026-07-13",
+      "productId": "prd_grout01",
+      "channel": "tiktok-shop",
+      "quantity": 1,
+      "unitPrice": 19.95,
+      "unitCost": 2.66,
+      "status": "shipped"
+    },
+    {
+      "id": "ord_07130054",
+      "date": "2026-07-13",
+      "productId": "prd_posture",
+      "channel": "tiktok-shop",
+      "quantity": 1,
+      "unitPrice": 24.95,
+      "unitCost": 3.85,
+      "status": "delivered"
+    },
+    {
+      "id": "ord_07130055",
+      "date": "2026-07-13",
+      "productId": "prd_grout01",
+      "channel": "shopify",
+      "quantity": 2,
+      "unitPrice": 19.95,
+      "unitCost": 2.66,
+      "status": "shipped"
+    },
+    {
+      "id": "ord_07140056",
+      "date": "2026-07-14",
+      "productId": "prd_posture",
+      "channel": "shopify",
+      "quantity": 1,
+      "unitPrice": 24.95,
+      "unitCost": 3.85,
+      "status": "delivered"
+    },
+    {
+      "id": "ord_07140057",
+      "date": "2026-07-14",
+      "productId": "prd_grout01",
+      "channel": "tiktok-shop",
+      "quantity": 2,
+      "unitPrice": 19.95,
+      "unitCost": 2.66,
+      "status": "delivered"
+    },
+    {
+      "id": "ord_07140058",
+      "date": "2026-07-14",
+      "productId": "prd_cargel1",
+      "channel": "tiktok-shop",
+      "quantity": 1,
+      "unitPrice": 14.95,
+      "unitCost": 1.33,
+      "status": "delivered"
+    },
+    {
+      "id": "ord_07140059",
+      "date": "2026-07-14",
+      "productId": "prd_petbrsh",
+      "channel": "tiktok-shop",
+      "quantity": 2,
+      "unitPrice": 16.95,
+      "unitCost": 2.1,
+      "status": "shipped"
+    },
+    {
+      "id": "ord_07150060",
+      "date": "2026-07-15",
+      "productId": "prd_petbrsh",
+      "channel": "tiktok-shop",
+      "quantity": 2,
+      "unitPrice": 16.95,
+      "unitCost": 2.1,
+      "status": "delivered"
+    },
+    {
+      "id": "ord_07150061",
+      "date": "2026-07-15",
+      "productId": "prd_cargel1",
+      "channel": "shopify",
+      "quantity": 1,
+      "unitPrice": 14.95,
+      "unitCost": 1.33,
+      "status": "delivered"
+    },
+    {
+      "id": "ord_07150062",
+      "date": "2026-07-15",
+      "productId": "prd_cargel1",
+      "channel": "shopify",
+      "quantity": 1,
+      "unitPrice": 14.95,
+      "unitCost": 1.33,
+      "status": "delivered"
+    },
+    {
+      "id": "ord_07150063",
+      "date": "2026-07-15",
+      "productId": "prd_grout01",
+      "channel": "tiktok-shop",
+      "quantity": 1,
+      "unitPrice": 19.95,
+      "unitCost": 2.66,
+      "status": "delivered"
+    },
+    {
+      "id": "ord_07160064",
+      "date": "2026-07-16",
+      "productId": "prd_grout01",
+      "channel": "tiktok-shop",
+      "quantity": 1,
+      "unitPrice": 19.95,
+      "unitCost": 2.66,
+      "status": "delivered"
+    },
+    {
+      "id": "ord_07160065",
+      "date": "2026-07-16",
+      "productId": "prd_cargel1",
+      "channel": "shopify",
+      "quantity": 1,
+      "unitPrice": 14.95,
+      "unitCost": 1.33,
+      "status": "delivered"
+    },
+    {
+      "id": "ord_07160066",
+      "date": "2026-07-16",
+      "productId": "prd_grout01",
+      "channel": "tiktok-shop",
+      "quantity": 1,
+      "unitPrice": 19.95,
+      "unitCost": 2.66,
+      "status": "delivered"
+    },
+    {
+      "id": "ord_07160067",
+      "date": "2026-07-16",
+      "productId": "prd_posture",
+      "channel": "tiktok-shop",
+      "quantity": 2,
+      "unitPrice": 24.95,
+      "unitCost": 3.85,
+      "status": "delivered"
+    },
+    {
+      "id": "ord_07160068",
+      "date": "2026-07-16",
+      "productId": "prd_grout01",
+      "channel": "tiktok-shop",
+      "quantity": 1,
+      "unitPrice": 19.95,
+      "unitCost": 2.66,
+      "status": "delivered"
+    },
+    {
+      "id": "ord_07170069",
+      "date": "2026-07-17",
+      "productId": "prd_posture",
+      "channel": "tiktok-shop",
+      "quantity": 1,
+      "unitPrice": 24.95,
+      "unitCost": 3.85,
+      "status": "delivered"
+    },
+    {
+      "id": "ord_07170070",
+      "date": "2026-07-17",
+      "productId": "prd_grout01",
+      "channel": "tiktok-shop",
+      "quantity": 1,
+      "unitPrice": 19.95,
+      "unitCost": 2.66,
+      "status": "shipped"
+    },
+    {
+      "id": "ord_07170071",
+      "date": "2026-07-17",
+      "productId": "prd_grout01",
+      "channel": "shopify",
+      "quantity": 1,
+      "unitPrice": 19.95,
+      "unitCost": 2.66,
+      "status": "delivered"
+    },
+    {
+      "id": "ord_07170072",
+      "date": "2026-07-17",
+      "productId": "prd_posture",
+      "channel": "tiktok-shop",
+      "quantity": 2,
+      "unitPrice": 24.95,
+      "unitCost": 3.85,
+      "status": "shipped"
+    },
+    {
+      "id": "ord_07170073",
+      "date": "2026-07-17",
+      "productId": "prd_grout01",
+      "channel": "shopify",
+      "quantity": 1,
+      "unitPrice": 19.95,
+      "unitCost": 2.66,
+      "status": "delivered"
+    },
+    {
+      "id": "ord_07180074",
+      "date": "2026-07-18",
+      "productId": "prd_grout01",
+      "channel": "tiktok-shop",
+      "quantity": 1,
+      "unitPrice": 19.95,
+      "unitCost": 2.66,
+      "status": "delivered"
+    },
+    {
+      "id": "ord_07180075",
+      "date": "2026-07-18",
+      "productId": "prd_cargel1",
+      "channel": "tiktok-shop",
+      "quantity": 2,
+      "unitPrice": 14.95,
+      "unitCost": 1.33,
+      "status": "delivered"
+    },
+    {
+      "id": "ord_07180076",
+      "date": "2026-07-18",
+      "productId": "prd_grout01",
+      "channel": "shopify",
+      "quantity": 1,
+      "unitPrice": 19.95,
+      "unitCost": 2.66,
+      "status": "delivered"
+    },
+    {
+      "id": "ord_07180077",
+      "date": "2026-07-18",
+      "productId": "prd_grout01",
+      "channel": "shopify",
+      "quantity": 1,
+      "unitPrice": 19.95,
+      "unitCost": 2.66,
+      "status": "delivered"
+    },
+    {
+      "id": "ord_07180078",
+      "date": "2026-07-18",
+      "productId": "prd_posture",
+      "channel": "shopify",
+      "quantity": 1,
+      "unitPrice": 24.95,
+      "unitCost": 3.85,
+      "status": "delivered"
+    },
+    {
+      "id": "ord_07180079",
+      "date": "2026-07-18",
+      "productId": "prd_cargel1",
+      "channel": "tiktok-shop",
+      "quantity": 1,
+      "unitPrice": 14.95,
+      "unitCost": 1.33,
+      "status": "delivered"
+    },
+    {
+      "id": "ord_07180080",
+      "date": "2026-07-18",
+      "productId": "prd_grout01",
+      "channel": "tiktok-shop",
+      "quantity": 1,
+      "unitPrice": 19.95,
+      "unitCost": 2.66,
+      "status": "delivered"
+    },
+    {
+      "id": "ord_07190081",
+      "date": "2026-07-19",
+      "productId": "prd_grout01",
+      "channel": "shopify",
+      "quantity": 2,
+      "unitPrice": 19.95,
+      "unitCost": 2.66,
+      "status": "shipped"
+    },
+    {
+      "id": "ord_07190082",
+      "date": "2026-07-19",
+      "productId": "prd_cargel1",
+      "channel": "tiktok-shop",
+      "quantity": 1,
+      "unitPrice": 14.95,
+      "unitCost": 1.33,
+      "status": "shipped"
+    },
+    {
+      "id": "ord_07190083",
+      "date": "2026-07-19",
+      "productId": "prd_grout01",
+      "channel": "tiktok-shop",
+      "quantity": 2,
+      "unitPrice": 19.95,
+      "unitCost": 2.66,
+      "status": "delivered"
+    },
+    {
+      "id": "ord_07190084",
+      "date": "2026-07-19",
+      "productId": "prd_grout01",
+      "channel": "shopify",
+      "quantity": 1,
+      "unitPrice": 19.95,
+      "unitCost": 2.66,
+      "status": "delivered"
+    },
+    {
+      "id": "ord_07190085",
+      "date": "2026-07-19",
+      "productId": "prd_grout01",
+      "channel": "tiktok-shop",
+      "quantity": 1,
+      "unitPrice": 19.95,
+      "unitCost": 2.66,
+      "status": "delivered"
+    },
+    {
+      "id": "ord_07190086",
+      "date": "2026-07-19",
+      "productId": "prd_posture",
+      "channel": "shopify",
+      "quantity": 1,
+      "unitPrice": 24.95,
+      "unitCost": 3.85,
+      "status": "delivered"
+    },
+    {
+      "id": "ord_07190158",
+      "date": "2026-07-19",
+      "productId": "prd_grout01",
+      "channel": "shopify",
+      "quantity": 1,
+      "unitPrice": 19.95,
+      "unitCost": 2.66,
+      "status": "delivered"
+    },
+    {
+      "id": "ord_07190167",
+      "date": "2026-07-19",
+      "productId": "prd_grout01",
+      "channel": "shopify",
+      "quantity": 1,
+      "unitPrice": 19.95,
+      "unitCost": 2.66,
+      "status": "delivered"
+    },
+    {
+      "id": "ord_07190174",
+      "date": "2026-07-19",
+      "productId": "prd_grout01",
+      "channel": "shopify",
+      "quantity": 1,
+      "unitPrice": 19.95,
+      "unitCost": 2.66,
+      "status": "delivered"
+    },
+    {
+      "id": "ord_07190175",
+      "date": "2026-07-19",
+      "productId": "prd_grout01",
+      "channel": "shopify",
+      "quantity": 1,
+      "unitPrice": 19.95,
+      "unitCost": 2.66,
+      "status": "delivered"
+    },
+    {
+      "id": "ord_07190179",
+      "date": "2026-07-19",
+      "productId": "prd_grout01",
+      "channel": "shopify",
+      "quantity": 1,
+      "unitPrice": 19.95,
+      "unitCost": 2.66,
+      "status": "delivered"
+    },
+    {
+      "id": "ord_07200087",
+      "date": "2026-07-20",
+      "productId": "prd_grout01",
+      "channel": "tiktok-shop",
+      "quantity": 1,
+      "unitPrice": 19.95,
+      "unitCost": 2.66,
+      "status": "delivered"
+    },
+    {
+      "id": "ord_07200088",
+      "date": "2026-07-20",
+      "productId": "prd_grout01",
+      "channel": "shopify",
+      "quantity": 2,
+      "unitPrice": 19.95,
+      "unitCost": 2.66,
+      "status": "shipped"
+    },
+    {
+      "id": "ord_07200089",
+      "date": "2026-07-20",
+      "productId": "prd_grout01",
+      "channel": "tiktok-shop",
+      "quantity": 1,
+      "unitPrice": 19.95,
+      "unitCost": 2.66,
+      "status": "delivered"
+    },
+    {
+      "id": "ord_07200090",
+      "date": "2026-07-20",
+      "productId": "prd_grout01",
+      "channel": "shopify",
+      "quantity": 1,
+      "unitPrice": 19.95,
+      "unitCost": 2.66,
+      "status": "delivered"
+    },
+    {
+      "id": "ord_07200091",
+      "date": "2026-07-20",
+      "productId": "prd_grout01",
+      "channel": "tiktok-shop",
+      "quantity": 2,
+      "unitPrice": 19.95,
+      "unitCost": 2.66,
+      "status": "shipped"
+    },
+    {
+      "id": "ord_07200092",
+      "date": "2026-07-20",
+      "productId": "prd_grout01",
+      "channel": "tiktok-shop",
+      "quantity": 1,
+      "unitPrice": 19.95,
+      "unitCost": 2.66,
+      "status": "delivered"
+    },
+    {
+      "id": "ord_07200152",
+      "date": "2026-07-20",
+      "productId": "prd_grout01",
+      "channel": "shopify",
+      "quantity": 1,
+      "unitPrice": 19.95,
+      "unitCost": 2.66,
+      "status": "delivered"
+    },
+    {
+      "id": "ord_07200153",
+      "date": "2026-07-20",
+      "productId": "prd_grout01",
+      "channel": "tiktok-shop",
+      "quantity": 1,
+      "unitPrice": 19.95,
+      "unitCost": 2.66,
+      "status": "delivered"
+    },
+    {
+      "id": "ord_07200154",
+      "date": "2026-07-20",
+      "productId": "prd_grout01",
+      "channel": "tiktok-shop",
+      "quantity": 1,
+      "unitPrice": 19.95,
+      "unitCost": 2.66,
+      "status": "delivered"
+    },
+    {
+      "id": "ord_07210093",
+      "date": "2026-07-21",
+      "productId": "prd_grout01",
+      "channel": "tiktok-shop",
+      "quantity": 1,
+      "unitPrice": 19.95,
+      "unitCost": 2.66,
+      "status": "delivered"
+    },
+    {
+      "id": "ord_07210094",
+      "date": "2026-07-21",
+      "productId": "prd_grout01",
+      "channel": "tiktok-shop",
+      "quantity": 1,
+      "unitPrice": 19.95,
+      "unitCost": 2.66,
+      "status": "delivered"
+    },
+    {
+      "id": "ord_07210095",
+      "date": "2026-07-21",
+      "productId": "prd_posture",
+      "channel": "tiktok-shop",
+      "quantity": 1,
+      "unitPrice": 24.95,
+      "unitCost": 3.85,
+      "status": "shipped"
+    },
+    {
+      "id": "ord_07210096",
+      "date": "2026-07-21",
+      "productId": "prd_cargel1",
+      "channel": "tiktok-shop",
+      "quantity": 2,
+      "unitPrice": 14.95,
+      "unitCost": 1.33,
+      "status": "delivered"
+    },
+    {
+      "id": "ord_07210097",
+      "date": "2026-07-21",
+      "productId": "prd_cargel1",
+      "channel": "tiktok-shop",
+      "quantity": 1,
+      "unitPrice": 14.95,
+      "unitCost": 1.33,
+      "status": "refunded"
+    },
+    {
+      "id": "ord_07210098",
+      "date": "2026-07-21",
+      "productId": "prd_grout01",
+      "channel": "shopify",
+      "quantity": 1,
+      "unitPrice": 19.95,
+      "unitCost": 2.66,
+      "status": "delivered"
+    },
+    {
+      "id": "ord_07210161",
+      "date": "2026-07-21",
+      "productId": "prd_grout01",
+      "channel": "shopify",
+      "quantity": 1,
+      "unitPrice": 19.95,
+      "unitCost": 2.66,
+      "status": "delivered"
+    },
+    {
+      "id": "ord_07210164",
+      "date": "2026-07-21",
+      "productId": "prd_grout01",
+      "channel": "tiktok-shop",
+      "quantity": 1,
+      "unitPrice": 19.95,
+      "unitCost": 2.66,
+      "status": "delivered"
+    },
+    {
+      "id": "ord_07210178",
+      "date": "2026-07-21",
+      "productId": "prd_grout01",
+      "channel": "shopify",
+      "quantity": 1,
+      "unitPrice": 19.95,
+      "unitCost": 2.66,
+      "status": "delivered"
+    },
+    {
+      "id": "ord_07220099",
+      "date": "2026-07-22",
+      "productId": "prd_grout01",
+      "channel": "shopify",
+      "quantity": 1,
+      "unitPrice": 19.95,
+      "unitCost": 2.66,
+      "status": "delivered"
+    },
+    {
+      "id": "ord_07220100",
+      "date": "2026-07-22",
+      "productId": "prd_grout01",
+      "channel": "tiktok-shop",
+      "quantity": 1,
+      "unitPrice": 19.95,
+      "unitCost": 2.66,
+      "status": "shipped"
+    },
+    {
+      "id": "ord_07220101",
+      "date": "2026-07-22",
+      "productId": "prd_cargel1",
+      "channel": "shopify",
+      "quantity": 1,
+      "unitPrice": 14.95,
+      "unitCost": 1.33,
+      "status": "delivered"
+    },
+    {
+      "id": "ord_07220102",
+      "date": "2026-07-22",
+      "productId": "prd_grout01",
+      "channel": "shopify",
+      "quantity": 2,
+      "unitPrice": 19.95,
+      "unitCost": 2.66,
+      "status": "delivered"
+    },
+    {
+      "id": "ord_07220103",
+      "date": "2026-07-22",
+      "productId": "prd_grout01",
+      "channel": "tiktok-shop",
+      "quantity": 1,
+      "unitPrice": 19.95,
+      "unitCost": 2.66,
+      "status": "delivered"
+    },
+    {
+      "id": "ord_07220104",
+      "date": "2026-07-22",
+      "productId": "prd_grout01",
+      "channel": "tiktok-shop",
+      "quantity": 1,
+      "unitPrice": 19.95,
+      "unitCost": 2.66,
+      "status": "delivered"
+    },
+    {
+      "id": "ord_07220105",
+      "date": "2026-07-22",
+      "productId": "prd_grout01",
+      "channel": "shopify",
+      "quantity": 2,
+      "unitPrice": 19.95,
+      "unitCost": 2.66,
+      "status": "delivered"
+    },
+    {
+      "id": "ord_07220155",
+      "date": "2026-07-22",
+      "productId": "prd_grout01",
+      "channel": "tiktok-shop",
+      "quantity": 1,
+      "unitPrice": 19.95,
+      "unitCost": 2.66,
+      "status": "delivered"
+    },
+    {
+      "id": "ord_07220156",
+      "date": "2026-07-22",
+      "productId": "prd_grout01",
+      "channel": "shopify",
+      "quantity": 1,
+      "unitPrice": 19.95,
+      "unitCost": 2.66,
+      "status": "delivered"
+    },
+    {
+      "id": "ord_07220165",
+      "date": "2026-07-22",
+      "productId": "prd_grout01",
+      "channel": "tiktok-shop",
+      "quantity": 1,
+      "unitPrice": 19.95,
+      "unitCost": 2.66,
+      "status": "delivered"
+    },
+    {
+      "id": "ord_07220177",
+      "date": "2026-07-22",
+      "productId": "prd_grout01",
+      "channel": "tiktok-shop",
+      "quantity": 1,
+      "unitPrice": 19.95,
+      "unitCost": 2.66,
+      "status": "delivered"
+    },
+    {
+      "id": "ord_07230106",
+      "date": "2026-07-23",
+      "productId": "prd_grout01",
+      "channel": "shopify",
+      "quantity": 1,
+      "unitPrice": 19.95,
+      "unitCost": 2.66,
+      "status": "delivered"
+    },
+    {
+      "id": "ord_07230107",
+      "date": "2026-07-23",
+      "productId": "prd_grout01",
+      "channel": "shopify",
+      "quantity": 1,
+      "unitPrice": 19.95,
+      "unitCost": 2.66,
+      "status": "shipped"
+    },
+    {
+      "id": "ord_07230108",
+      "date": "2026-07-23",
+      "productId": "prd_grout01",
+      "channel": "shopify",
+      "quantity": 1,
+      "unitPrice": 19.95,
+      "unitCost": 2.66,
+      "status": "delivered"
+    },
+    {
+      "id": "ord_07230109",
+      "date": "2026-07-23",
+      "productId": "prd_cargel1",
+      "channel": "shopify",
+      "quantity": 1,
+      "unitPrice": 14.95,
+      "unitCost": 1.33,
+      "status": "delivered"
+    },
+    {
+      "id": "ord_07230110",
+      "date": "2026-07-23",
+      "productId": "prd_grout01",
+      "channel": "tiktok-shop",
+      "quantity": 1,
+      "unitPrice": 19.95,
+      "unitCost": 2.66,
+      "status": "delivered"
+    },
+    {
+      "id": "ord_07230111",
+      "date": "2026-07-23",
+      "productId": "prd_grout01",
+      "channel": "shopify",
+      "quantity": 1,
+      "unitPrice": 19.95,
+      "unitCost": 2.66,
+      "status": "delivered"
+    },
+    {
+      "id": "ord_07230157",
+      "date": "2026-07-23",
+      "productId": "prd_grout01",
+      "channel": "shopify",
+      "quantity": 1,
+      "unitPrice": 19.95,
+      "unitCost": 2.66,
+      "status": "delivered"
+    },
+    {
+      "id": "ord_07230159",
+      "date": "2026-07-23",
+      "productId": "prd_grout01",
+      "channel": "shopify",
+      "quantity": 1,
+      "unitPrice": 19.95,
+      "unitCost": 2.66,
+      "status": "delivered"
+    },
+    {
+      "id": "ord_07230169",
+      "date": "2026-07-23",
+      "productId": "prd_grout01",
+      "channel": "tiktok-shop",
+      "quantity": 1,
+      "unitPrice": 19.95,
+      "unitCost": 2.66,
+      "status": "delivered"
+    },
+    {
+      "id": "ord_07240112",
+      "date": "2026-07-24",
+      "productId": "prd_cargel1",
+      "channel": "shopify",
+      "quantity": 2,
+      "unitPrice": 14.95,
+      "unitCost": 1.33,
+      "status": "delivered"
+    },
+    {
+      "id": "ord_07240113",
+      "date": "2026-07-24",
+      "productId": "prd_grout01",
+      "channel": "tiktok-shop",
+      "quantity": 1,
+      "unitPrice": 19.95,
+      "unitCost": 2.66,
+      "status": "delivered"
+    },
+    {
+      "id": "ord_07240114",
+      "date": "2026-07-24",
+      "productId": "prd_cargel1",
+      "channel": "shopify",
+      "quantity": 1,
+      "unitPrice": 14.95,
+      "unitCost": 1.33,
+      "status": "delivered"
+    },
+    {
+      "id": "ord_07240115",
+      "date": "2026-07-24",
+      "productId": "prd_grout01",
+      "channel": "shopify",
+      "quantity": 1,
+      "unitPrice": 19.95,
+      "unitCost": 2.66,
+      "status": "delivered"
+    },
+    {
+      "id": "ord_07240116",
+      "date": "2026-07-24",
+      "productId": "prd_cargel1",
+      "channel": "tiktok-shop",
+      "quantity": 1,
+      "unitPrice": 14.95,
+      "unitCost": 1.33,
+      "status": "delivered"
+    },
+    {
+      "id": "ord_07240117",
+      "date": "2026-07-24",
+      "productId": "prd_cargel1",
+      "channel": "tiktok-shop",
+      "quantity": 2,
+      "unitPrice": 14.95,
+      "unitCost": 1.33,
+      "status": "delivered"
+    },
+    {
+      "id": "ord_07240160",
+      "date": "2026-07-24",
+      "productId": "prd_grout01",
+      "channel": "shopify",
+      "quantity": 1,
+      "unitPrice": 19.95,
+      "unitCost": 2.66,
+      "status": "delivered"
+    },
+    {
+      "id": "ord_07240166",
+      "date": "2026-07-24",
+      "productId": "prd_grout01",
+      "channel": "tiktok-shop",
+      "quantity": 1,
+      "unitPrice": 19.95,
+      "unitCost": 2.66,
+      "status": "delivered"
+    },
+    {
+      "id": "ord_07240172",
+      "date": "2026-07-24",
+      "productId": "prd_grout01",
+      "channel": "tiktok-shop",
+      "quantity": 1,
+      "unitPrice": 19.95,
+      "unitCost": 2.66,
+      "status": "delivered"
+    },
+    {
+      "id": "ord_07250118",
+      "date": "2026-07-25",
+      "productId": "prd_cargel1",
+      "channel": "tiktok-shop",
+      "quantity": 1,
+      "unitPrice": 14.95,
+      "unitCost": 1.33,
+      "status": "shipped"
+    },
+    {
+      "id": "ord_07250119",
+      "date": "2026-07-25",
+      "productId": "prd_grout01",
+      "channel": "tiktok-shop",
+      "quantity": 2,
+      "unitPrice": 19.95,
+      "unitCost": 2.66,
+      "status": "paid"
+    },
+    {
+      "id": "ord_07250120",
+      "date": "2026-07-25",
+      "productId": "prd_grout01",
+      "channel": "shopify",
+      "quantity": 1,
+      "unitPrice": 19.95,
+      "unitCost": 2.66,
+      "status": "paid"
+    },
+    {
+      "id": "ord_07250121",
+      "date": "2026-07-25",
+      "productId": "prd_grout01",
+      "channel": "tiktok-shop",
+      "quantity": 1,
+      "unitPrice": 19.95,
+      "unitCost": 2.66,
+      "status": "shipped"
+    },
+    {
+      "id": "ord_07250122",
+      "date": "2026-07-25",
+      "productId": "prd_ledmask",
+      "channel": "shopify",
+      "quantity": 1,
+      "unitPrice": 59.95,
+      "unitCost": 12.4,
+      "status": "shipped"
+    },
+    {
+      "id": "ord_07250123",
+      "date": "2026-07-25",
+      "productId": "prd_cargel1",
+      "channel": "shopify",
+      "quantity": 1,
+      "unitPrice": 14.95,
+      "unitCost": 1.33,
+      "status": "paid"
+    },
+    {
+      "id": "ord_07250124",
+      "date": "2026-07-25",
+      "productId": "prd_grout01",
+      "channel": "shopify",
+      "quantity": 1,
+      "unitPrice": 19.95,
+      "unitCost": 2.66,
+      "status": "shipped"
+    },
+    {
+      "id": "ord_07250125",
+      "date": "2026-07-25",
+      "productId": "prd_grout01",
+      "channel": "tiktok-shop",
+      "quantity": 2,
+      "unitPrice": 19.95,
+      "unitCost": 2.66,
+      "status": "paid"
+    },
+    {
+      "id": "ord_07250126",
+      "date": "2026-07-25",
+      "productId": "prd_grout01",
+      "channel": "shopify",
+      "quantity": 1,
+      "unitPrice": 19.95,
+      "unitCost": 2.66,
+      "status": "shipped"
+    },
+    {
+      "id": "ord_07250173",
+      "date": "2026-07-25",
+      "productId": "prd_grout01",
+      "channel": "tiktok-shop",
+      "quantity": 1,
+      "unitPrice": 19.95,
+      "unitCost": 2.66,
+      "status": "delivered"
+    },
+    {
+      "id": "ord_07260127",
+      "date": "2026-07-26",
+      "productId": "prd_grout01",
+      "channel": "shopify",
+      "quantity": 1,
+      "unitPrice": 19.95,
+      "unitCost": 2.66,
+      "status": "paid"
+    },
+    {
+      "id": "ord_07260128",
+      "date": "2026-07-26",
+      "productId": "prd_grout01",
+      "channel": "shopify",
+      "quantity": 1,
+      "unitPrice": 19.95,
+      "unitCost": 2.66,
+      "status": "paid"
+    },
+    {
+      "id": "ord_07260129",
+      "date": "2026-07-26",
+      "productId": "prd_cargel1",
+      "channel": "tiktok-shop",
+      "quantity": 1,
+      "unitPrice": 14.95,
+      "unitCost": 1.33,
+      "status": "shipped"
+    },
+    {
+      "id": "ord_07260130",
+      "date": "2026-07-26",
+      "productId": "prd_posture",
+      "channel": "shopify",
+      "quantity": 1,
+      "unitPrice": 24.95,
+      "unitCost": 3.85,
+      "status": "paid"
+    },
+    {
+      "id": "ord_07260131",
+      "date": "2026-07-26",
+      "productId": "prd_posture",
+      "channel": "shopify",
+      "quantity": 1,
+      "unitPrice": 24.95,
+      "unitCost": 3.85,
+      "status": "shipped"
+    },
+    {
+      "id": "ord_07260132",
+      "date": "2026-07-26",
+      "productId": "prd_grout01",
+      "channel": "shopify",
+      "quantity": 1,
+      "unitPrice": 19.95,
+      "unitCost": 2.66,
+      "status": "paid"
+    },
+    {
+      "id": "ord_07260133",
+      "date": "2026-07-26",
+      "productId": "prd_cargel1",
+      "channel": "tiktok-shop",
+      "quantity": 1,
+      "unitPrice": 14.95,
+      "unitCost": 1.33,
+      "status": "shipped"
+    },
+    {
+      "id": "ord_07260134",
+      "date": "2026-07-26",
+      "productId": "prd_grout01",
+      "channel": "tiktok-shop",
+      "quantity": 1,
+      "unitPrice": 19.95,
+      "unitCost": 2.66,
+      "status": "paid"
+    },
+    {
+      "id": "ord_07260135",
+      "date": "2026-07-26",
+      "productId": "prd_grout01",
+      "channel": "shopify",
+      "quantity": 1,
+      "unitPrice": 19.95,
+      "unitCost": 2.66,
+      "status": "paid"
+    },
+    {
+      "id": "ord_07260136",
+      "date": "2026-07-26",
+      "productId": "prd_posture",
+      "channel": "shopify",
+      "quantity": 2,
+      "unitPrice": 24.95,
+      "unitCost": 3.85,
+      "status": "paid"
+    },
+    {
+      "id": "ord_07260162",
+      "date": "2026-07-26",
+      "productId": "prd_grout01",
+      "channel": "shopify",
+      "quantity": 1,
+      "unitPrice": 19.95,
+      "unitCost": 2.66,
+      "status": "delivered"
+    },
+    {
+      "id": "ord_07260168",
+      "date": "2026-07-26",
+      "productId": "prd_grout01",
+      "channel": "tiktok-shop",
+      "quantity": 1,
+      "unitPrice": 19.95,
+      "unitCost": 2.66,
+      "status": "delivered"
+    },
+    {
+      "id": "ord_07260176",
+      "date": "2026-07-26",
+      "productId": "prd_grout01",
+      "channel": "tiktok-shop",
+      "quantity": 1,
+      "unitPrice": 19.95,
+      "unitCost": 2.66,
+      "status": "delivered"
+    },
+    {
+      "id": "ord_07270137",
+      "date": "2026-07-27",
+      "productId": "prd_cargel1",
+      "channel": "tiktok-shop",
+      "quantity": 1,
+      "unitPrice": 14.95,
+      "unitCost": 1.33,
+      "status": "shipped"
+    },
+    {
+      "id": "ord_07270138",
+      "date": "2026-07-27",
+      "productId": "prd_grout01",
+      "channel": "tiktok-shop",
+      "quantity": 2,
+      "unitPrice": 19.95,
+      "unitCost": 2.66,
+      "status": "paid"
+    },
+    {
+      "id": "ord_07270139",
+      "date": "2026-07-27",
+      "productId": "prd_cargel1",
+      "channel": "tiktok-shop",
+      "quantity": 2,
+      "unitPrice": 14.95,
+      "unitCost": 1.33,
+      "status": "shipped"
+    },
+    {
+      "id": "ord_07270140",
+      "date": "2026-07-27",
+      "productId": "prd_ledmask",
+      "channel": "shopify",
+      "quantity": 1,
+      "unitPrice": 59.95,
+      "unitCost": 12.4,
+      "status": "shipped"
+    },
+    {
+      "id": "ord_07270141",
+      "date": "2026-07-27",
+      "productId": "prd_posture",
+      "channel": "tiktok-shop",
+      "quantity": 1,
+      "unitPrice": 24.95,
+      "unitCost": 3.85,
+      "status": "shipped"
+    },
+    {
+      "id": "ord_07270142",
+      "date": "2026-07-27",
+      "productId": "prd_grout01",
+      "channel": "tiktok-shop",
+      "quantity": 1,
+      "unitPrice": 19.95,
+      "unitCost": 2.66,
+      "status": "paid"
+    },
+    {
+      "id": "ord_07270143",
+      "date": "2026-07-27",
+      "productId": "prd_grout01",
+      "channel": "shopify",
+      "quantity": 1,
+      "unitPrice": 19.95,
+      "unitCost": 2.66,
+      "status": "paid"
+    },
+    {
+      "id": "ord_07270144",
+      "date": "2026-07-27",
+      "productId": "prd_posture",
+      "channel": "shopify",
+      "quantity": 1,
+      "unitPrice": 24.95,
+      "unitCost": 3.85,
+      "status": "paid"
+    },
+    {
+      "id": "ord_07270163",
+      "date": "2026-07-27",
+      "productId": "prd_grout01",
+      "channel": "tiktok-shop",
+      "quantity": 1,
+      "unitPrice": 19.95,
+      "unitCost": 2.66,
+      "status": "delivered"
+    },
+    {
+      "id": "ord_07270170",
+      "date": "2026-07-27",
+      "productId": "prd_grout01",
+      "channel": "tiktok-shop",
+      "quantity": 1,
+      "unitPrice": 19.95,
+      "unitCost": 2.66,
+      "status": "delivered"
+    },
+    {
+      "id": "ord_07270171",
+      "date": "2026-07-27",
+      "productId": "prd_grout01",
+      "channel": "shopify",
+      "quantity": 1,
+      "unitPrice": 19.95,
+      "unitCost": 2.66,
+      "status": "delivered"
+    },
+    {
+      "id": "ord_07280145",
+      "date": "2026-07-28",
+      "productId": "prd_grout01",
+      "channel": "tiktok-shop",
+      "quantity": 2,
+      "unitPrice": 19.95,
+      "unitCost": 2.66,
+      "status": "paid"
+    },
+    {
+      "id": "ord_07280146",
+      "date": "2026-07-28",
+      "productId": "prd_grout01",
+      "channel": "tiktok-shop",
+      "quantity": 1,
+      "unitPrice": 19.95,
+      "unitCost": 2.66,
+      "status": "paid"
+    },
+    {
+      "id": "ord_07280147",
+      "date": "2026-07-28",
+      "productId": "prd_grout01",
+      "channel": "shopify",
+      "quantity": 1,
+      "unitPrice": 19.95,
+      "unitCost": 2.66,
+      "status": "shipped"
+    },
+    {
+      "id": "ord_07280148",
+      "date": "2026-07-28",
+      "productId": "prd_grout01",
+      "channel": "shopify",
+      "quantity": 1,
+      "unitPrice": 19.95,
+      "unitCost": 2.66,
+      "status": "paid"
+    },
+    {
+      "id": "ord_07280149",
+      "date": "2026-07-28",
+      "productId": "prd_posture",
+      "channel": "shopify",
+      "quantity": 2,
+      "unitPrice": 24.95,
+      "unitCost": 3.85,
+      "status": "paid"
+    },
+    {
+      "id": "ord_07280150",
+      "date": "2026-07-28",
+      "productId": "prd_grout01",
+      "channel": "shopify",
+      "quantity": 1,
+      "unitPrice": 19.95,
+      "unitCost": 2.66,
+      "status": "paid"
+    },
+    {
+      "id": "ord_07280151",
+      "date": "2026-07-28",
+      "productId": "prd_grout01",
+      "channel": "shopify",
+      "quantity": 1,
+      "unitPrice": 19.95,
+      "unitCost": 2.66,
+      "status": "paid"
+    }
+  ]
+}

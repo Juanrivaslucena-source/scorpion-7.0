@@ -1,0 +1,71 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "scorpion/product",
+  "title": "Scorpion Product Record",
+  "type": "object",
+  "required": ["id", "name", "stage", "cost", "salePrice", "supplier", "createdAt"],
+  "properties": {
+    "id": { "type": "string", "pattern": "^prd_[a-z0-9]{6,}$" },
+    "name": { "type": "string", "minLength": 3, "maxLength": 80 },
+    "slug": { "type": "string" },
+    "category": {
+      "type": "string",
+      "enum": ["home", "beauty", "auto", "pets", "fitness", "tech", "kitchen", "apparel", "novelty"]
+    },
+    "stage": {
+      "type": "string",
+      "enum": ["researching", "sourcing", "active", "winning", "dead"],
+      "description": "Lifecycle stage in the Scorpion product pipeline."
+    },
+    "cost": { "type": "number", "minimum": 0, "description": "Landed unit cost in USD." },
+    "salePrice": { "type": "number", "minimum": 0 },
+    "marginPct": { "type": "number", "minimum": -100, "maximum": 100 },
+    "supplier": {
+      "type": "object",
+      "required": ["platform", "url"],
+      "properties": {
+        "platform": { "type": "string", "enum": ["aliexpress", "cjdropshipping", "zendrop", "alibaba"] },
+        "url": { "type": "string", "format": "uri" },
+        "sellerRating": { "type": "number", "minimum": 0, "maximum": 5 },
+        "unitsSold": { "type": "integer", "minimum": 0 },
+        "shipDaysMin": { "type": "integer", "minimum": 0 },
+        "shipDaysMax": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "trend": {
+      "type": "object",
+      "properties": {
+        "source": { "type": "string" },
+        "hashtag": { "type": "string" },
+        "momentum": { "type": "string", "enum": ["rising", "peaking", "cooling", "flat"] },
+        "evidence": { "type": "string" }
+      }
+    },
+    "saturation": {
+      "type": "object",
+      "properties": {
+        "score": { "type": "string", "enum": ["low", "medium", "high"] },
+        "activeSellers": { "type": "integer", "minimum": 0 },
+        "evidence": { "type": "string" }
+      }
+    },
+    "contentAngles": {
+      "type": "array",
+      "items": { "type": "string" },
+      "maxItems": 6
+    },
+    "risks": { "type": "array", "items": { "type": "string" } },
+    "metrics": {
+      "type": "object",
+      "properties": {
+        "unitsSold": { "type": "integer", "minimum": 0 },
+        "revenue": { "type": "number", "minimum": 0 },
+        "refundRatePct": { "type": "number", "minimum": 0, "maximum": 100 },
+        "conversionRatePct": { "type": "number", "minimum": 0, "maximum": 100 }
+      }
+    },
+    "scoutScore": { "type": "number", "minimum": 0, "maximum": 100 },
+    "createdAt": { "type": "string", "format": "date-time" },
+    "updatedAt": { "type": "string", "format": "date-time" }
+  }
+}

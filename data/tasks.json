@@ -1,0 +1,171 @@
+{
+  "updatedAt": "2026-07-29T20:40:25.498Z",
+  "count": 6,
+  "tasks": [
+    {
+      "id": "tsk_scout29",
+      "type": "product-scout",
+      "title": "Product Scout Cycle #2 — kitchen gadgets",
+      "status": "running",
+      "assignedModel": "perplexity-sonar",
+      "escalationModel": "fable-5",
+      "progress": 62,
+      "startedAt": "2026-07-29T09:12:00.000Z",
+      "etaSeconds": 480,
+      "payload": {
+        "niche": "kitchen",
+        "criteria": [
+          "visual-demo",
+          "3x-margin",
+          "trending-now",
+          "impulse-under-3s",
+          "low-saturation"
+        ],
+        "maxCandidates": 3
+      },
+      "log": [
+        {
+          "t": "2026-07-29T09:12:04.000Z",
+          "msg": "Routed trend-research to perplexity-sonar"
+        },
+        {
+          "t": "2026-07-29T09:13:31.000Z",
+          "msg": "12 candidate items returned, deduping against dead list"
+        },
+        {
+          "t": "2026-07-29T09:16:02.000Z",
+          "msg": "Escalating 3 finalists to fable-5 for AliExpress price verification"
+        }
+      ]
+    },
+    {
+      "id": "tsk_clip881",
+      "type": "video-generation",
+      "title": "Render ASMR grout clip — clp_grt003",
+      "status": "running",
+      "assignedModel": "runway-gen3",
+      "escalationModel": null,
+      "progress": 34,
+      "startedAt": "2026-07-29T09:41:00.000Z",
+      "etaSeconds": 210,
+      "payload": {
+        "clipId": "clp_grt003",
+        "durationSec": 18,
+        "creditsBudget": 25
+      },
+      "log": [
+        {
+          "t": "2026-07-29T09:41:07.000Z",
+          "msg": "Reserved 25 RunwayML credits (100 remaining)"
+        },
+        {
+          "t": "2026-07-29T09:42:55.000Z",
+          "msg": "Shot 1/3 complete — macro pen tip"
+        }
+      ]
+    },
+    {
+      "id": "tsk_margin7",
+      "type": "margin-analysis",
+      "title": "Re-price LED face mask against landed cost",
+      "status": "queued",
+      "assignedModel": "gpt-5-thinking",
+      "escalationModel": null,
+      "progress": 0,
+      "startedAt": null,
+      "etaSeconds": 90,
+      "payload": {
+        "productId": "prd_ledmask",
+        "targetMarginPct": 75
+      },
+      "log": []
+    },
+    {
+      "id": "tsk_hooks12",
+      "type": "hook-generation",
+      "title": "10 new hooks for car cleaning gel",
+      "status": "done",
+      "assignedModel": "gpt-4o-mini",
+      "escalationModel": null,
+      "progress": 100,
+      "startedAt": "2026-07-29T07:55:00.000Z",
+      "completedAt": "2026-07-29T07:56:12.000Z",
+      "etaSeconds": 70,
+      "payload": {
+        "productId": "prd_cargel1",
+        "count": 10
+      },
+      "result": {
+        "accepted": 4,
+        "rejected": 6,
+        "topHook": "The dust in your vents has been there since 2019"
+      },
+      "log": [
+        {
+          "t": "2026-07-29T07:55:02.000Z",
+          "msg": "Routed to gpt-4o-mini (cost 0.0006/1k)"
+        },
+        {
+          "t": "2026-07-29T07:56:12.000Z",
+          "msg": "10 hooks returned, 4 passed the 3-second test"
+        }
+      ]
+    },
+    {
+      "id": "tsk_sat003",
+      "type": "saturation-check",
+      "title": "Saturation sweep — grout pen competitors",
+      "status": "done",
+      "assignedModel": "gpt-5-thinking",
+      "escalationModel": "fable-5",
+      "progress": 100,
+      "startedAt": "2026-07-28T18:20:00.000Z",
+      "completedAt": "2026-07-28T18:34:40.000Z",
+      "etaSeconds": 880,
+      "payload": {
+        "productId": "prd_grout01"
+      },
+      "result": {
+        "score": "medium",
+        "activeSellers": 7,
+        "trendDirection": "rising"
+      },
+      "log": [
+        {
+          "t": "2026-07-28T18:20:11.000Z",
+          "msg": "Fable 5 sampled 40 TikTok Shop listings"
+        },
+        {
+          "t": "2026-07-28T18:34:40.000Z",
+          "msg": "7 storefronts pushing consistently — medium saturation"
+        }
+      ]
+    },
+    {
+      "id": "tsk_fail01",
+      "type": "supplier-verification",
+      "title": "Verify backup supplier for pet brush",
+      "status": "failed",
+      "assignedModel": "fable-5",
+      "escalationModel": null,
+      "progress": 45,
+      "startedAt": "2026-07-16T11:02:00.000Z",
+      "completedAt": "2026-07-16T11:09:20.000Z",
+      "etaSeconds": 400,
+      "payload": {
+        "productId": "prd_petbrsh"
+      },
+      "error": "Fable 5 blocked by supplier login wall; product marked dead before retry.",
+      "log": [
+        {
+          "t": "2026-07-16T11:02:10.000Z",
+          "msg": "Navigating supplier storefront"
+        },
+        {
+          "t": "2026-07-16T11:09:20.000Z",
+          "msg": "FAILED: login wall, no cached price available"
+        }
+      ]
+    }
+  ]
+}

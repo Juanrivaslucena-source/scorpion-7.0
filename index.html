@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Scorpion — Autonomous Operations</title>
+<meta name="description" content="Scorpion 7.0 — autonomous AI operations console for product research, content generation and revenue tracking." />
+<meta name="theme-color" content="#0a0a0f" />
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🦂</text></svg>" />
+<link rel="stylesheet" href="assets/css/dashboard.css" />
+</head>
+<body>
+
+<!-- ===================== SVG sprite ===================== -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="i-scorpion" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M4 8v3a4 4 0 0 0 4 4h6"/><path d="M20 6v5a6 6 0 0 1-2 4.5"/><path d="M14 15l3 3"/><circle cx="18.5" cy="19.5" r="1.8"/><path d="M4 8 2 6"/><path d="M8 8 6 5"/>
+    </symbol>
+    <symbol id="i-grid" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>
+    </symbol>
+    <symbol id="i-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/>
+    </symbol>
+    <symbol id="i-film" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="2" y="4" width="20" height="16" rx="2"/><path d="M7 4v16M17 4v16M2 12h20M2 8h5M2 16h5M17 8h5M17 16h5"/>
+    </symbol>
+    <symbol id="i-chart" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M3 3v18h18"/><path d="M7 15l3-4 3 3 5-7"/>
+    </symbol>
+    <symbol id="i-cpu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="6" y="6" width="12" height="12" rx="2"/><path d="M9 2v4M15 2v4M9 18v4M15 18v4M2 9h4M2 15h4M18 9h4M18 15h4"/>
+    </symbol>
+    <symbol id="i-gear" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.6 1.6 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.6 1.6 0 0 0-1.8-.3 1.6 1.6 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1A1.6 1.6 0 0 0 9 19.4a1.6 1.6 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.6 1.6 0 0 0 .3-1.8 1.6 1.6 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1A1.6 1.6 0 0 0 4.6 9a1.6 1.6 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.6 1.6 0 0 0 1.8.3H9a1.6 1.6 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.6 1.6 0 0 0 1 1.5 1.6 1.6 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.6 1.6 0 0 0-.3 1.8V9a1.6 1.6 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.6 1.6 0 0 0-1.5 1z"/>
+    </symbol>
+    <symbol id="i-github" viewBox="0 0 24 24" fill="currentColor">
+      <path d="M12 .5C5.7.5.5 5.7.5 12c0 5.1 3.3 9.4 7.9 10.9.6.1.8-.2.8-.6v-2c-3.2.7-3.9-1.5-3.9-1.5-.5-1.3-1.3-1.7-1.3-1.7-1.1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.7 1.3 3.4 1 .1-.8.4-1.3.7-1.6-2.6-.3-5.3-1.3-5.3-5.8 0-1.3.5-2.3 1.2-3.1-.1-.3-.5-1.5.1-3.1 0 0 1-.3 3.3 1.2a11.4 11.4 0 0 1 6 0C17.6 4.7 18.6 5 18.6 5c.6 1.6.2 2.8.1 3.1.8.8 1.2 1.8 1.2 3.1 0 4.5-2.7 5.5-5.3 5.8.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6 4.6-1.5 7.9-5.8 7.9-10.9C23.5 5.7 18.3.5 12 .5z"/>
+    </symbol>
+    <symbol id="i-logout" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="m16 17 5-5-5-5"/><path d="M21 12H9"/>
+    </symbol>
+    <symbol id="i-menu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+      <path d="M3 6h18M3 12h18M3 18h18"/>
+    </symbol>
+    <symbol id="i-refresh" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M21 12a9 9 0 1 1-2.6-6.4"/><path d="M21 3v6h-6"/>
+    </symbol>
+    <symbol id="i-play" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="m6 4 14 8-14 8z"/>
+    </symbol>
+    <symbol id="i-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M20 6 9 17l-5-5"/>
+    </symbol>
+    <symbol id="i-alert" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16.5v.01"/>
+    </symbol>
+    <symbol id="i-clock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>
+    </symbol>
+    <symbol id="i-box" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M21 8 12 3 3 8v8l9 5 9-5z"/><path d="m3 8 9 5 9-5M12 13v8"/>
+    </symbol>
+    <symbol id="i-bolt" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M13 2 4 14h7l-1 8 9-12h-7z"/>
+    </symbol>
+    <symbol id="i-dollar" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12 2v20"/><path d="M17 6.5C17 4.6 14.8 3.5 12 3.5S7 4.6 7 6.5 9.2 9.5 12 9.5s5 1.4 5 3.5-2.2 3.5-5 3.5-5-1.1-5-3"/>
+    </symbol>
+  </defs>
+</svg>
+
+<!-- ===================== Login gate ===================== -->
+<div class="login-screen" id="loginScreen">
+  <div class="login-card">
+    <div class="brand-mark" style="width:46px;height:46px"><svg style="width:26px;height:26px"><use href="#i-scorpion"/></svg></div>
+    <h1>Scorpion</h1>
+    <p>Autonomous operations console</p>
+    <div class="login-error" id="loginError"></div>
+    <button class="btn btn-primary btn-block" id="btnLogin">
+      <svg><use href="#i-github"/></svg> Continue with GitHub
+    </button>
+    <button class="btn btn-ghost btn-block" id="btnDemo" style="margin-top:10px">
+      Explore demo mode
+    </button>
+    <p class="login-foot">
+      GitHub OAuth is used only to identify the operator.<br />
+      Demo mode runs entirely on local seed data — no network calls.
+    </p>
+  </div>
+</div>
+
+<!-- ===================== App shell ===================== -->
+<div class="app" id="app">
+  <div class="scrim" id="scrim"></div>
+
+  <aside class="sidebar" id="sidebar">
+    <div class="brand">
+      <div class="brand-mark"><svg><use href="#i-scorpion"/></svg></div>
+      <div class="brand-text">
+        <span class="brand-name">Scorpion</span>
+        <span class="brand-sub">v7.0 · Ops</span>
+      </div>
+    </div>
+
+    <nav class="nav" id="nav">
+      <div class="nav-label">Operations</div>
+      <button class="nav-item active" data-view="dashboard"><svg><use href="#i-grid"/></svg> Dashboard</button>
+      <button class="nav-item" data-view="scout"><svg><use href="#i-search"/></svg> Product Scout <span class="nav-count" id="navProducts">0</span></button>
+      <button class="nav-item" data-view="studio"><svg><use href="#i-film"/></svg> Content Studio <span class="nav-count" id="navClips">0</span></button>
+      <button class="nav-item" data-view="sales"><svg><use href="#i-chart"/></svg> Sales Tracker</button>
+      <div class="nav-label">System</div>
+      <button class="nav-item" data-view="models"><svg><use href="#i-cpu"/></svg> Model Registry <span class="nav-count" id="navModels">0</span></button>
+      <button class="nav-item" data-view="settings"><svg><use href="#i-gear"/></svg> Settings</button>
+    </nav>
+
+    <div class="sidebar-foot">
+      <div class="user-chip">
+        <img id="userAvatar" alt="" hidden />
+        <div class="avatar-fallback" id="userInitial">S</div>
+        <div class="user-meta">
+          <div class="user-name" id="userName">operator</div>
+          <div class="user-role" id="userRole">Director</div>
+        </div>
+        <button class="icon-btn" id="btnLogout" title="Sign out" aria-label="Sign out"><svg><use href="#i-logout"/></svg></button>
+      </div>
+    </div>
+  </aside>
+
+  <main class="main">
+    <header class="topbar">
+      <button class="menu-toggle" id="menuToggle" aria-label="Toggle navigation"><svg><use href="#i-menu"/></svg></button>
+      <div class="topbar-titles">
+        <h1 id="viewTitle">Dashboard</h1>
+        <div class="topbar-sub" id="viewSub">Live operational overview</div>
+      </div>
+      <div class="topbar-actions">
+        <button class="btn btn-ghost" id="btnRefresh"><svg><use href="#i-refresh"/></svg> <span class="label">Refresh</span></button>
+        <button class="btn btn-primary" id="btnRunCycle"><svg><use href="#i-play"/></svg> <span class="label">Run cycle</span></button>
+      </div>
+    </header>
+
+    <div class="content">
+      <section class="view active" id="view-dashboard"></section>
+      <section class="view" id="view-scout"></section>
+      <section class="view" id="view-studio"></section>
+      <section class="view" id="view-sales"></section>
+      <section class="view" id="view-models"></section>
+      <section class="view" id="view-settings"></section>
+    </div>
+  </main>
+</div>
+
+<div class="toast-host" id="toastHost"></div>
+
+<script src="assets/js/api.js"></script>
+<script src="assets/js/auth.js"></script>
+<script src="assets/js/router.js"></script>
+<script src="assets/js/dashboard.js"></script>
+<script src="assets/js/app.js"></script>
+</body>
+</html>

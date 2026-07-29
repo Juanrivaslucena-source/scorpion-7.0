@@ -1,0 +1,28 @@
+{
+  "name": "scorpion-7.0",
+  "version": "7.0.0",
+  "private": true,
+  "description": "Scorpion — autonomous AI operations platform for product research, content generation and revenue tracking.",
+  "main": "scripts/orchestrate.js",
+  "scripts": {
+    "start": "node scripts/dev-server.js",
+    "dev": "node scripts/dev-server.js",
+    "seed": "node scripts/seed.js",
+    "orchestrate": "node scripts/orchestrate.js",
+    "orchestrate:once": "node scripts/orchestrate.js --once",
+    "scout": "node scripts/orchestrate.js --task product-scout --once",
+    "test": "node scripts/selftest.js"
+  },
+  "keywords": [
+    "dropshipping",
+    "automation",
+    "ai-orchestration",
+    "arena",
+    "fable",
+    "runwayml"
+  ],
+  "license": "UNLICENSED",
+  "engines": {
+    "node": ">=18"
+  }
+}

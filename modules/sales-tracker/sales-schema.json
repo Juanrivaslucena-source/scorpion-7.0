@@ -1,0 +1,66 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "scorpion/sales",
+  "title": "Scorpion Sales Ledger",
+  "type": "object",
+  "required": ["currency", "orders"],
+  "properties": {
+    "currency": { "type": "string", "default": "USD" },
+    "updatedAt": { "type": "string", "format": "date-time" },
+    "totals": {
+      "type": "object",
+      "properties": {
+        "revenue": { "type": "number" },
+        "cogs": { "type": "number" },
+        "grossProfit": { "type": "number" },
+        "orders": { "type": "integer" },
+        "averageOrderValue": { "type": "number" },
+        "marginPct": { "type": "number" }
+      }
+    },
+    "byChannel": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "revenue": { "type": "number" },
+          "orders": { "type": "integer" }
+        }
+      }
+    },
+    "daily": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["date", "revenue", "orders"],
+        "properties": {
+          "date": { "type": "string", "format": "date" },
+          "revenue": { "type": "number" },
+          "orders": { "type": "integer" },
+          "cogs": { "type": "number" },
+          "channels": {
+            "type": "object",
+            "additionalProperties": { "type": "number" }
+          }
+        }
+      }
+    },
+    "orders": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "date", "productId", "channel", "quantity", "unitPrice"],
+        "properties": {
+          "id": { "type": "string", "pattern": "^ord_[a-z0-9]{6,}$" },
+          "date": { "type": "string", "format": "date" },
+          "productId": { "type": "string" },
+          "channel": { "type": "string", "enum": ["shopify", "tiktok-shop", "amazon", "etsy"] },
+          "quantity": { "type": "integer", "minimum": 1 },
+          "unitPrice": { "type": "number", "minimum": 0 },
+          "unitCost": { "type": "number", "minimum": 0 },
+          "status": { "type": "string", "enum": ["paid", "shipped", "delivered", "refunded"] }
+        }
+      }
+    }
+  }
+}
