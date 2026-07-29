@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Alpha Reels — 16 Compositions</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: #0a0a0c;
+      color: #fff;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      padding: 40px 20px;
+    }
+    .container { max-width: 1400px; margin: 0 auto; }
+    h1 {
+      font-size: 48px;
+      margin-bottom: 12px;
+      letter-spacing: -1px;
+    }
+    .subtitle {
+      font-size: 18px;
+      color: #9a95a3;
+      margin-bottom: 40px;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+      gap: 24px;
+      margin-bottom: 60px;
+    }
+    .card {
+      background: #141317;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid #2a2830;
+      transition: all 0.3s ease;
+    }
+    .card:hover {
+      border-color: #e11d63;
+      transform: translateY(-4px);
+      box-shadow: 0 20px 40px rgba(225, 29, 99, 0.1);
+    }
+    .phone {
+      aspect-ratio: 9/16;
+      background: linear-gradient(135deg, #333 0%, #222 100%);
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      color: #666;
+    }
+    .phone::before {
+      content: 'Video Preview';
+      position: absolute;
+      text-align: center;
+    }
+    .info {
+      padding: 20px;
+    }
+    .category {
+      display: inline-block;
+      background: #e11d63;
+      color: #fff;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      padding: 4px 10px;
+      border-radius: 4px;
+      margin-bottom: 12px;
+      text-transform: uppercase;
+    }
+    .category.promo { background: #ff2d2d; }
+    .composition-name {
+      font-size: 20px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+    .specs {
+      font-size: 13px;
+      color: #9a95a3;
+      line-height: 1.6;
+    }
+    .section-title {
+      font-size: 32px;
+      margin-top: 60px;
+      margin-bottom: 24px;
+      color: #e11d63;
+      border-bottom: 1px solid #2a2830;
+      padding-bottom: 12px;
+    }
+    .section-title:first-of-type { margin-top: 0; }
+    .status {
+      display: inline-block;
+      font-size: 11px;
+      padding: 2px 8px;
+      border-radius: 3px;
+      margin-left: auto;
+      background: #2a2830;
+      color: #9a95a3;
+    }
+    .status.ready { background: #1a3a2a; color: #4ade80; }
+    .info-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Alpha Reels</h1>
+    <p class="subtitle">16 compositions ready for rendering</p>
+
+    <h2 class="section-title">Per-Brand Showcase Reels</h2>
+    <p style="color: #9a95a3; margin-bottom: 24px;">Premium product showcases with hero photo + specs for each brand</p>
+
+    <div class="grid">
+      <div class="card">
+        <div class="phone"></div>
+        <div class="info">
+          <div class="category">Brand Showcase</div>
+          <div class="info-row">
+            <div class="composition-name">Arctic Leopard</div>
+            <span class="status ready">Ready</span>
+          </div>
+          <div class="specs">
+            155 frames · 5.2s<br>
+            XF, XE Pro S, XE Pro R + specs<br>
+            Official product lineup
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="phone"></div>
+        <div class="info">
+          <div class="category">Brand Showcase</div>
+          <div class="info-row">
+            <div class="composition-name">79Bike</div>
+            <span class="status">Placeholder</span>
+          </div>
+          <div class="specs">
+            225 frames · 7.5s<br>
+            Falcon (hero), Viper, Eagle<br>
+            3 models
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="phone"></div>
+        <div class="info">
+          <div class="category">Brand Showcase</div>
+          <div class="info-row">
+            <div class="composition-name">Ventus One Plus</div>
+            <span class="status">Placeholder</span>
+          </div>
+          <div class="specs">
+            155 frames · 5.2s<br>
+            One Plus hero shot<br>
+            12kW · 60V 100Ah
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="phone"></div>
+        <div class="info">
+          <div class="category">Brand Showcase</div>
+          <div class="info-row">
+            <div class="composition-name">Yozma IN 10 Pro</div>
+            <span class="status">Placeholder</span>
+          </div>
+          <div class="specs">
+            155 frames · 5.2s<br>
+            IN 10 Pro hero shot<br>
+            10kW · 72V
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="phone"></div>
+        <div class="info">
+          <div class="category">Brand Showcase</div>
+          <div class="info-row">
+            <div class="composition-name">eRide Pro SS</div>
+            <span class="status">Placeholder</span>
+          </div>
+          <div class="specs">
+            155 frames · 5.2s<br>
+            Pro SS hero shot<br>
+            8kW · 48V 60Ah
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="phone"></div>
+        <div class="info">
+          <div class="category">Brand Showcase</div>
+          <div class="info-row">
+            <div class="composition-name">Sur-Ron Ultra Bee</div>
+            <span class="status">Placeholder</span>
+          </div>
+          <div class="specs">
+            225 frames · 7.5s<br>
+            Ultra Bee, Ultra Bee Sport<br>
+            8–10kW lineup
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="phone"></div>
+        <div class="info">
+          <div class="category">Brand Showcase</div>
+          <div class="info-row">
+            <div class="composition-name">Y-Volt</div>
+            <span class="status">Placeholder</span>
+          </div>
+          <div class="specs">
+            155 frames · 5.2s<br>
+            Y-Volt Max hero<br>
+            5kW · 48V commuter
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="phone"></div>
+        <div class="info">
+          <div class="category">Brand Showcase</div>
+          <div class="info-row">
+            <div class="composition-name">Altis Sigma</div>
+            <span class="status">Placeholder</span>
+          </div>
+          <div class="specs">
+            155 frames · 5.2s<br>
+            Sigma hero shot<br>
+            8kW · 52V 60Ah Sport Trail
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <h2 class="section-title">Promo & Montage Reels</h2>
+    <p style="color: #9a95a3; margin-bottom: 24px;">Hook reels, brand compilations, and aesthetic montages</p>
+
+    <div class="grid">
+      <div class="card">
+        <div class="phone"></div>
+        <div class="info">
+          <div class="category promo">Montage</div>
+          <div class="info-row">
+            <div class="composition-name">Real Brand Reel</div>
+            <span class="status ready">Ready</span>
+          </div>
+          <div class="specs">
+            477 frames · 15.9s<br>
+            8 hard-cut brand shots<br>
+            Dark gritty grade
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="phone"></div>
+        <div class="info">
+          <div class="category promo">Lineup</div>
+          <div class="info-row">
+            <div class="composition-name">Real Bike Lineup</div>
+            <span class="status ready">Ready</span>
+          </div>
+          <div class="specs">
+            410 frames · 13.7s<br>
+            3 premium hero bikes<br>
+            Studio aesthetic
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="phone"></div>
+        <div class="info">
+          <div class="category promo">Aesthetic</div>
+          <div class="info-row">
+            <div class="composition-name">Hard Cut Reel</div>
+            <span class="status ready">Ready</span>
+          </div>
+          <div class="specs">
+            450 frames · 15s<br>
+            6 gritty cuts · No fades<br>
+            Bikelife energy
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="phone"></div>
+        <div class="info">
+          <div class="category promo">Montage</div>
+          <div class="info-row">
+            <div class="composition-name">Aesthetic Edit</div>
+            <span class="status ready">Ready</span>
+          </div>
+          <div class="specs">
+            480 frames · 16s<br>
+            Cinematic montage<br>
+            Soft transitions
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="phone"></div>
+        <div class="info">
+          <div class="category promo">Hook</div>
+          <div class="info-row">
+            <div class="composition-name">Just Dropped</div>
+            <span class="status">Video Clip Needed</span>
+          </div>
+          <div class="specs">
+            450 frames · 15s<br>
+            "IT'S HERE."<br>
+            Tagline: "The new Sur-Ron just dropped"
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="phone"></div>
+        <div class="info">
+          <div class="category promo">Hook</div>
+          <div class="info-row">
+            <div class="composition-name">Financing Hook</div>
+            <span class="status">Video Clip Needed</span>
+          </div>
+          <div class="specs">
+            450 frames · 15s<br>
+            "$49 DOWN."<br>
+            Tagline: "No credit check · Ride home today"
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="phone"></div>
+        <div class="info">
+          <div class="category promo">Hook</div>
+          <div class="info-row">
+            <div class="composition-name">Bikelife</div>
+            <span class="status">Video Clip Needed</span>
+          </div>
+          <div class="specs">
+            450 frames · 15s<br>
+            "RUN WITH THE PACK."<br>
+            Brand: Alpha Electric Bikes
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="phone"></div>
+        <div class="info">
+          <div class="category promo">Hook</div>
+          <div class="info-row">
+            <div class="composition-name">Ride & Repair</div>
+            <span class="status">Video Clip Needed</span>
+          </div>
+          <div class="specs">
+            450 frames · 15s<br>
+            "WE SELL IT. WE FIX IT."<br>
+            Tagline: Expert service + repair
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top: 80px; padding-top: 40px; border-top: 1px solid #2a2830; color: #9a95a3;">
+      <h3 style="color: #fff; margin-bottom: 16px;">Status Summary</h3>
+      <ul style="list-style: none; line-height: 1.8;">
+        <li>✅ <strong>8 brand showcase compositions</strong> — Code complete, Arctic Leopard with official photos</li>
+        <li>✅ <strong>8 promo/montage reels</strong> — Code complete, 4 ready to render immediately</li>
+        <li>⏳ <strong>Rendering</strong> — See RENDERING.md for instructions (blocked in sandbox due to network policy)</li>
+        <li>📝 <strong>Product images</strong> — Arctic Leopard complete; others need official photos sourced</li>
+        <li>🎬 <strong>Video clips</strong> — 4 hook reels need short 3–8s video clips (available in public/clips/)</li>
+      </ul>
+    </div>
+  </div>
+</body>
+</html>
