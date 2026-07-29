@@ -10,28 +10,62 @@
  */
 
 const BLOCK_CSS = `
-  .sb-section { padding: 64px 32px; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
-  .sb-container { max-width: 760px; margin: 0 auto; }
-  .sb-hero { text-align: center; background: linear-gradient(135deg, #1e232c 0%, #ff7a45 140%); color: #fff; padding: 96px 32px; }
-  .sb-hero h1 { font-size: 44px; margin: 0 0 16px; line-height: 1.1; }
-  .sb-hero p { font-size: 19px; margin: 0 0 28px; opacity: 0.92; }
-  .sb-btn { display: inline-block; background: #ff7a45; color: #fff; padding: 14px 28px; border-radius: 8px; text-decoration: none; font-weight: 600; }
-  .sb-heading h2 { font-size: 32px; margin: 0 0 12px; }
-  .sb-text p { font-size: 17px; line-height: 1.7; color: #333; margin: 0; }
-  .sb-features { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; max-width: 960px; margin: 0 auto; }
-  .sb-feature { text-align: center; padding: 16px; }
-  .sb-feature .sb-ico { font-size: 34px; }
-  .sb-feature h3 { font-size: 18px; margin: 12px 0 8px; }
-  .sb-feature p { font-size: 15px; color: #555; line-height: 1.6; margin: 0; }
-  .sb-image img { max-width: 100%; height: auto; display: block; margin: 0 auto; border-radius: 8px; }
-  .sb-cta { text-align: center; background: #171a21; color: #fff; }
-  .sb-cta h2 { font-size: 30px; margin: 0 0 12px; }
-  .sb-cta p { font-size: 17px; opacity: 0.85; margin: 0 0 24px; }
-  .sb-footer { text-align: center; background: #0f1115; color: #9aa3b2; padding: 32px; font-size: 14px; }
-  .sb-footer a { color: #ffb347; text-decoration: none; }
-  @media (max-width: 640px) {
+  /* ===== Scorpion content system — expresses DESIGN_DNA.md =====
+     Editorial palette: ink / paper / one accent. Modular type scale (~1.25).
+     Generous rhythm, restrained motion. */
+  :root {
+    --sb-ink: #16151a;
+    --sb-ink-soft: #4a4852;
+    --sb-paper: #f7f5f1;
+    --sb-paper-2: #ffffff;
+    --sb-accent: #c8532b;
+    --sb-line: rgba(22, 21, 26, 0.10);
+    --sb-display: "Georgia", "Times New Roman", serif;
+    --sb-text: -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+    --sb-maxw: 68ch;
+  }
+  .sb-section { padding: clamp(56px, 9vw, 128px) clamp(20px, 6vw, 64px); font-family: var(--sb-text); color: var(--sb-ink); background: var(--sb-paper); }
+  .sb-container { max-width: var(--sb-maxw); margin: 0 auto; }
+
+  /* Hero — editorial, quiet luxury */
+  .sb-hero { text-align: left; background: var(--sb-ink); color: var(--sb-paper); padding: clamp(96px, 16vw, 200px) clamp(20px, 6vw, 64px); }
+  .sb-hero h1 { font-family: var(--sb-display); font-weight: 500; font-size: clamp(40px, 8vw, 82px); margin: 0 0 24px; line-height: 1.04; letter-spacing: -0.02em; max-width: 16ch; }
+  .sb-hero p { font-size: clamp(17px, 2.2vw, 21px); line-height: 1.6; margin: 0 0 40px; max-width: 46ch; color: rgba(247, 245, 241, 0.72); }
+
+  /* Buttons — physical, real destinations */
+  .sb-btn { display: inline-block; background: var(--sb-accent); color: #fff; padding: 15px 30px; border-radius: 4px; text-decoration: none; font-weight: 600; font-size: 15px; letter-spacing: 0.01em; transition: transform 0.2s ease, background 0.2s ease; }
+  .sb-btn:hover { background: #a8421f; transform: translateY(-2px); }
+
+  .sb-heading h2 { font-family: var(--sb-display); font-weight: 500; font-size: clamp(30px, 5vw, 46px); margin: 0; line-height: 1.1; letter-spacing: -0.015em; }
+  .sb-text p { font-size: clamp(17px, 2vw, 19px); line-height: 1.75; color: var(--sb-ink-soft); margin: 0; }
+
+  /* Features — restrained editorial grid */
+  .sb-features { display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(28px, 4vw, 56px); max-width: 1080px; margin: 0 auto; }
+  .sb-feature { text-align: left; }
+  .sb-feature .sb-ico { font-size: 28px; display: block; }
+  .sb-feature h3 { font-family: var(--sb-display); font-weight: 500; font-size: 21px; margin: 18px 0 10px; letter-spacing: -0.01em; }
+  .sb-feature p { font-size: 16px; color: var(--sb-ink-soft); line-height: 1.65; margin: 0; }
+
+  .sb-image img { max-width: 100%; height: auto; display: block; margin: 0 auto; border-radius: 6px; }
+
+  /* CTA — one clear focal point */
+  .sb-cta { text-align: center; background: var(--sb-paper-2); border-top: 1px solid var(--sb-line); border-bottom: 1px solid var(--sb-line); }
+  .sb-cta h2 { font-family: var(--sb-display); font-weight: 500; font-size: clamp(28px, 4.5vw, 44px); margin: 0 0 16px; letter-spacing: -0.015em; line-height: 1.1; }
+  .sb-cta p { font-size: clamp(16px, 2vw, 19px); color: var(--sb-ink-soft); margin: 0 0 32px; }
+
+  .sb-footer { text-align: center; background: var(--sb-ink); color: rgba(247, 245, 241, 0.6); padding: 48px 32px; font-size: 14px; letter-spacing: 0.01em; }
+  .sb-footer a { color: var(--sb-paper); text-decoration: none; border-bottom: 1px solid rgba(247, 245, 241, 0.3); padding-bottom: 1px; }
+
+  /* Scroll-reveal — subtle, tasteful, and optional */
+  .sb-reveal { opacity: 0; transform: translateY(18px); transition: opacity 0.7s ease, transform 0.7s ease; }
+  .sb-reveal.is-in { opacity: 1; transform: none; }
+
+  @media (max-width: 720px) {
     .sb-features { grid-template-columns: 1fr; }
-    .sb-hero h1 { font-size: 32px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .sb-reveal { opacity: 1; transform: none; transition: none; }
+    .sb-btn { transition: none; }
   }
 `;
 

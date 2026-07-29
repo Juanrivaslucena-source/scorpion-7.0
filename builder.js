@@ -21,6 +21,19 @@
 
   let selectedBlock = null;
 
+  /* ---------- Toolbar markup ---------- */
+  function toolbarHTML(hasLink) {
+    return (
+      (hasLink
+        ? '<button type="button" data-act="link" title="Set button link">🔗</button>'
+        : "") +
+      '<button type="button" data-act="up" title="Move up">↑</button>' +
+      '<button type="button" data-act="down" title="Move down">↓</button>' +
+      '<button type="button" data-act="dup" title="Duplicate">⧉</button>' +
+      '<button type="button" data-act="del" title="Delete">✕</button>'
+    );
+  }
+
   /* ---------- Palette ---------- */
   BLOCKS.forEach(function (def) {
     const item = document.createElement("div");
@@ -52,15 +65,11 @@
     wrap.dataset.type = type;
     wrap.innerHTML = def.template();
 
-    // Toolbar
+    // Toolbar (link action only shown for blocks that contain a button)
     const toolbar = document.createElement("div");
     toolbar.className = "block-toolbar";
     toolbar.contentEditable = "false";
-    toolbar.innerHTML =
-      '<button type="button" data-act="up" title="Move up">↑</button>' +
-      '<button type="button" data-act="down" title="Move down">↓</button>' +
-      '<button type="button" data-act="dup" title="Duplicate">⧉</button>' +
-      '<button type="button" data-act="del" title="Delete">✕</button>';
+    toolbar.innerHTML = toolbarHTML(!!wrap.querySelector(".sb-btn"));
     wrap.appendChild(toolbar);
 
     wrap.addEventListener("click", function (e) {
@@ -108,7 +117,19 @@
     e.stopPropagation();
     const act = btn.dataset.act;
 
-    if (act === "del") {
+    if (act === "link") {
+      const linkBtn = block.querySelector(".sb-btn");
+      if (linkBtn) {
+        const url = window.prompt(
+          "Button link URL:",
+          linkBtn.getAttribute("href") || ""
+        );
+        if (url !== null) {
+          const t = url.trim();
+          linkBtn.setAttribute("href", t || "#");
+        }
+      }
+    } else if (act === "del") {
       block.remove();
       if (selectedBlock === block) selectedBlock = null;
     } else if (act === "dup") {
@@ -221,8 +242,36 @@
     return clone.innerHTML.trim();
   }
 
+  // Small IntersectionObserver that honors reduced-motion; embedded in export.
+  const REVEAL_SCRIPT =
+    "<script>\n(function(){var els=document.querySelectorAll('.sb-reveal');" +
+    "if(!('IntersectionObserver' in window)||window.matchMedia('(prefers-reduced-motion: reduce)').matches){" +
+    "els.forEach(function(e){e.classList.add('is-in');});return;}" +
+    "var io=new IntersectionObserver(function(entries){entries.forEach(function(en){" +
+    "if(en.isIntersecting){en.target.classList.add('is-in');io.unobserve(en.target);}});}," +
+    "{threshold:0.12});els.forEach(function(e){io.observe(e);});})();\n<\/script>";
+
   function buildDocument() {
-    const body = serializePage();
+    // Start from the persisted-style serialization, then produce clean,
+    // unwrapped semantic markup: drop editor data-* markers, remove the
+    // .block wrappers, and add a scroll-reveal class to each section.
+    const tmp = document.createElement("div");
+    tmp.innerHTML = serializePage();
+    ["data-field", "data-href", "data-img"].forEach(function (attr) {
+      tmp.querySelectorAll("[" + attr + "]").forEach(function (n) {
+        n.removeAttribute(attr);
+      });
+    });
+
+    const parts = [];
+    Array.prototype.forEach.call(tmp.children, function (block) {
+      Array.prototype.forEach.call(block.children, function (node) {
+        node.classList.add("sb-reveal");
+        parts.push(node.outerHTML);
+      });
+    });
+    const body = parts.join("\n");
+
     return (
       "<!DOCTYPE html>\n" +
       '<html lang="en">\n<head>\n<meta charset="UTF-8" />\n' +
@@ -232,6 +281,8 @@
       BLOCK_CSS +
       "\n</style>\n</head>\n<body>\n" +
       body +
+      "\n" +
+      REVEAL_SCRIPT +
       "\n</body>\n</html>\n"
     );
   }
@@ -289,11 +340,7 @@
       toolbar = document.createElement("div");
       toolbar.className = "block-toolbar";
       toolbar.contentEditable = "false";
-      toolbar.innerHTML =
-        '<button type="button" data-act="up" title="Move up">↑</button>' +
-        '<button type="button" data-act="down" title="Move down">↓</button>' +
-        '<button type="button" data-act="dup" title="Duplicate">⧉</button>' +
-        '<button type="button" data-act="del" title="Delete">✕</button>';
+      toolbar.innerHTML = toolbarHTML(!!wrap.querySelector(".sb-btn"));
       wrap.appendChild(toolbar);
     }
   }
