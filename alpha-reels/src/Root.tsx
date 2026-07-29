@@ -1,6 +1,7 @@
 import React from 'react';
 import { Composition } from 'remotion';
 import { Reel } from './Reel';
+import { AestheticMontage } from './AestheticMontage';
 
 // 9:16 vertical, 15s @ 30fps.
 const WIDTH = 1080;
@@ -14,6 +15,14 @@ const DURATION = 15 * FPS;
 export const RemotionRoot: React.FC = () => {
   return (
     <>
+      <Composition
+        id="AestheticEdit"
+        component={AestheticMontage}
+        durationInFrames={16 * FPS}
+        fps={FPS}
+        width={WIDTH}
+        height={HEIGHT}
+      />
       <Composition
         id="JustDropped"
         component={Reel}
