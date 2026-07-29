@@ -1,0 +1,307 @@
+<title>Alpha Electric — Visual Playbook</title>
+<style>
+  /* This playbook deliberately commits to a dark studio look — it is a grading
+     reference, so ambient theme must not shift its colors. */
+  :root{
+    --bg:#0b0a0d; --panel:#141218; --panel2:#1b1822; --line:rgba(255,255,255,.08);
+    --ink:#f2eff5; --muted:#8f8a99;
+    /* Lane A — Porsche-edit pastel */
+    --a-primary:#f5b8cd; --a-secondary:#e8d5c4; --a-dark:#2a2228; --a-light:#faf3ee; --a-accent:#d98aa8;
+    /* Lane B — gritty dark */
+    --b-base:#0c0c0e; --b-steel:#26262c; --b-fog:#8b8b94; --b-accent:#ff2d8f; --b-neon:#c8ff1f;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--bg);color:var(--ink);font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;line-height:1.5;-webkit-font-smoothing:antialiased}
+  .mono{font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace;font-variant-numeric:tabular-nums}
+  .wrap{max-width:1180px;margin:0 auto;padding:0 24px}
+  .lbl{font-family:ui-monospace,monospace;font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--muted)}
+  section{padding:64px 0;border-bottom:1px solid var(--line)}
+  h2{font-size:clamp(24px,3.6vw,38px);font-weight:800;letter-spacing:-1px;margin:10px 0 6px}
+  .sub{color:var(--muted);max-width:64ch;font-size:15px}
+
+  /* header */
+  header{padding:72px 0 56px;border-bottom:1px solid var(--line);
+    background:radial-gradient(60% 80% at 20% 0%,rgba(245,184,205,.08),transparent 60%),
+               radial-gradient(50% 70% at 85% 10%,rgba(255,45,143,.07),transparent 60%)}
+  h1{font-size:clamp(38px,6vw,64px);font-weight:900;letter-spacing:-2px;line-height:.95;text-transform:uppercase}
+  h1 em{font-style:normal;color:var(--a-primary)}
+
+  /* lanes grid */
+  .lanes{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin-top:36px}
+  @media(max-width:880px){.lanes{grid-template-columns:1fr}}
+  .lane{border:1px solid var(--line);border-radius:18px;overflow:hidden;background:var(--panel)}
+  .lane .head{padding:22px 24px;border-bottom:1px solid var(--line)}
+  .lane h3{font-size:22px;font-weight:800;letter-spacing:-.5px}
+  .lane .head p{color:var(--muted);font-size:13.5px;margin-top:4px}
+  .lane .body{padding:22px 24px;display:grid;gap:20px}
+
+  /* swatches */
+  .sw{display:flex;gap:8px}
+  .sw .chip{flex:1;border-radius:10px;height:64px;position:relative;border:1px solid rgba(255,255,255,.08)}
+  .sw .chip span{position:absolute;left:8px;bottom:6px;font-family:ui-monospace,monospace;font-size:9.5px;letter-spacing:.5px;
+    color:#fff;mix-blend-mode:difference}
+
+  /* type demos */
+  .typedemo{border-radius:14px;padding:26px 22px;min-height:150px;display:flex;flex-direction:column;justify-content:center;overflow:hidden}
+  .typedemo.a{background:linear-gradient(150deg,#f3e0da,#efc6d2)}
+  .typedemo.b{background:#0a0a0c}
+  /* Lane A type: refined serif float-in with bloom */
+  .a-model{font-family:Georgia,"Times New Roman",serif;font-weight:700;font-size:44px;letter-spacing:.5px;color:#3a2b33;
+    animation:aIn 3.6s cubic-bezier(.16,1,.3,1) infinite}
+  .a-spec{font-family:ui-monospace,monospace;font-size:13px;letter-spacing:3px;color:#7c5f6d;margin-top:10px;
+    animation:aIn 3.6s .25s cubic-bezier(.16,1,.3,1) infinite}
+  @keyframes aIn{0%{opacity:0;transform:translateY(18px) scale(1.04);filter:blur(10px)}
+    18%{opacity:1;transform:none;filter:blur(0)}
+    82%{opacity:1;transform:none;filter:blur(0)}
+    96%,100%{opacity:0;transform:translateY(-8px);filter:blur(6px)}}
+  /* Lane B type: hard snap + neon flicker */
+  .b-model{font-family:"Arial Black","Helvetica Neue",sans-serif;font-weight:900;font-size:46px;letter-spacing:-1px;
+    text-transform:uppercase;color:#fff;animation:bIn 2.2s cubic-bezier(.9,0,.1,1) infinite}
+  .b-spec{font-family:ui-monospace,monospace;font-size:12.5px;letter-spacing:4px;color:var(--b-accent);margin-top:8px;
+    animation:bFlick 2.2s steps(2,end) infinite}
+  @keyframes bIn{0%{opacity:0;transform:scale(1.35);letter-spacing:8px;filter:blur(14px)}
+    9%{opacity:1;transform:scale(1);letter-spacing:-1px;filter:blur(0)}
+    11%{transform:translateX(-3px)}13%{transform:translateX(2px)}15%{transform:none}
+    88%{opacity:1}92%,100%{opacity:0}}
+  @keyframes bFlick{0%,7%{opacity:0}9%,30%{opacity:1}32%{opacity:.25}34%,88%{opacity:1}92%,100%{opacity:0}}
+
+  /* phone mockups */
+  .phones{display:flex;gap:18px;justify-content:center}
+  .phone{width:150px;aspect-ratio:9/16;border-radius:18px;border:2px solid #2c2933;overflow:hidden;position:relative;background:#000}
+  .cut{position:absolute;inset:0;display:flex;align-items:flex-end;padding:12px;opacity:0}
+  .cut .tag{font-family:"Arial Black",sans-serif;font-weight:900;font-size:13px;color:#fff;line-height:1.05;text-transform:uppercase}
+  /* Lane A cycle: soft ease, one bloom */
+  .pa .c1{background:linear-gradient(160deg,#f2cdb8,#e9a9c0);animation:pa 6.8s infinite}
+  .pa .c2{background:linear-gradient(200deg,#efdccd,#d8a8b8);animation:pa 6.8s 2.27s infinite}
+  .pa .c3{background:linear-gradient(180deg,#e8b7c6,#c98da6);animation:pa 6.8s 4.53s infinite}
+  @keyframes pa{0%{opacity:0}4%{opacity:1}30%{opacity:1}36%{opacity:0}100%{opacity:0}}
+  .pa::after{content:"";position:absolute;inset:0;background:#fff;opacity:0;animation:bloom 6.8s infinite}
+  @keyframes bloom{31%{opacity:0}33%{opacity:.85}35%{opacity:0}100%{opacity:0}}
+  /* Lane B cycle: hard cuts, no fades */
+  .pb .c1{background:linear-gradient(160deg,#17171b,#000);animation:pb 3.8s steps(1,end) infinite}
+  .pb .c2{background:linear-gradient(200deg,#101014,#000);animation:pb 3.8s .95s steps(1,end) infinite}
+  .pb .c3{background:linear-gradient(190deg,#1d1d22,#050507);animation:pb 3.8s 1.9s steps(1,end) infinite}
+  .pb .c4{background:#000;animation:pb 3.8s 2.85s steps(1,end) infinite}
+  @keyframes pb{0%{opacity:1}25%{opacity:1}25.01%,100%{opacity:0}}
+  .pb .tag{color:var(--b-accent)}
+  .pb::after{content:"";position:absolute;inset:0;pointer-events:none;opacity:.14;
+    background-image:repeating-linear-gradient(0deg,transparent 0 2px,rgba(255,255,255,.5) 2px 3px)}
+
+  /* bike palette cards */
+  .toggle{display:inline-flex;border:1px solid var(--line);border-radius:99px;overflow:hidden;margin:18px 0 6px}
+  .toggle button{background:none;border:0;color:var(--muted);font-family:ui-monospace,monospace;font-size:12px;
+    letter-spacing:2px;padding:9px 18px;cursor:pointer}
+  .toggle button.on{background:var(--ink);color:#111}
+  .bikes{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:18px}
+  @media(max-width:960px){.bikes{grid-template-columns:repeat(2,1fr)}}
+  .bike{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px}
+  .bike .num{font-family:ui-monospace,monospace;font-size:11px;color:var(--muted);letter-spacing:2px}
+  .bike h4{font-size:15.5px;font-weight:800;margin:4px 0 12px;letter-spacing:-.2px}
+  .bike .row{display:flex;gap:6px}
+  .bike .c{flex:1;height:34px;border-radius:7px;border:1px solid rgba(255,255,255,.07)}
+  .bike .hex{font-family:ui-monospace,monospace;font-size:9.5px;color:var(--muted);margin-top:8px;letter-spacing:.4px;word-spacing:6px}
+
+  /* framing */
+  .frames{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:22px}
+  @media(max-width:760px){.frames{grid-template-columns:1fr}}
+  .fr{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px}
+  .fr .canvas{aspect-ratio:9/16;max-width:170px;margin:0 auto;border:1px solid var(--line);border-radius:10px;position:relative;
+    background:linear-gradient(160deg,#232028,#121016)}
+  .fr .canvas::before,.fr .canvas::after{content:"";position:absolute;background:rgba(255,255,255,.07)}
+  .fr .canvas::before{left:33.3%;right:33.3%;top:0;bottom:0;border-left:1px dashed rgba(255,255,255,.12);border-right:1px dashed rgba(255,255,255,.12);background:none}
+  .fr .canvas::after{top:33.3%;bottom:33.3%;left:0;right:0;border-top:1px dashed rgba(255,255,255,.12);border-bottom:1px dashed rgba(255,255,255,.12);background:none}
+  .blk{position:absolute;border-radius:6px;background:#39343f}
+  .txt{position:absolute;height:8px;border-radius:3px;background:var(--a-primary)}
+  .fr h5{font-size:14px;font-weight:800;margin:12px 0 4px;text-align:center}
+  .fr p{font-size:12.5px;color:var(--muted);text-align:center}
+
+  /* timeline */
+  .tl{display:flex;border:1px solid var(--line);border-radius:12px;overflow:hidden;margin-top:22px;min-height:74px}
+  .tl div{padding:12px 10px;font-family:ui-monospace,monospace;font-size:11px;letter-spacing:1px;display:flex;flex-direction:column;gap:4px;justify-content:center}
+  .tl b{font-family:inherit;font-size:11.5px;color:var(--ink)}
+  .tl span{color:var(--muted);font-size:10px}
+  .t-intro{flex:1.2;background:#221d29}.t-shots{flex:3.4;background:#1a1720}.t-spec{flex:1.4;background:#221d29}.t-end{flex:1.6;background:#191622}
+
+  pre{background:#0d0c10;border:1px solid var(--line);border-radius:14px;padding:20px;overflow-x:auto;
+    font-family:ui-monospace,monospace;font-size:12.5px;line-height:1.65;color:#cfc9dc;margin-top:20px}
+  pre .k{color:var(--a-primary)} pre .v{color:var(--b-neon)}
+  .note{margin-top:14px;font-size:12.5px;color:var(--muted);border-left:2px solid var(--a-accent);padding-left:12px}
+  footer{padding:44px 0;color:var(--muted);font-size:12.5px;text-align:center}
+</style>
+
+<header><div class="wrap">
+  <div class="lbl">Alpha Electric Bikes · campaign visual playbook</div>
+  <h1>Two lanes.<br><em>One machine.</em></h1>
+  <p class="sub" style="margin-top:14px">Production system for the 8-bike campaign — 15 reels · 10 slideshows · site + dashboard assets. Built to drop straight into the Remotion pipeline. Real bikes only; neutral copy; Arctic Leopard is the golden sample.</p>
+</div></header>
+
+<section><div class="wrap">
+  <div class="lbl">01 — Aesthetic lanes</div>
+  <h2>Lane A “Porsche-edit” · Lane B “Gritty Bikelife”</h2>
+  <p class="sub">Same skeleton, opposite attitude. A floats; B snaps. A is allowed one bloom-to-white per reel; B is hard cuts only — no dissolves anywhere.</p>
+  <div class="lanes">
+    <div class="lane">
+      <div class="head"><h3>Lane A — Porsche-edit</h3><p>80–95 BPM · pastel film · soft deceleration · halation bloom</p></div>
+      <div class="body">
+        <div class="sw">
+          <div class="chip" style="background:#f5b8cd"><span>#F5B8CD</span></div>
+          <div class="chip" style="background:#e8d5c4"><span>#E8D5C4</span></div>
+          <div class="chip" style="background:#d98aa8"><span>#D98AA8</span></div>
+          <div class="chip" style="background:#2a2228"><span>#2A2228</span></div>
+          <div class="chip" style="background:#faf3ee"><span>#FAF3EE</span></div>
+        </div>
+        <div class="typedemo a">
+          <div class="a-model">Ultra Bee</div>
+          <div class="a-spec">21 KW · 74V · KISSIMMEE FL</div>
+        </div>
+        <div class="phones"><div class="phone pa">
+          <div class="cut c1"><div class="tag" style="color:#4a3540">hero</div></div>
+          <div class="cut c2"><div class="tag" style="color:#4a3540">detail</div></div>
+          <div class="cut c3"><div class="tag" style="color:#4a3540">ride</div></div>
+        </div></div>
+      </div>
+    </div>
+    <div class="lane">
+      <div class="head"><h3>Lane B — Gritty Bikelife</h3><p>120–130 BPM · crushed blacks · hard cuts on the kick · neon flicker</p></div>
+      <div class="body">
+        <div class="sw">
+          <div class="chip" style="background:#0c0c0e"><span>#0C0C0E</span></div>
+          <div class="chip" style="background:#26262c"><span>#26262C</span></div>
+          <div class="chip" style="background:#8b8b94"><span>#8B8B94</span></div>
+          <div class="chip" style="background:#ff2d8f"><span>#FF2D8F</span></div>
+          <div class="chip" style="background:#c8ff1f"><span>#C8FF1F</span></div>
+        </div>
+        <div class="typedemo b">
+          <div class="b-model">Ultra Bee</div>
+          <div class="b-spec">21KW / 74V / 59–71 MPH</div>
+        </div>
+        <div class="phones"><div class="phone pb">
+          <div class="cut c1"><div class="tag">hero</div></div>
+          <div class="cut c2"><div class="tag">macro</div></div>
+          <div class="cut c3"><div class="tag">action</div></div>
+          <div class="cut c4"><div class="tag">end</div></div>
+        </div></div>
+      </div>
+    </div>
+  </div>
+  <p class="note">Grade recipes — <b>Lane A:</b> lift +0.04 warm (r+.02), gamma 1.06 toward pink (+.03 r, +.01 b), gain 0.97; grain 35mm at 12% / size 1.4; halation bloom threshold .82, radius 22px, pink-tinted. <b>Lane B:</b> lift −0.06 (crush), gamma 0.94, gain 1.08; saturation .78 globally, accent channel boosted +.25; noise 18% / size 1.0; chromatic aberration 1.5px at frame edges only.</p>
+</div></section>
+
+<section><div class="wrap">
+  <div class="lbl">02 — Per-bike palettes</div>
+  <h2>Eight bikes, one family</h2>
+  <p class="sub">Each bike's accent is sampled from its real paint. Toggle lanes — cards re-skin live.</p>
+  <div class="toggle"><button id="tA" class="on">LANE A</button><button id="tB">LANE B</button></div>
+  <div class="bikes" id="bikes"></div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="lbl">03 — Typography</div>
+  <h2>Type system</h2>
+  <p class="sub">Real fonts load in Remotion (this page previews with system stand-ins — artifact pages can't fetch webfonts).</p>
+  <div class="lanes" style="margin-top:24px">
+    <div class="lane"><div class="body">
+      <div class="lbl">Lane A pairing</div>
+      <div style="font-family:Georgia,serif;font-size:34px;font-weight:700">Fraunces — model names</div>
+      <div class="mono" style="color:var(--muted);font-size:13px">IBM Plex Mono — specs & dealer tag</div>
+      <p class="sub" style="font-size:13px">Model name: 84–96px eq., wt 600, tracking +0.5px, never all-caps. Spec line: 30px eq., tracking +3px, 78% opacity. Dealer tag appears only on end card.</p>
+    </div></div>
+    <div class="lane"><div class="body">
+      <div class="lbl">Lane B pairing</div>
+      <div style="font-family:'Arial Black',sans-serif;font-size:32px;font-weight:900;text-transform:uppercase;letter-spacing:-1px">Archivo Black — model names</div>
+      <div class="mono" style="color:var(--muted);font-size:13px">Space Mono — specs & dealer tag</div>
+      <p class="sub" style="font-size:13px">Model name: 96–110px eq., wt 900, tracking −1px, ALL CAPS, snaps from tracking +8px on entry. Spec line: 28px eq., accent color, steps() flicker on entry. Tag bottom-left, persistent at 55% opacity.</p>
+    </div></div>
+  </div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="lbl">04 — Composition & framing</div>
+  <h2>Every cut intentional</h2>
+  <div class="frames">
+    <div class="fr"><div class="canvas">
+      <div class="blk" style="left:14%;right:14%;top:30%;height:34%"></div>
+      <div class="txt" style="left:12%;width:44%;top:14%"></div>
+    </div><h5>Hero</h5><p>Bike centered for impact; type in upper negative space; never covers motor/suspension/wheel.</p></div>
+    <div class="fr"><div class="canvas">
+      <div class="blk" style="left:-14%;right:30%;top:16%;height:52%;border-radius:12px"></div>
+      <div class="txt" style="right:10%;width:34%;bottom:22%"></div>
+    </div><h5>Macro detail</h5><p>Offset to a thirds line; brake / throttle / swingarm fills 60%+; type reacts to the empty third.</p></div>
+    <div class="fr"><div class="canvas">
+      <div class="blk" style="left:22%;right:8%;top:42%;height:26%;transform:rotate(-7deg)"></div>
+      <div class="txt" style="left:12%;width:40%;bottom:14%"></div>
+    </div><h5>Action</h5><p>Diagonal energy, motion blur kept; horizon tilted 5–8°; slideshows push-in 4–6% linear — never random Ken Burns.</p></div>
+  </div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="lbl">05 — Master template</div>
+  <h2>Reel skeleton (12–15s)</h2>
+  <div class="tl">
+    <div class="t-intro"><b>INTRO</b><span>0–1.5s · kinetic name</span></div>
+    <div class="t-shots"><b>3–4 CUTS</b><span>hero → macro → action · on the kick</span></div>
+    <div class="t-spec"><b>SPEC</b><span>one factual line</span></div>
+    <div class="t-end"><b>END CARD</b><span>logo + Kissimmee, FL</span></div>
+  </div>
+  <p class="note">Lane B cuts land every 2 beats (126 BPM → ~0.95s ≈ 29 frames); one speed-ramp 100→40→100% mid-reel; one 6-frame freeze on the hero. Lane A cuts every 2 beats (88 BPM → ~1.36s ≈ 41 frames), single bloom transition max. Arctic Leopard (#1) is the reference render — every other bike inherits this skeleton with its own palette + accent.</p>
+</div></section>
+
+<section><div class="wrap">
+  <div class="lbl">06 — Motion specs export</div>
+  <h2>Copy-paste for Remotion</h2>
+<pre>{
+  <span class="k">"fps"</span>: 30,
+  <span class="k">"laneA"</span>: {
+    <span class="k">"bpm"</span>: 88, <span class="k">"cutFrames"</span>: 41, <span class="k">"maxBloomTransitions"</span>: 1,
+    <span class="k">"enter"</span>: <span class="v">"cubic-bezier(0.16, 1, 0.3, 1)"</span>, <span class="k">"enterDur"</span>: 20,
+    <span class="k">"exit"</span>:  <span class="v">"cubic-bezier(0.7, 0, 0.84, 0)"</span>, <span class="k">"exitDur"</span>: 12,
+    <span class="k">"model"</span>: { <span class="k">"from"</span>: {<span class="k">"y"</span>: 18, <span class="k">"scale"</span>: 1.04, <span class="k">"blur"</span>: 10, <span class="k">"opacity"</span>: 0} },
+    <span class="k">"stillMotion"</span>: { <span class="k">"pushIn"</span>: [1.0, 1.05], <span class="k">"easing"</span>: <span class="v">"linear"</span> },
+    <span class="k">"grade"</span>: { <span class="k">"lift"</span>: 0.04, <span class="k">"gamma"</span>: 1.06, <span class="k">"gain"</span>: 0.97, <span class="k">"grain"</span>: 0.12, <span class="k">"bloom"</span>: {<span class="k">"threshold"</span>: 0.82, <span class="k">"radius"</span>: 22} }
+  },
+  <span class="k">"laneB"</span>: {
+    <span class="k">"bpm"</span>: 126, <span class="k">"cutFrames"</span>: 29, <span class="k">"transitions"</span>: <span class="v">"hard-cut-only"</span>,
+    <span class="k">"enter"</span>: <span class="v">"cubic-bezier(0.9, 0, 0.1, 1)"</span>, <span class="k">"enterDur"</span>: 8,
+    <span class="k">"glitch"</span>: { <span class="k">"easing"</span>: <span class="v">"steps(2, end)"</span>, <span class="k">"shakePx"</span>: [ -3, 2, 0 ], <span class="k">"frames"</span>: [11, 13, 15] },
+    <span class="k">"model"</span>: { <span class="k">"from"</span>: {<span class="k">"scale"</span>: 1.35, <span class="k">"tracking"</span>: 8, <span class="k">"blur"</span>: 14, <span class="k">"opacity"</span>: 0} },
+    <span class="k">"speedRamp"</span>: [1.0, 0.4, 1.0], <span class="k">"freezeFrames"</span>: 6,
+    <span class="k">"grade"</span>: { <span class="k">"lift"</span>: -0.06, <span class="k">"gamma"</span>: 0.94, <span class="k">"gain"</span>: 1.08, <span class="k">"sat"</span>: 0.78, <span class="k">"noise"</span>: 0.18, <span class="k">"caEdgePx"</span>: 1.5 }
+  },
+  <span class="k">"fonts"</span>: { <span class="k">"laneA"</span>: [<span class="v">"Fraunces"</span>, <span class="v">"IBM Plex Mono"</span>], <span class="k">"laneB"</span>: [<span class="v">"Archivo Black"</span>, <span class="v">"Space Mono"</span>] }
+}</pre>
+  <p class="note">Per-bike palettes export from the cards above — the toggle writes the active lane's variables to <code class="mono">window.alphaPalettes</code> for copy-out.</p>
+</div></section>
+
+<footer>Alpha Electric Bikes — internal pitch playbook · not an official brand document</footer>
+
+<script>
+  const BIKES=[
+    {n:'01',name:'Arctic Leopard XE',a:['#e9c9b4','#f2b8c4','#8a4b52','#f7efe8'],b:['#0d0c0e','#2a2126','#d43a4a','#8b8b94']},
+    {n:'02',name:'Altis Sigma',a:['#d9d3d5','#f0c3d2','#5c565c','#f8f4f4'],b:['#101114','#33383f','#5fd4ff','#9aa0a8']},
+    {n:'03',name:'79Bike Falcon',a:['#ded2ec','#f0c0d8','#6a5a86','#f7f2fb'],b:['#0e0c14','#2c2440','#9b5cff','#8f8a99']},
+    {n:'04',name:'Ventus One Plus',a:['#d8cec2','#efc4cb','#5a5148','#f6f1ea'],b:['#0c0d0c','#272b26','#c8ff1f','#8d938b']},
+    {n:'05',name:'Yozma IN 10 Pro',a:['#f2cdb4','#f4b8ba','#8a4636','#faf0e8'],b:['#100c0b','#2e211c','#ff5a2d','#948b88']},
+    {n:'06',name:'eRide Pro SS',a:['#cfd2da','#eec2d4','#4e5260','#f3f4f8'],b:['#0b0c10','#23262f','#2d6bff','#8a8e99']},
+    {n:'07',name:'Sur-Ron Ultra Bee',a:['#ead9b8','#f1c2c8','#7a6a3e','#f9f4e8'],b:['#0d0c09','#2b2718','#ffc82d','#94907f']},
+    {n:'08',name:'Y-Volt Surge V',a:['#e8eef0','#f2c6d4','#6e7a80','#fbfdfd'],b:['#0b0d0e','#283034','#4de3ff','#93a0a5']},
+  ];
+  let lane='a';
+  const grid=document.getElementById('bikes');
+  function render(){
+    grid.innerHTML='';
+    window.alphaPalettes={};
+    BIKES.forEach(bk=>{
+      const cols=bk[lane];
+      window.alphaPalettes[bk.name]=cols;
+      const el=document.createElement('div');el.className='bike';
+      el.innerHTML='<div class="num">'+bk.n+' · LANE '+lane.toUpperCase()+'</div><h4>'+bk.name+'</h4>'
+        +'<div class="row">'+cols.map(c=>'<div class="c" style="background:'+c+'"></div>').join('')+'</div>'
+        +'<div class="hex">'+cols.join(' ')+'</div>';
+      grid.appendChild(el);
+    });
+  }
+  const tA=document.getElementById('tA'),tB=document.getElementById('tB');
+  tA.onclick=()=>{lane='a';tA.classList.add('on');tB.classList.remove('on');render()};
+  tB.onclick=()=>{lane='b';tB.classList.add('on');tA.classList.remove('on');render()};
+  render();
+</script>
