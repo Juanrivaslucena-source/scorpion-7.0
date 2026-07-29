@@ -4,3 +4,5 @@ out/
 public/clips/
 public/photos/
 public/logo.png
+generated/
+public/gen/
