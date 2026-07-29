@@ -67,12 +67,21 @@ of them the trigger word. That comment wall *is* the lead list.
 - Every automated conversation hands off to a human when it stops being simple.
 - Never imply the demo is a paying client's site.
 
+### Account policy
+
+**Juan's personal account is off-limits.** It is not used for the funnel, not
+referenced in outreach, and not connected to any automation. The agency runs on
+a **separate, dedicated brand account** — created when Juan chooses to, under
+the agency name, kept entirely distinct from anything personal.
+
+Nothing in this playbook executes against a personal profile.
+
 ### Honest gap to close
 
-`@l0stindsauce` is currently 381 followers and 2 posts. The funnel is worthless
-without content volume feeding it. Sequence: **content cadence first**, trigger
-automation second, paid tooling third. Build the posting habit (build-in-public
-clips of real work) before wiring any automation.
+A new brand account starts at zero. The funnel is worthless without content
+volume feeding it, so the sequence is: **content cadence first**, trigger
+automation second, paid tooling third. Assets get built and stockpiled now; they
+publish once the brand account exists.
 
 ## Prospecting (outbound, secondary)
 
