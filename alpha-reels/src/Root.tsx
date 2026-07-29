@@ -3,6 +3,7 @@ import { Composition } from 'remotion';
 import { Reel } from './Reel';
 import { AestheticMontage } from './AestheticMontage';
 import { HardCutReel } from './HardCutReel';
+import { RealBikeLineup } from './RealBikeLineup';
 
 // 9:16 vertical, 15s @ 30fps.
 const WIDTH = 1080;
@@ -16,6 +17,14 @@ const DURATION = 15 * FPS;
 export const RemotionRoot: React.FC = () => {
   return (
     <>
+      <Composition
+        id="RealBikeLineup"
+        component={RealBikeLineup}
+        durationInFrames={45 + 3 * 105 + 55}
+        fps={FPS}
+        width={WIDTH}
+        height={HEIGHT}
+      />
       <Composition
         id="HardCutReel"
         component={HardCutReel}
