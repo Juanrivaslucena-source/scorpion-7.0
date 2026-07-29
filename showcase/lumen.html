@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Lumen — Aesthetic Studio</title>
+<meta name="description" content="Lumen Aesthetic Studio — advanced skin treatments in a calm, considered space." />
+<style>
+:root{
+  --ink:#0d0c0b; --ink-2:#161412; --bone:#f2ece3; --bone-dim:rgba(242,236,227,.62);
+  --gold:#c2a186; --line:rgba(242,236,227,.14);
+  --serif:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,"Times New Roman",serif;
+  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Helvetica,Arial,sans-serif;
+  --ease:cubic-bezier(.22,1,.36,1);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--ink);color:var(--bone);font-family:var(--sans);
+  -webkit-font-smoothing:antialiased;overflow-x:hidden}
+body.loading{overflow:hidden}
+h1,h2,h3,blockquote{font-family:var(--serif);font-weight:400;letter-spacing:-.025em;margin:0}
+a{color:inherit}
+img{max-width:100%;display:block}
+.wrap{width:min(1240px,92vw);margin:0 auto}
+
+/* ---------- grain + vignette ---------- */
+#grain{position:fixed;inset:0;pointer-events:none;z-index:60;opacity:.045;mix-blend-mode:overlay}
+.vig{position:fixed;inset:0;pointer-events:none;z-index:59;
+  background:radial-gradient(120% 90% at 50% 40%,transparent 45%,rgba(0,0,0,.55) 100%)}
+
+/* ---------- loader ---------- */
+#loader{position:fixed;inset:0;z-index:100;background:var(--ink);display:grid;place-items:center;
+  transition:opacity .8s var(--ease),visibility .8s}
+#loader.done{opacity:0;visibility:hidden}
+.ld-num{font-family:var(--serif);font-size:clamp(48px,12vw,140px);letter-spacing:-.04em;line-height:1}
+.ld-bar{width:min(360px,60vw);height:1px;background:var(--line);margin-top:22px;overflow:hidden}
+.ld-bar i{display:block;height:100%;width:0;background:var(--gold)}
+.ld-cap{margin-top:16px;font-size:11px;letter-spacing:.34em;text-transform:uppercase;color:var(--bone-dim)}
+
+/* ---------- cursor ---------- */
+#cur{position:fixed;top:0;left:0;width:26px;height:26px;border:1px solid var(--gold);border-radius:50%;
+  pointer-events:none;z-index:70;transform:translate(-50%,-50%);transition:width .3s var(--ease),
+  height .3s var(--ease),background .3s var(--ease),opacity .3s;mix-blend-mode:difference}
+#cur.big{width:74px;height:74px;background:rgba(194,161,134,.18)}
+@media (pointer:coarse){#cur{display:none}}
+
+/* ---------- nav ---------- */
+nav{position:fixed;top:0;left:0;right:0;z-index:50;padding:22px 0;
+  transition:background .5s var(--ease),padding .5s var(--ease),border-color .5s}
+nav.stuck{background:rgba(13,12,11,.78);backdrop-filter:blur(14px);padding:14px 0;border-bottom:1px solid var(--line)}
+.nav-in{display:flex;align-items:center;justify-content:space-between;gap:24px}
+.brand{font-family:var(--serif);font-size:22px;letter-spacing:.02em}
+.brand em{color:var(--gold);font-style:normal}
+.nav-l{display:flex;gap:34px;align-items:center}
+.nav-l a{text-decoration:none;font-size:13.5px;letter-spacing:.04em;color:var(--bone-dim);position:relative;padding:4px 0}
+.nav-l a::after{content:"";position:absolute;left:0;bottom:0;height:1px;width:0;background:var(--gold);transition:width .45s var(--ease)}
+.nav-l a:hover{color:var(--bone)}
+.nav-l a:hover::after{width:100%}
+.btn{display:inline-block;border:1px solid var(--gold);color:var(--bone);text-decoration:none;
+  padding:13px 26px;border-radius:2px;font-size:12.5px;letter-spacing:.12em;text-transform:uppercase;
+  position:relative;overflow:hidden;background:transparent;cursor:pointer;font-family:var(--sans)}
+.btn span{position:relative;z-index:2;transition:color .5s var(--ease)}
+.btn::before{content:"";position:absolute;inset:0;background:var(--gold);transform:translateY(101%);
+  transition:transform .55s var(--ease)}
+.btn:hover::before{transform:translateY(0)}
+.btn:hover span{color:var(--ink)}
+@media(max-width:860px){.nav-l{display:none}}
+
+/* ---------- hero ---------- */
+header{min-height:100svh;display:flex;align-items:center;position:relative;padding:120px 0 80px;overflow:hidden}
+.aura{position:absolute;border-radius:50%;filter:blur(90px);opacity:.5;pointer-events:none}
+.a1{width:52vw;height:52vw;left:-12vw;top:-10vw;background:radial-gradient(circle,#3a2a20,transparent 68%)}
+.a2{width:46vw;height:46vw;right:-10vw;bottom:-14vw;background:radial-gradient(circle,#2a2f33,transparent 68%)}
+.eyebrow{font-size:11px;letter-spacing:.4em;text-transform:uppercase;color:var(--gold);margin-bottom:30px}
+h1{font-size:clamp(46px,9.2vw,148px);line-height:.94}
+h1 .ln{display:block;overflow:hidden}
+h1 .ln>span{display:block;transform:translateY(105%);transition:transform 1.15s var(--ease)}
+.ready h1 .ln>span{transform:translateY(0)}
+h1 .ln:nth-child(2)>span{transition-delay:.11s}
+h1 .ln:nth-child(3)>span{transition-delay:.22s}
+.it{font-style:italic;color:var(--gold)}
+.sub{max-width:46ch;margin:38px 0 44px;font-size:clamp(15px,1.5vw,18.5px);line-height:1.75;color:var(--bone-dim)}
+.hero-cta{display:flex;gap:18px;align-items:center;flex-wrap:wrap}
+.ghost{font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:var(--bone-dim);text-decoration:none;
+  border-bottom:1px solid var(--line);padding-bottom:6px;transition:color .4s,border-color .4s}
+.ghost:hover{color:var(--bone);border-color:var(--gold)}
+.fade{opacity:0;transform:translateY(26px);transition:opacity 1s var(--ease),transform 1s var(--ease)}
+.ready .fade{opacity:1;transform:none}
+.ready .d1{transition-delay:.42s}.ready .d2{transition-delay:.54s}.ready .d3{transition-delay:.66s}
+.scroll-hint{position:absolute;bottom:34px;left:50%;transform:translateX(-50%);font-size:10.5px;
+  letter-spacing:.3em;text-transform:uppercase;color:var(--bone-dim);display:flex;flex-direction:column;
+  align-items:center;gap:12px}
+.scroll-hint i{display:block;width:1px;height:46px;background:linear-gradient(var(--gold),transparent);
+  animation:drop 2.4s var(--ease) infinite}
+@keyframes drop{0%{transform:scaleY(0);transform-origin:top}50%{transform:scaleY(1);transform-origin:top}
+  51%{transform-origin:bottom}100%{transform:scaleY(0);transform-origin:bottom}}
+
+/* ---------- marquee ---------- */
+.mq{border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:26px 0;overflow:hidden;
+  display:flex;gap:64px;white-space:nowrap}
+.mq div{display:flex;gap:64px;animation:slide 34s linear infinite}
+.mq span{font-family:var(--serif);font-size:clamp(17px,2vw,26px);color:var(--bone-dim);
+  display:flex;align-items:center;gap:64px}
+.mq span::after{content:"◦";color:var(--gold)}
+@keyframes slide{to{transform:translateX(-100%)}}
+
+/* ---------- sections ---------- */
+section{padding:clamp(90px,13vw,180px) 0;position:relative}
+.tag{font-size:11px;letter-spacing:.34em;text-transform:uppercase;color:var(--gold);margin-bottom:26px;
+  display:flex;align-items:center;gap:14px}
+.tag::before{content:"";width:38px;height:1px;background:var(--gold)}
+h2{font-size:clamp(30px,5.2vw,68px);line-height:1.06}
+.lead{color:var(--bone-dim);font-size:clamp(15px,1.5vw,18px);line-height:1.8;max-width:52ch}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:clamp(34px,6vw,96px);align-items:center}
+@media(max-width:900px){.two{grid-template-columns:1fr}}
+
+/* reveal */
+.rv{opacity:0;transform:translateY(38px);transition:opacity 1.05s var(--ease),transform 1.05s var(--ease)}
+.rv.in{opacity:1;transform:none}
+.rv[data-d="1"]{transition-delay:.1s}.rv[data-d="2"]{transition-delay:.2s}.rv[data-d="3"]{transition-delay:.3s}
+.clip{clip-path:inset(0 0 100% 0);transition:clip-path 1.35s var(--ease)}
+.clip.in{clip-path:inset(0 0 0 0)}
+
+/* generative art panels (no external images) */
+.art{position:relative;aspect-ratio:4/5;border-radius:3px;overflow:hidden;background:var(--ink-2)}
+.art::after{content:"";position:absolute;inset:0;
+  background:radial-gradient(120% 80% at 30% 20%,rgba(194,161,134,.28),transparent 60%),
+             radial-gradient(90% 90% at 80% 90%,rgba(120,140,150,.22),transparent 62%)}
+.art canvas{width:100%;height:100%;display:block}
+
+/* ---------- services ---------- */
+.svc{border-top:1px solid var(--line)}
+.svc-row{display:grid;grid-template-columns:70px 1fr auto;gap:26px;align-items:center;
+  padding:clamp(26px,3.4vw,42px) 0;border-bottom:1px solid var(--line);position:relative;
+  text-decoration:none;transition:padding-left .55s var(--ease)}
+.svc-row:hover{padding-left:22px}
+.svc-row::before{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(194,161,134,.09),transparent 70%);
+  opacity:0;transition:opacity .55s var(--ease)}
+.svc-row:hover::before{opacity:1}
+.svc-n{font-size:11.5px;letter-spacing:.2em;color:var(--gold);position:relative}
+.svc-t{font-family:var(--serif);font-size:clamp(21px,3.1vw,40px);line-height:1.2;position:relative;
+  transition:transform .55s var(--ease)}
+.svc-row:hover .svc-t{transform:translateX(8px)}
+.svc-p{font-size:13px;letter-spacing:.06em;color:var(--bone-dim);position:relative;white-space:nowrap}
+@media(max-width:700px){.svc-row{grid-template-columns:auto 1fr;gap:16px}.svc-p{grid-column:2;white-space:normal}}
+
+/* ---------- before / after ---------- */
+.ba{position:relative;aspect-ratio:16/10;border-radius:3px;overflow:hidden;cursor:ew-resize;
+  user-select:none;touch-action:none;background:#100e0d}
+.ba canvas{position:absolute;inset:0;width:100%;height:100%}
+.ba .after{clip-path:inset(0 0 0 50%)}
+.ba-h{position:absolute;top:0;bottom:0;left:50%;width:1px;background:var(--bone);transform:translateX(-.5px)}
+.ba-h::after{content:"";position:absolute;top:50%;left:50%;width:52px;height:52px;transform:translate(-50%,-50%);
+  border:1px solid var(--bone);border-radius:50%;background:rgba(13,12,11,.45);backdrop-filter:blur(6px)}
+.ba-h b{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);z-index:2;font-size:13px;
+  letter-spacing:.1em;color:var(--bone)}
+.ba-lb{position:absolute;bottom:16px;font-size:10.5px;letter-spacing:.26em;text-transform:uppercase;
+  color:var(--bone-dim);background:rgba(13,12,11,.5);padding:7px 13px;border-radius:2px;backdrop-filter:blur(4px)}
+.ba-lb.l{left:16px}.ba-lb.r{right:16px}
+.ba:focus-visible{outline:2px solid var(--gold);outline-offset:4px}
+
+/* ---------- stats ---------- */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:34px;border-top:1px solid var(--line);
+  border-bottom:1px solid var(--line);padding:clamp(40px,5vw,64px) 0}
+.st b{display:block;font-family:var(--serif);font-size:clamp(34px,5.4vw,62px);letter-spacing:-.03em;line-height:1}
+.st span{display:block;margin-top:12px;font-size:11.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--bone-dim)}
+@media(max-width:760px){.stats{grid-template-columns:1fr 1fr;gap:30px}}
+
+/* ---------- quote ---------- */
+blockquote{font-size:clamp(23px,3.7vw,46px);line-height:1.32;max-width:20ch;margin:0 auto;text-align:center}
+.cite{text-align:center;margin-top:34px;font-size:11.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--bone-dim)}
+
+/* ---------- pricing ---------- */
+.plans{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.plan{border:1px solid var(--line);border-radius:3px;padding:clamp(28px,3.2vw,40px);display:flex;
+  flex-direction:column;transition:border-color .5s var(--ease),transform .5s var(--ease),background .5s}
+.plan:hover{border-color:var(--gold);transform:translateY(-6px)}
+.plan.fx{background:linear-gradient(180deg,rgba(194,161,134,.11),transparent);border-color:rgba(194,161,134,.45)}
+.plan h3{font-size:20px;margin-bottom:8px}
+.plan .pr{font-family:var(--serif);font-size:46px;letter-spacing:-.03em;line-height:1;margin:16px 0 4px}
+.plan .pu{font-size:11.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--bone-dim);margin-bottom:26px}
+.plan ul{list-style:none;padding:0;margin:0 0 30px}
+.plan li{font-size:14.5px;color:var(--bone-dim);padding:11px 0;border-bottom:1px solid var(--line);
+  display:flex;gap:11px;align-items:flex-start;line-height:1.5}
+.plan li::before{content:"—";color:var(--gold);flex:none}
+.plan .btn{margin-top:auto;text-align:center}
+@media(max-width:900px){.plans{grid-template-columns:1fr}}
+
+/* ---------- cta ---------- */
+.cta{text-align:center;position:relative;overflow:hidden}
+.cta h2{max-width:16ch;margin:0 auto 30px}
+
+/* ---------- footer ---------- */
+footer{border-top:1px solid var(--line);padding:70px 0 44px}
+.f-top{display:flex;justify-content:space-between;gap:40px;flex-wrap:wrap;margin-bottom:56px}
+.f-col h4{font-size:11px;letter-spacing:.26em;text-transform:uppercase;color:var(--gold);margin:0 0 18px;font-weight:400}
+.f-col p,.f-col a{font-size:14.5px;color:var(--bone-dim);line-height:1.9;text-decoration:none;display:block;margin:0}
+.f-col a:hover{color:var(--bone)}
+.f-bot{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;padding-top:26px;
+  border-top:1px solid var(--line);font-size:12.5px;color:var(--bone-dim)}
+
+/* ---------- sound toggle ---------- */
+#snd{position:fixed;right:22px;bottom:22px;z-index:65;width:50px;height:50px;border-radius:50%;
+  border:1px solid var(--line);background:rgba(13,12,11,.7);backdrop-filter:blur(10px);cursor:pointer;
+  display:grid;place-items:center;gap:3px;transition:border-color .4s}
+#snd:hover{border-color:var(--gold)}
+#snd .bars{display:flex;align-items:center;gap:2.5px;height:16px}
+#snd .bars i{width:2px;height:4px;background:var(--gold);display:block}
+#snd.on .bars i{animation:eq .9s ease-in-out infinite}
+#snd.on .bars i:nth-child(2){animation-delay:.15s}
+#snd.on .bars i:nth-child(3){animation-delay:.3s}
+#snd.on .bars i:nth-child(4){animation-delay:.45s}
+@keyframes eq{0%,100%{height:4px}50%{height:15px}}
+#snd small{position:absolute;bottom:-19px;font-size:8.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--bone-dim)}
+
+:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;
+    transition-duration:.001ms!important}
+  html{scroll-behavior:auto}
+  .rv,.fade,h1 .ln>span{opacity:1!important;transform:none!important}
+  .clip{clip-path:none!important}
+  #grain{display:none}
+}
+</style>
+</head>
+<body class="loading">
+
+<div id="loader">
+  <div style="text-align:center">
+    <div class="ld-num"><span id="ldn">0</span></div>
+    <div class="ld-bar"><i id="ldb"></i></div>
+    <div class="ld-cap">Lumen Aesthetic Studio</div>
+  </div>
+</div>
+
+<canvas id="grain"></canvas>
+<div class="vig"></div>
+<div id="cur"></div>
+
+<nav id="nav">
+  <div class="wrap nav-in">
+    <a class="brand" href="#top" style="text-decoration:none">Lu<em>men</em></a>
+    <div class="nav-l">
+      <a href="#treatments">Treatments</a>
+      <a href="#results">Results</a>
+      <a href="#studio">Studio</a>
+      <a href="#pricing">Membership</a>
+    </div>
+    <a class="btn" href="#book"><span>Book a consult</span></a>
+  </div>
+</nav>
+
+<header id="top">
+  <div class="aura a1"></div><div class="aura a2"></div>
+  <div class="wrap">
+    <p class="eyebrow fade d1">Est. 2019 · Downtown</p>
+    <h1>
+      <span class="ln"><span>Skin that</span></span>
+      <span class="ln"><span>remembers</span></span>
+      <span class="ln"><span><em class="it">its best day.</em></span></span>
+    </h1>
+    <p class="sub fade d2">Advanced, evidence-led aesthetic treatments in a quiet room —
+      delivered by practitioners who would rather do less, better.</p>
+    <div class="hero-cta fade d3">
+      <a class="btn" href="#book"><span>Book a consult</span></a>
+      <a class="ghost" href="#treatments">View treatments</a>
+    </div>
+  </div>
+  <div class="scroll-hint fade d3"><span>Scroll</span><i></i></div>
+</header>
+
+<div class="mq" aria-hidden="true">
+  <div><span>Hydrafacial</span><span>Microneedling</span><span>Laser Resurfacing</span><span>Chemical Peels</span><span>Dermaplaning</span><span>LED Therapy</span></div>
+  <div><span>Hydrafacial</span><span>Microneedling</span><span>Laser Resurfacing</span><span>Chemical Peels</span><span>Dermaplaning</span><span>LED Therapy</span></div>
+</div>
+
+<section id="studio">
+  <div class="wrap two">
+    <div>
+      <p class="tag rv">The Studio</p>
+      <h2 class="rv" data-d="1">A calmer kind<br>of clinical.</h2>
+      <p class="lead rv" data-d="2" style="margin-top:28px">
+        We built Lumen around a simple belief: good skin is a long game, and pressure has no place in it.
+        No packages you didn't ask for. No treatment you don't need. Just a considered plan, reviewed
+        every visit, by the same practitioner who wrote it.
+      </p>
+      <div class="rv" data-d="3" style="margin-top:38px">
+        <a class="ghost" href="#book">Meet the team</a>
+      </div>
+    </div>
+    <div class="art clip rv"><canvas data-art="1" width="640" height="800"></canvas></div>
+  </div>
+</section>
+
+<section style="padding-top:0">
+  <div class="wrap">
+    <div class="stats">
+      <div class="st rv"><b>12k+</b><span>Treatments</span></div>
+      <div class="st rv" data-d="1"><b>4.9</b><span>Average rating</span></div>
+      <div class="st rv" data-d="2"><b>96%</b><span>Return rate</span></div>
+      <div class="st rv" data-d="3"><b>7</b><span>Years open</span></div>
+    </div>
+  </div>
+</section>
+
+<section id="treatments">
+  <div class="wrap">
+    <p class="tag rv">Treatments</p>
+    <h2 class="rv" data-d="1" style="max-width:14ch">Fewer options.<br>Better outcomes.</h2>
+    <div class="svc" style="margin-top:clamp(46px,6vw,80px)">
+      <a class="svc-row rv" href="#book"><span class="svc-n">01</span><span class="svc-t">Signature Hydrafacial</span><span class="svc-p">from $180 · 60 min</span></a>
+      <a class="svc-row rv" href="#book"><span class="svc-n">02</span><span class="svc-t">Collagen Microneedling</span><span class="svc-p">from $340 · 75 min</span></a>
+      <a class="svc-row rv" href="#book"><span class="svc-n">03</span><span class="svc-t">Fractional Laser Resurfacing</span><span class="svc-p">from $520 · 90 min</span></a>
+      <a class="svc-row rv" href="#book"><span class="svc-n">04</span><span class="svc-t">Medical-Grade Peel</span><span class="svc-p">from $220 · 45 min</span></a>
+      <a class="svc-row rv" href="#book"><span class="svc-n">05</span><span class="svc-t">LED &amp; Recovery Ritual</span><span class="svc-p">from $95 · 30 min</span></a>
+    </div>
+  </div>
+</section>
+
+<section id="results">
+  <div class="wrap">
+    <p class="tag rv">Results</p>
+    <h2 class="rv" data-d="1">Twelve weeks apart.</h2>
+    <p class="lead rv" data-d="2" style="margin:26px 0 46px">Drag to compare. Real programme, three sessions,
+      no retouching beyond colour balance.</p>
+    <div class="ba rv" id="ba" tabindex="0" role="slider" aria-label="Before and after comparison"
+         aria-valuemin="0" aria-valuemax="100" aria-valuenow="50">
+      <canvas class="before" data-art="2" width="1200" height="750"></canvas>
+      <canvas class="after" data-art="3" width="1200" height="750"></canvas>
+      <div class="ba-lb l">Before</div>
+      <div class="ba-lb r">After · Week 12</div>
+      <div class="ba-h" id="bah"><b>↔</b></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <blockquote class="rv">“I have never once felt sold to. That is the whole reason I stayed.”</blockquote>
+    <p class="cite rv" data-d="1">Marisol T. · Client since 2021</p>
+  </div>
+</section>
+
+<section id="pricing">
+  <div class="wrap">
+    <p class="tag rv">Membership</p>
+    <h2 class="rv" data-d="1" style="max-width:15ch">Skin is a habit,<br>not an event.</h2>
+    <div class="plans" style="margin-top:clamp(46px,6vw,74px)">
+      <div class="plan rv">
+        <h3>Essential</h3>
+        <div class="pr">$120</div><div class="pu">per month</div>
+        <ul><li>One signature facial monthly</li><li>10% off all add-ons</li><li>Annual skin mapping</li></ul>
+        <a class="btn" href="#book"><span>Choose Essential</span></a>
+      </div>
+      <div class="plan fx rv" data-d="1">
+        <h3>Devoted</h3>
+        <div class="pr">$260</div><div class="pu">per month</div>
+        <ul><li>Two treatments monthly</li><li>Priority booking</li><li>15% off all add-ons</li><li>Quarterly plan review</li></ul>
+        <a class="btn" href="#book"><span>Choose Devoted</span></a>
+      </div>
+      <div class="plan rv" data-d="2">
+        <h3>Studio</h3>
+        <div class="pr">$480</div><div class="pu">per month</div>
+        <ul><li>Unlimited signature facials</li><li>One advanced treatment monthly</li><li>Dedicated practitioner</li><li>Home-care allowance</li></ul>
+        <a class="btn" href="#book"><span>Choose Studio</span></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="cta" id="book">
+  <div class="aura a2" style="left:50%;transform:translateX(-50%);bottom:-30vw"></div>
+  <div class="wrap">
+    <p class="tag rv" style="justify-content:center">Book</p>
+    <h2 class="rv" data-d="1">Start with a conversation, not a treatment.</h2>
+    <p class="lead rv" data-d="2" style="margin:0 auto 44px;text-align:center">
+      Thirty minutes, no charge, no obligation. We will tell you honestly if we are not the right fit.</p>
+    <div class="rv" data-d="3"><a class="btn" href="#book"><span>Book your consult</span></a></div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="f-top">
+      <div class="f-col">
+        <div class="brand" style="margin-bottom:16px">Lu<em>men</em></div>
+        <p style="max-width:30ch">Aesthetic studio &amp; skin clinic.<br>By appointment only.</p>
+      </div>
+      <div class="f-col"><h4>Visit</h4><p>412 Alder Street<br>Suite 2, Downtown</p></div>
+      <div class="f-col"><h4>Contact</h4><a href="#book">hello@lumenstudio.co</a><a href="#book">(555) 018-4420</a></div>
+      <div class="f-col"><h4>Hours</h4><p>Tue – Fri · 10 – 7<br>Saturday · 10 – 4</p></div>
+    </div>
+    <div class="f-bot"><span>© 2026 Lumen Aesthetic Studio</span><span>Built by Scorpion</span></div>
+  </div>
+</footer>
+
+<button id="snd" aria-pressed="false" aria-label="Toggle ambient sound">
+  <span class="bars"><i></i><i></i><i></i><i></i></span>
+  <small>Sound</small>
+</button>
+
+<script>
+(function(){
+"use strict";
+var RM = matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+/* ---------- generative art panels ---------- */
+function paint(cv,seed){
+  var x=cv.getContext("2d"),w=cv.width,h=cv.height,i;
+  var g=x.createLinearGradient(0,0,w,h);
+  if(seed===1){g.addColorStop(0,"#2b2119");g.addColorStop(.5,"#3d3026");g.addColorStop(1,"#191614");}
+  else if(seed===2){g.addColorStop(0,"#241d18");g.addColorStop(.6,"#2e2620");g.addColorStop(1,"#15120f");}
+  else {g.addColorStop(0,"#3b2f24");g.addColorStop(.5,"#5a4636");g.addColorStop(1,"#231c16");}
+  x.fillStyle=g;x.fillRect(0,0,w,h);
+  // soft light blooms
+  var n=seed===1?7:5;
+  for(i=0;i<n;i++){
+    var cx=(Math.sin(i*12.9+seed)*.5+.5)*w, cy=(Math.cos(i*7.3+seed)*.5+.5)*h,
+        r=(60+((i*seed*37)%1)*0)+w*(.16+((i%3)*.07));
+    var rg=x.createRadialGradient(cx,cy,0,cx,cy,r);
+    var a=seed===3?.20:.13;
+    rg.addColorStop(0,"rgba(214,182,152,"+a+")");rg.addColorStop(1,"rgba(214,182,152,0)");
+    x.fillStyle=rg;x.beginPath();x.arc(cx,cy,r,0,6.284);x.fill();
+  }
+  // fine contour lines — editorial texture
+  x.strokeStyle="rgba(242,236,227,"+(seed===3?.055:.04)+")";x.lineWidth=1;
+  for(i=0;i<26;i++){
+    x.beginPath();
+    for(var px=0;px<=w;px+=8){
+      var py=h*(i/26)+Math.sin(px*.004+i*.6+seed)*(h*.035)+Math.sin(px*.011+i)*(h*.012);
+      px===0?x.moveTo(px,py):x.lineTo(px,py);
+    }
+    x.stroke();
+  }
+  // grain
+  var id=x.getImageData(0,0,w,h),d=id.data;
+  for(i=0;i<d.length;i+=4){var v=(Math.random()-.5)*(seed===3?14:20);d[i]+=v;d[i+1]+=v;d[i+2]+=v;}
+  x.putImageData(id,0,0);
+}
+document.querySelectorAll("canvas[data-art]").forEach(function(c){paint(c,+c.dataset.art);});
+
+/* ---------- film grain overlay ---------- */
+var gc=document.getElementById("grain"),gx=gc.getContext("2d"),gw=0,gh=0,tile=null;
+function mkTile(){
+  var t=document.createElement("canvas");t.width=t.height=140;
+  var tx=t.getContext("2d"),d=tx.createImageData(140,140),p=d.data;
+  for(var i=0;i<p.length;i+=4){var v=Math.random()*255;p[i]=p[i+1]=p[i+2]=v;p[i+3]=26;}
+  tx.putImageData(d,0,0);return t;
+}
+function sizeGrain(){gw=gc.width=innerWidth;gh=gc.height=innerHeight;}
+addEventListener("resize",sizeGrain);sizeGrain();tile=mkTile();
+var gt=0;
+function grain(ts){
+  if(ts-gt>62){gt=ts;gx.clearRect(0,0,gw,gh);
+    var pt=gx.createPattern(tile,"repeat");gx.fillStyle=pt;
+    gx.save();gx.translate(-Math.random()*140,-Math.random()*140);
+    gx.fillRect(0,0,gw+140,gh+140);gx.restore();}
+  requestAnimationFrame(grain);
+}
+if(!RM) requestAnimationFrame(grain); else gc.style.display="none";
+
+/* ---------- loader ---------- */
+var n=0,ldn=document.getElementById("ldn"),ldb=document.getElementById("ldb"),ld=document.getElementById("loader");
+var iv=setInterval(function(){
+  n+=Math.random()*13+5; if(n>=100){n=100;clearInterval(iv);done();}
+  ldn.textContent=Math.floor(n); ldb.style.width=n+"%";
+},RM?10:95);
+function done(){
+  setTimeout(function(){
+    ld.classList.add("done");document.body.classList.remove("loading");
+    document.body.classList.add("ready");
+  },RM?0:340);
+}
+
+/* ---------- nav ---------- */
+var nav=document.getElementById("nav");
+addEventListener("scroll",function(){nav.classList.toggle("stuck",scrollY>60);},{passive:true});
+
+/* ---------- reveals ---------- */
+var io=new IntersectionObserver(function(en){
+  en.forEach(function(e){if(e.isIntersecting){e.target.classList.add("in");io.unobserve(e.target);}});
+},{threshold:.14,rootMargin:"0px 0px -8% 0px"});
+document.querySelectorAll(".rv,.clip").forEach(function(e){io.observe(e);});
+
+/* ---------- cursor ---------- */
+var cur=document.getElementById("cur"),cx=innerWidth/2,cy=innerHeight/2,tx=cx,ty=cy;
+addEventListener("pointermove",function(e){tx=e.clientX;ty=e.clientY;},{passive:true});
+(function loop(){cx+=(tx-cx)*.18;cy+=(ty-cy)*.18;
+  cur.style.transform="translate("+cx+"px,"+cy+"px) translate(-50%,-50%)";requestAnimationFrame(loop);})();
+document.querySelectorAll("a,button,.ba,.plan").forEach(function(el){
+  el.addEventListener("pointerenter",function(){cur.classList.add("big");tick();});
+  el.addEventListener("pointerleave",function(){cur.classList.remove("big");});
+});
+
+/* ---------- before / after ---------- */
+var ba=document.getElementById("ba"),bah=document.getElementById("bah"),
+    aft=ba.querySelector(".after"),drag=false;
+function setBA(p){
+  p=Math.max(0,Math.min(100,p));
+  aft.style.clipPath="inset(0 0 0 "+p+"%)";bah.style.left=p+"%";
+  ba.setAttribute("aria-valuenow",Math.round(p));
+}
+function fromEvt(e){var r=ba.getBoundingClientRect();return ((e.clientX-r.left)/r.width)*100;}
+ba.addEventListener("pointerdown",function(e){drag=true;ba.setPointerCapture(e.pointerId);setBA(fromEvt(e));});
+ba.addEventListener("pointermove",function(e){if(drag)setBA(fromEvt(e));});
+ba.addEventListener("pointerup",function(){drag=false;});
+ba.addEventListener("pointercancel",function(){drag=false;});
+ba.addEventListener("keydown",function(e){
+  var cv=+ba.getAttribute("aria-valuenow");
+  if(e.key==="ArrowLeft"){setBA(cv-4);e.preventDefault();}
+  if(e.key==="ArrowRight"){setBA(cv+4);e.preventDefault();}
+});
+setBA(50);
+
+/* ---------- sound (opt-in, off by default) ---------- */
+var AC=window.AudioContext||window.webkitAudioContext,ctx=null,pad=null,on=false;
+var btn=document.getElementById("snd");
+function ensure(){if(!ctx&&AC)ctx=new AC();return ctx;}
+function startPad(){
+  var c=ensure();if(!c)return;
+  if(c.state==="suspended")c.resume();
+  pad=c.createGain();pad.gain.value=0;pad.connect(c.destination);
+  var filt=c.createBiquadFilter();filt.type="lowpass";filt.frequency.value=620;filt.Q.value=.6;
+  filt.connect(pad);
+  [110,164.81,220,329.63].forEach(function(f,i){
+    var o=c.createOscillator(),g=c.createGain(),l=c.createOscillator(),lg=c.createGain();
+    o.type=i%2?"sine":"triangle";o.frequency.value=f;
+    g.gain.value=i===3?.05:.11;
+    l.frequency.value=.05+i*.021;lg.gain.value=i===3?.02:.05;
+    l.connect(lg);lg.connect(g.gain);
+    o.connect(g);g.connect(filt);o.start();l.start();
+  });
+  pad.gain.linearRampToValueAtTime(.16,c.currentTime+2.4);
+}
+function tick(){
+  if(!on||!ctx)return;
+  var o=ctx.createOscillator(),g=ctx.createGain();
+  o.type="sine";o.frequency.value=1180+Math.random()*260;
+  g.gain.setValueAtTime(.0001,ctx.currentTime);
+  g.gain.exponentialRampToValueAtTime(.035,ctx.currentTime+.008);
+  g.gain.exponentialRampToValueAtTime(.0001,ctx.currentTime+.16);
+  o.connect(g);g.connect(ctx.destination);o.start();o.stop(ctx.currentTime+.18);
+}
+btn.addEventListener("click",function(){
+  on=!on;btn.classList.toggle("on",on);btn.setAttribute("aria-pressed",String(on));
+  if(on){ if(!pad) startPad(); else {ctx.resume();pad.gain.linearRampToValueAtTime(.16,ctx.currentTime+.9);} }
+  else if(pad){ pad.gain.linearRampToValueAtTime(0,ctx.currentTime+.6); }
+});
+
+/* ---------- smooth anchor offset ---------- */
+document.querySelectorAll('a[href^="#"]').forEach(function(a){
+  a.addEventListener("click",function(e){
+    var t=document.querySelector(a.getAttribute("href"));if(!t)return;
+    e.preventDefault();
+    var y=t.getBoundingClientRect().top+scrollY-70;
+    scrollTo({top:y,behavior:RM?"auto":"smooth"});
+  });
+});
+})();
+</script>
+</body>
+</html>
