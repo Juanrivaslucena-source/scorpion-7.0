@@ -5,6 +5,7 @@ import { AestheticMontage } from './AestheticMontage';
 import { HardCutReel } from './HardCutReel';
 import { RealBikeLineup } from './RealBikeLineup';
 import { RealBrandReel } from './RealBrandReel';
+import { BrandShowcase, showcaseDuration } from './BrandShowcase';
 
 // 9:16 vertical, 15s @ 30fps.
 const WIDTH = 1080;
@@ -18,6 +19,24 @@ const DURATION = 15 * FPS;
 export const RemotionRoot: React.FC = () => {
   return (
     <>
+      <Composition
+        id="ArcticLeopard"
+        component={BrandShowcase}
+        durationInFrames={showcaseDuration(4)}
+        fps={FPS}
+        width={WIDTH}
+        height={HEIGHT}
+        defaultProps={{
+          brand: 'ARCTIC LEOPARD',
+          tagline: 'The full lineup',
+          items: [
+            { src: 'brands/03.jpg', model: 'XE PRO', spec: 'Desert-tested', fit: 'cover' as const },
+            { src: 'al/xf.jpg', model: 'XF', spec: '12kW · 130 lb · compact', fit: 'contain' as const },
+            { src: 'al/xepros.jpg', model: 'XE PRO S', spec: '20kW · 74V 60Ah', fit: 'contain' as const },
+            { src: 'al/xepror.jpg', model: 'XE PRO R', spec: '26.5kW · 700 Nm · 72 mph', fit: 'contain' as const },
+          ],
+        }}
+      />
       <Composition
         id="RealBrandReel"
         component={RealBrandReel}
