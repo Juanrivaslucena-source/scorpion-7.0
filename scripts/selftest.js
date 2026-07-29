@@ -52,6 +52,8 @@ console.log('File layout');
   'data/seed/products-seed.json', 'data/seed/content-seed.json', 'data/seed/sales-seed.json',
   'scripts/orchestrate.js', 'scripts/arena-router.js', 'scripts/fable-agent.js',
   'pipeline/PIPELINE.md', 'pipeline/COMMAND_CENTER.md', 'auth/callback.html',
+  'scripts/design-audit.js', 'scripts/design-fix.js', 'scripts/lib/cdp.js',
+  'scripts/lib/design-rules.js', 'scripts/lib/browser-provision.js', 'CLAUDE.md',
 ].forEach((f) => {
   test(`exists: ${f}`, () => assert(fs.existsSync(path.join(ROOT, f)), `missing ${f}`));
 });
@@ -383,6 +385,109 @@ test('no TODO or placeholder markers in source', () => {
     const src = fs.readFileSync(path.join(ROOT, f), 'utf8');
     assert(!/\bTODO\b|\bFIXME\b|placeholder implementation/i.test(src), `${f} contains a placeholder marker`);
   });
+});
+
+
+/* ---------- design audit tooling ------------------------------------------ */
+
+console.log('\nDesign audit tooling');
+
+const designAudit = require('./design-audit');
+const { AUDIT_SOURCE } = require('./lib/design-rules');
+
+test('audit covers every routable view', () => {
+  const htmlViews = [...fs.readFileSync(path.join(ROOT, 'index.html'), 'utf8')
+    .matchAll(/id="view-([\w-]+)"/g)].map((m) => m[1]).sort();
+  const auditViews = designAudit.VIEWS.map((v) => v.id).sort();
+  eq(auditViews.join(','), htmlViews.join(','),
+    'design-audit VIEWS must match the view containers in index.html');
+});
+
+test('audit checks desktop and mobile viewports', () => {
+  const names = designAudit.VIEWPORTS.map((v) => v.name);
+  assert(names.includes('desktop') && names.includes('mobile'), `got ${names}`);
+});
+
+test('every rule in design-rules has operator guidance', () => {
+  const rules = [...AUDIT_SOURCE.matchAll(/rule:\s*'([\w-]+)'/g)].map((m) => m[1]);
+  const unique = [...new Set(rules)];
+  assert(unique.length >= 8, `expected 8+ rules, found ${unique.length}`);
+  unique.forEach((r) => {
+    assert(designAudit.RULE_GUIDANCE[r], `rule "${r}" has no RULE_GUIDANCE entry`);
+  });
+});
+
+test('audit rule source is self-contained (no Node globals)', () => {
+  assert(!/\brequire\(/.test(AUDIT_SOURCE), 'rules run in the browser; require() is unavailable');
+  assert(!/\bprocess\./.test(AUDIT_SOURCE), 'rules must not reference process');
+});
+
+test('report builder groups repeated findings', () => {
+  const report = designAudit.buildReport([{
+    view: 'dashboard', viewport: 'desktop', screenshot: 's.png', stats: {},
+    consoleErrors: [], failedRequests: [],
+    findings: [
+      { rule: 'low-contrast', severity: 'warning', selector: 'a', detail: 'd', groupKey: 'pair-1' },
+      { rule: 'low-contrast', severity: 'warning', selector: 'b', detail: 'd', groupKey: 'pair-1' },
+      { rule: 'low-contrast', severity: 'warning', selector: 'c', detail: 'e', groupKey: 'pair-2' },
+    ],
+  }], { browser: 'test' });
+  eq(report.summary.findings, 3, 'raw findings preserved');
+  eq(report.groups['low-contrast'].length, 2, 'should collapse to 2 groups');
+  eq(report.groups['low-contrast'][0].occurrences, 2);
+});
+
+test('console errors are promoted to findings', () => {
+  const report = designAudit.buildReport([{
+    view: 'x', viewport: 'desktop', screenshot: 's.png', stats: {},
+    findings: [], consoleErrors: ['TypeError: boom'], failedRequests: [],
+  }], { browser: 'test' });
+  eq(report.summary.errors, 1);
+  eq(report.findings[0].rule, 'console-error');
+});
+
+test('clean audit produces a PASS brief with no tasks', () => {
+  const report = designAudit.buildReport([{
+    view: 'x', viewport: 'desktop', screenshot: 's.png', stats: {},
+    findings: [], consoleErrors: [], failedRequests: [],
+  }], { browser: 'test' });
+  eq(report.summary.status, 'pass');
+  const brief = designAudit.writeFixme(report);
+  assert(brief.includes('Nothing to fix'), 'clean brief should say nothing to fix');
+});
+
+test('failing audit brief names the verification commands', () => {
+  const report = designAudit.buildReport([{
+    view: 'x', viewport: 'desktop', screenshot: 's.png', stats: {},
+    consoleErrors: [], failedRequests: [],
+    findings: [{ rule: 'oversized-icon', severity: 'error', selector: 'svg', detail: 'huge' }],
+  }], { browser: 'test' });
+  const brief = designAudit.writeFixme(report);
+  assert(brief.includes('npm test'), 'brief must tell the agent to run the tests');
+  assert(brief.includes('npm run design:audit'), 'brief must require a re-audit');
+  assert(brief.includes('- [ ]'), 'brief must contain checkboxes');
+});
+
+test('CLAUDE.md documents the guardrails', () => {
+  const md = fs.readFileSync(path.join(ROOT, 'CLAUDE.md'), 'utf8');
+  ['npm run design:audit', 'design-report/', 'Zero runtime dependencies']
+    .forEach((needle) => assert(md.includes(needle), `CLAUDE.md missing: ${needle}`));
+});
+
+test('package.json still has zero runtime dependencies', () => {
+  const pkg = read('package.json');
+  assert(!pkg.dependencies || Object.keys(pkg.dependencies).length === 0,
+    'the design audit must not add runtime dependencies');
+});
+
+test('CI workflow template is present', () => {
+  assert(fs.existsSync(path.join(ROOT, 'docs/ci/design-audit.yml.example')),
+    'missing docs/ci/design-audit.yml.example');
+});
+
+test('design scripts are wired into npm', () => {
+  const s = read('package.json').scripts;
+  ['design:audit', 'design:fix', 'verify'].forEach((k) => assert(s[k], `missing script: ${k}`));
 });
 
 /* ---------- summary ------------------------------------------------------- */

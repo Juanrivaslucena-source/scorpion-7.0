@@ -1,0 +1,55 @@
+name: Design Audit
+
+on:
+  push:
+    branches: ['**']
+    paths:
+      - 'index.html'
+      - 'assets/**'
+      - 'data/**'
+      - 'modules/**'
+      - 'scripts/**'
+      - '.github/workflows/design-audit.yml'
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      # The audit provisions its own Chromium on first run and caches it.
+      # ubuntu-latest already ships one, so this usually resolves instantly.
+      - name: Cache provisioned browser
+        uses: actions/cache@v4
+        with:
+          path: .cache/chromium
+          key: chromium-${{ runner.os }}-131
+
+      - name: Unit and integration tests
+        run: npm test
+
+      - name: Design audit
+        run: npm run design:audit
+
+      - name: Upload audit report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: design-report
+          path: design-report/
+          retention-days: 14
+
+      - name: Summarize
+        if: always()
+        run: |
+          if [ -f design-report/REPORT.md ]; then
+            cat design-report/REPORT.md >> "$GITHUB_STEP_SUMMARY"
+          fi

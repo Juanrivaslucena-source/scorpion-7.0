@@ -87,6 +87,78 @@ from the environment.
 
 ---
 
+## Design audit → Claude Code
+
+Visual bugs survive unit tests. The icon-sizing bug that made KPI glyphs render
+at 164px passed every static check because the markup was valid — it just looked
+wrong. `npm run design:audit` catches that class of defect by rendering the app
+in real Chromium and inspecting the live DOM.
+
+```bash
+npm run design:audit    # render every view, write design-report/
+npm run design:fix      # audit, hand the brief to Claude Code, re-audit
+npm run verify          # tests + audit, the pre-commit gate
+```
+
+**What it checks**, at 1440px and 390px across all six views: oversized icons,
+clipped content, page-level horizontal scroll, overlapping text, WCAG AA
+contrast, touch-target size, accessible names, `undefined`/`NaN` leaking into
+the UI, blank views, and console errors.
+
+**Output** lands in `design-report/` (gitignored):
+
+| File | Purpose |
+|---|---|
+| `FIXME.md` | Prioritized work order written for Claude Code |
+| `REPORT.md` | Human-readable summary |
+| `report.json` | Machine-readable findings |
+| `screens/` | 12 screenshots |
+
+Findings are grouped by root cause — one failing colour variable appearing 33
+times becomes one task, not 33.
+
+### The handoff
+
+`npm run design:fix` runs the audit, then invokes the Claude Code CLI against
+`design-report/FIXME.md` and re-audits to confirm the fixes landed. Repo
+conventions and guardrails live in [`CLAUDE.md`](CLAUDE.md).
+
+```bash
+npm install -g @anthropic-ai/claude-code   # once
+npm run design:fix                          # audit → fix → verify
+npm run design:fix:dry                      # preview the prompt only
+```
+
+Or drive it manually:
+
+```bash
+npm run design:audit
+claude "read design-report/FIXME.md and fix every task in it"
+```
+
+**No dependencies.** The audit drives Chromium over the DevTools Protocol using
+Node's built-in WebSocket — no Playwright, no Puppeteer. If no browser is
+present it provisions one into `.cache/chromium/` (also gitignored). Set
+`CHROMIUM_PATH` to use your own.
+
+### CI
+
+A ready-made GitHub Actions workflow lives at
+[`docs/ci/design-audit.yml.example`](docs/ci/design-audit.yml.example). It runs
+the tests and the audit on every push and uploads the report as an artifact. To
+enable it:
+
+```bash
+mkdir -p .github/workflows
+cp docs/ci/design-audit.yml.example .github/workflows/design-audit.yml
+git add .github && git commit -m "Enable design audit CI" && git push
+```
+
+(It ships as a template because GitHub Apps cannot create workflow files
+without the `workflows` permission.)
+
+---
+
 ## Layout
 
 ```

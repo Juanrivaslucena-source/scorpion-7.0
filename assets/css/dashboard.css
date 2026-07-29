@@ -18,7 +18,9 @@
 
   --text: #e8e8f0;
   --text-dim: #a0a0b8;
-  --text-faint: #6b6b85;
+  /* #8585a0 clears WCAG AA (4.5:1) on every surface token: 4.76 on --card,
+     5.20 on --sidebar, 5.68 on the tooltip background. Flagged by design:audit. */
+  --text-faint: #8585a0;
 
   --ok: #00d4aa;
   --warn: #f0b429;
