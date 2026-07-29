@@ -50,7 +50,7 @@
     // Click to append (accessibility / convenience).
     item.addEventListener("click", function () {
       addBlock(def.type, null);
-      persist();
+      commit();
     });
     paletteList.appendChild(item);
   });
@@ -149,7 +149,7 @@
       }
     }
     updateEmptyState();
-    persist();
+    commit();
   });
 
   // Re-attach listeners to a block created via cloneNode or deserialization.
@@ -170,7 +170,7 @@
     if (url === null) return;
     const trimmed = url.trim();
     if (trimmed) img.setAttribute("src", trimmed);
-    persist();
+    commit();
   }
 
   /* ---------- Drag & drop onto canvas ---------- */
@@ -207,7 +207,7 @@
     canvas.classList.remove("drag-over");
     const after = getDragAfterElement(e.clientY);
     addBlock(type, after);
-    persist();
+    commit();
   });
 
   function hasScorpionType(e) {
@@ -287,50 +287,107 @@
     );
   }
 
-  /* ---------- Persistence ---------- */
+  /* ---------- Persistence & history (undo/redo) ---------- */
+  const undoBtn = document.getElementById("btn-undo");
+  const redoBtn = document.getElementById("btn-redo");
   let saveTimer = null;
+  let isRestoring = false; // guards history capture during undo/redo/restore
+  const history = [];
+  let histIndex = -1;
+  const HISTORY_CAP = 80;
+
+  function saveNow() {
+    try {
+      localStorage.setItem(STORAGE_KEY, serializePage());
+      saveStatus.textContent = "Saved";
+    } catch (err) {
+      saveStatus.textContent = "Save failed";
+    }
+  }
+
+  function snapshot() {
+    if (isRestoring) return;
+    const html = serializePage();
+    if (history[histIndex] === html) return; // no real change
+    history.splice(histIndex + 1); // drop any redo tail
+    history.push(html);
+    if (history.length > HISTORY_CAP) history.shift();
+    histIndex = history.length - 1;
+    updateHistoryButtons();
+  }
+
+  // Immediate commit — structural actions (add/dup/move/delete/link/image).
+  function commit() {
+    saveNow();
+    snapshot();
+  }
+
+  // Debounced commit — text typing (one history entry per idle pause).
   function persist() {
     saveStatus.textContent = "Saving…";
     if (saveTimer) clearTimeout(saveTimer);
-    saveTimer = setTimeout(function () {
-      try {
-        localStorage.setItem(STORAGE_KEY, serializePage());
-        saveStatus.textContent = "Saved";
-      } catch (err) {
-        saveStatus.textContent = "Save failed";
-      }
-    }, 300);
+    saveTimer = setTimeout(commit, 350);
   }
 
-  function restore() {
-    let html;
-    try {
-      html = localStorage.getItem(STORAGE_KEY);
-    } catch (err) {
-      html = null;
-    }
-    if (!html) {
-      updateEmptyState();
-      return;
-    }
-    // Parse saved block markup and rebuild interactive blocks.
+  function updateHistoryButtons() {
+    if (undoBtn) undoBtn.disabled = histIndex <= 0;
+    if (redoBtn) redoBtn.disabled = histIndex >= history.length - 1;
+  }
+
+  // Rebuild interactive canvas blocks from serialized HTML.
+  function rebuildFromHTML(html) {
+    isRestoring = true;
+    canvas.querySelectorAll(".block").forEach(function (b) {
+      b.remove();
+    });
+    selectedBlock = null;
     const temp = document.createElement("div");
-    temp.innerHTML = html;
+    temp.innerHTML = html || "";
     temp.querySelectorAll(".block").forEach(function (savedBlock) {
       const type = savedBlock.dataset.type;
       const el = createBlockEl(type);
       if (!el) return;
-      // Replace fresh template content with the saved content, then re-add
-      // the toolbar (createBlockEl already appended one; we rebuild cleanly).
       el.innerHTML = savedBlock.innerHTML;
       restoreToolbar(el);
-      // Restore editability on fields.
       el.querySelectorAll("[data-field]").forEach(function (f) {
         f.setAttribute("contenteditable", "true");
       });
       canvas.appendChild(el);
     });
     updateEmptyState();
+    isRestoring = false;
+  }
+
+  function undo() {
+    if (histIndex <= 0) return;
+    histIndex--;
+    rebuildFromHTML(history[histIndex]);
+    saveNow();
+    updateHistoryButtons();
+  }
+
+  function redo() {
+    if (histIndex >= history.length - 1) return;
+    histIndex++;
+    rebuildFromHTML(history[histIndex]);
+    saveNow();
+    updateHistoryButtons();
+  }
+
+  function restore() {
+    let html = null;
+    try {
+      html = localStorage.getItem(STORAGE_KEY);
+    } catch (err) {
+      html = null;
+    }
+    if (html) rebuildFromHTML(html);
+    else updateEmptyState();
+    // Seed history with the initial state so the first edit is undoable.
+    history.length = 0;
+    history.push(serializePage());
+    histIndex = 0;
+    updateHistoryButtons();
   }
 
   function restoreToolbar(wrap) {
@@ -382,13 +439,13 @@
   });
 
   document.getElementById("btn-clear").addEventListener("click", function () {
-    if (!window.confirm("Clear the whole page? This cannot be undone.")) return;
+    if (!window.confirm("Clear the whole page? You can undo this.")) return;
     canvas.querySelectorAll(".block").forEach(function (b) {
       b.remove();
     });
     selectedBlock = null;
     updateEmptyState();
-    persist();
+    commit();
   });
 
   // Keyboard: Delete removes the selected block when not editing text.
@@ -403,7 +460,29 @@
       selectedBlock.remove();
       selectedBlock = null;
       updateEmptyState();
-      persist();
+      commit();
+    }
+  });
+
+  /* ---------- Undo / redo wiring ---------- */
+  if (undoBtn) undoBtn.addEventListener("click", undo);
+  if (redoBtn) redoBtn.addEventListener("click", redo);
+
+  document.addEventListener("keydown", function (e) {
+    if (!(e.metaKey || e.ctrlKey)) return;
+    const key = e.key.toLowerCase();
+    if (key === "z") {
+      // Inside a text field, let the browser's native text undo win.
+      const active = document.activeElement;
+      if (active && active.hasAttribute && active.hasAttribute("contenteditable")) {
+        return;
+      }
+      e.preventDefault();
+      if (e.shiftKey) redo();
+      else undo();
+    } else if (key === "y") {
+      e.preventDefault();
+      redo();
     }
   });
 

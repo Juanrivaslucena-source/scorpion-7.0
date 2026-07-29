@@ -6,14 +6,23 @@ can host anywhere. Everything runs client-side — no build step, no server.
 
 ## Features
 
-- **Drag-and-drop blocks** — Hero, Heading, Text, Features, Image, Call-to-action, Footer
+- **14 drag-and-drop blocks** — Nav bar, Hero, Split (text + image), Heading, Text,
+  Features, Logo strip, Stats, Image, Gallery, Quote/testimonial, Pricing,
+  Call-to-action, Footer
 - **Click-to-append** — click a block in the palette to add it to the bottom
 - **Inline editing** — click any text to edit it directly on the canvas
-- **Image replacement** — click an image to set its URL
+- **Editable images & links** — click an image to set its URL; per-block 🔗 action
+  sets real button hrefs
 - **Reorder / duplicate / delete** — per-block toolbar plus `Delete` key
+- **Undo / redo** — full history stack, with `Ctrl/Cmd+Z` and `Ctrl/Cmd+Shift+Z`
 - **Autosave** — your page is saved to `localStorage` as you work
 - **Live preview** — see the exported page in an isolated iframe
-- **Export** — download a single, self-contained `.html` file (styles inlined)
+- **Export** — download a single, self-contained `.html` file: styles inlined,
+  inline SVG image placeholders, and a scroll-reveal script that respects
+  `prefers-reduced-motion`
+
+The visual system (typography, palette, spacing, motion) is defined in
+[`DESIGN_DNA.md`](./DESIGN_DNA.md) and expressed in `BLOCK_CSS`.
 
 ## Run it
 
