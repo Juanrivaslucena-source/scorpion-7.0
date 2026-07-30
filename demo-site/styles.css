@@ -5,7 +5,7 @@
     --color-secondary: #64748b;
     --color-text-primary: #1e293b;
     --color-text-secondary: #64748b;
-    --color-text-faint: #6b6b85; /* This fails WCAG AA - should be caught by audit */
+    --color-text-faint: #767690; /* 4.41:1 on white - genuinely fails WCAG AA, caught by the contrast rule */
     --color-bg-primary: #ffffff;
     --color-bg-secondary: #f8fafc;
     --color-bg-tertiary: #f1f5f9;
@@ -239,7 +239,7 @@ a:hover {
 }
 
 .text-faint {
-    color: var(--color-text-faint); /* This fails WCAG AA contrast */
+    color: var(--color-text-faint); /* 4.41:1 on white - below the 4.5:1 WCAG AA minimum */
     font-size: var(--font-size-base);
     padding: var(--space-md);
     background-color: var(--color-bg-primary);

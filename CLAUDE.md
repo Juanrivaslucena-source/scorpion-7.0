@@ -21,6 +21,12 @@ Always prefer fixing issues in the design system (CSS variables, base styles) ov
 - All interactive elements must have accessible names
 - Focus indicators must be visible
 
+**Only the first of these is enforced by a rule.** `lib/rules/` contains exactly four
+rules: contrast, overflow, oversized-icon, and text-collision. Touch-target size,
+accessible names, and focus indicators are project standards that a human must check —
+the audit will not catch them and will not report them. Do not infer from a clean audit
+that they hold.
+
 ## Common Fix Patterns
 
 ### Contrast Issues
@@ -35,12 +41,26 @@ Always prefer fixing issues in the design system (CSS variables, base styles) ov
 
 **Example:**
 ```css
-/* Before - fails at 3.30:1 on white */
---text-faint: #6b6b85;
+/* Before - fails at 4.41:1 on white */
+--color-text-faint: #767690;
 
-/* After - passes at 4.76:1 on white */
---text-faint: #8585a0;
+/* After - passes at 5.16:1 on white */
+--color-text-faint: #6b6b85;
 ```
+
+**Every ratio quoted in this file is machine-checked.** `tests/unit.js` recomputes
+them with `lib/rules/contrast-rule.js` and fails if a number here drifts from what the
+code actually produces. Do not hand-edit a ratio into this document — compute it:
+
+```bash
+node -e 'const{getContrastRatio}=require("./lib/rules/contrast-rule.js");
+         console.log(getContrastRatio("#767690","#ffffff").toFixed(2))'
+```
+
+A previous version of this file claimed `#6b6b85` was 3.30:1 (it is 5.16:1, passing)
+and directed agents to "fix" it to `#8585a0` (which is 3.58:1, failing). That guidance
+was wrong in the most damaging possible direction — it turned a passing color into a
+failing one. The machine-check above exists so that cannot recur.
 
 ### Horizontal Overflow
 
@@ -86,27 +106,37 @@ Always prefer fixing issues in the design system (CSS variables, base styles) ov
 
 ## File Structure
 
+There is **no `src/` directory** and no React/Vue/Svelte in this repo. The audited
+markup and CSS live in `demo-site/`, as plain HTML and hand-written CSS. Earlier
+versions of this file described a `src/` tree that never existed, which sent agents
+looking for files that were not there.
+
 ```
 scorpion-7.0/
-├── src/
-│   ├── styles/           # CSS and design tokens
-│   │   ├── variables.css # CSS custom properties
-│   │   └── global.css    # Global styles
-│   └── components/       # React/Vue/Svelte components
+├── demo-site/            # The site under audit (plain HTML/CSS)
+│   ├── index.html
+│   ├── about.html
+│   ├── contact.html
+│   ├── styles.css        # All design tokens live here, in :root
+│   └── server.js         # Static file server for the audit target
 ├── scripts/
 │   ├── design-audit.js   # Main audit script
 │   └── design-fix.js     # Auto-fix workflow
 ├── lib/
 │   ├── audit-engine.js   # Audit orchestration
+│   ├── browser-resolver.js # Locates a Chromium binary
 │   ├── cdp-client.js     # Chromium CDP client
+│   ├── dom-utils.js      # CDP DOM/style helpers
 │   └── rules/            # Audit rules
 │       ├── contrast-rule.js
 │       ├── overflow-rule.js
 │       ├── oversized-icon-rule.js
 │       └── text-collision-rule.js
+├── tests/                # run.js, unit.js, integration.js, dependency-check.js
+├── .claude/skills/       # Project skills (llm-council, boil-the-ocean)
 ├── CLAUDE.md             # This file
 ├── package.json
-└── design-report/        # Generated audit reports
+└── design-report/        # Generated audit reports (gitignored)
     ├── audit-results.json
     ├── audit-report.md
     └── FIXME.md           # Action items for Claude Code
@@ -197,9 +227,16 @@ All changes must pass:
   - Spatial bucketing for collision detection (O(n) per parent vs O(n²) overall)
   - Cached computed styles
   - Smart viewport handling
-- Target: Full audit in < 10 seconds
+- Target: **unestablished.** The previously documented "< 10 seconds for 12 viewports"
+  was measured while the browser layer was a no-op that audited nothing. Re-measure
+  against real Chromium before quoting a number, and do not let an unmet performance
+  target become an argument for skipping the browser.
 
 ## Common Pitfalls
+
+Everything in this section was written before the audit had ever run against a real
+DOM. Treat it as untested hypothesis, and confirm against an actual run before acting
+on it.
 
 1. **False Positives from CSS Gap**: Flex containers with `gap` property may report inflated `scrollWidth`. The overflow rule excludes these.
 
@@ -207,7 +244,7 @@ All changes must pass:
 
 3. **Dynamic Content**: The audit waits for page load but may miss dynamically rendered content. Consider adding delays for SPAs.
 
-4. **Viewport Differences**: Always test at both desktop (1440px) and mobile (390px) viewports.
+4. **Viewport Differences**: Always test at both desktop (1440px) and mobile (390px) viewports. Note that `dom-utils.js` sets `mobile: false` in `Emulation.setDeviceMetricsOverride`, so mobile media queries do not currently match at 390px.
 
 ## Example Fix Session
 
@@ -217,24 +254,32 @@ All changes must pass:
 ```
 ## CONTRAST (error)
 
-**Pattern:** Color: #6b6b85
-**Count:** 62 occurrences
+**Pattern:** Color: #767690
+**Count:** 3 occurrences
 
 ### Example Findings:
-- Contrast ratio 3.30:1 fails WCAG AA
+- Contrast ratio 4.41:1 fails WCAG AA
   - Selector: .text-faint
   - Viewport: desktop (/)
 
 ### Suggested Fix
-Update CSS variable or color value to meet WCAG AA contrast (4.5:1 for normal text, 3:1 for large text). Current color: #6b6b85
+Update CSS variable or color value to meet WCAG AA contrast (4.5:1 for normal text, 3:1 for large text). Current color: #767690
 ```
 
 **Claude Code Action:**
-1. Find the CSS variable: `grep -r "6b6b85" src/`
-2. Locate in `src/styles/variables.css`: `--text-faint: #6b6b85;`
-3. Calculate new color: Use contrast checker to find minimum adjustment
-4. Update: `--text-faint: #8585a0;` (4.76:1 on white)
+1. Find the CSS variable: `grep -rn "767690" demo-site/`
+2. Locate in `demo-site/styles.css`: `--color-text-faint: #767690;`
+3. Compute a candidate with the project's own code — never a remembered number:
+   ```bash
+   node -e 'const{getContrastRatio}=require("./lib/rules/contrast-rule.js");
+            console.log(getContrastRatio("#6b6b85","#ffffff").toFixed(2))'   # 5.16
+   ```
+4. Update: `--color-text-faint: #6b6b85;` (5.16:1 on white)
 5. Verify: `npm run design:audit` shows 0 contrast findings
+
+**Note on counts:** a finding count of "62 occurrences" in an older version of this
+document was never produced by a real audit — the browser layer had never run. Treat
+any pre-2026 figure in `design-report/` as fiction and regenerate it.
 
 ## Resources
 

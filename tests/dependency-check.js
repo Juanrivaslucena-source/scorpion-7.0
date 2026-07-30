@@ -76,12 +76,20 @@ function checkDependencies() {
   
   console.log(`✅ Node.js ${nodeVersion} meets minimum requirement (22+)`);
   
-  // Check that our WebSocket fallback works
+  // The audit depends on Node's built-in global WebSocket. There is no fallback:
+  // the former mock transport silently disabled every audit while reporting success.
+  if (typeof globalThis.WebSocket !== 'function') {
+    console.error('❌ globalThis.WebSocket is missing — Node 22+ is required.');
+    process.exit(1);
+  }
+  console.log('✅ Built-in global WebSocket is available');
+
   try {
-    const { WebSocket } = require('../lib/websocket-fallback');
-    console.log('✅ WebSocket fallback is available');
+    const { assertWebSocketAvailable } = require('../lib/cdp-socket');
+    assertWebSocketAvailable();
+    console.log('✅ CDP socket adapter loads and finds a usable WebSocket');
   } catch (error) {
-    console.error('❌ WebSocket fallback failed:', error.message);
+    console.error('❌ CDP socket adapter failed:', error.message);
     process.exit(1);
   }
   
