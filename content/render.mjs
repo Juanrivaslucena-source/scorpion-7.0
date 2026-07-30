@@ -15,6 +15,7 @@ import fs from "fs";
 import path from "path";
 import { execFileSync } from "child_process";
 import { fileURLToPath } from "url";
+import { launchOptions } from "../dropship/lib/browser.mjs";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const SITE = process.argv[2] || path.join(ROOT, "showcase/lumen.html");
@@ -23,14 +24,6 @@ const URL = SITE.startsWith("http") ? SITE : "file://" + path.resolve(SITE);
 
 // 9:16 vertical, phone-sized.
 const W = 1080, H = 1920, SCALE = 1;
-
-function exe() {
-  const base = "/opt/pw-browsers";
-  const dir = fs.readdirSync(base).find((d) => d.startsWith("chromium-"))
-    || fs.readdirSync(base).find((d) => d.startsWith("chromium_headless_shell"));
-  const full = path.join(base, dir, "chrome-linux", "chrome");
-  return fs.existsSync(full) ? full : path.join(base, dir, "chrome-linux", "headless_shell");
-}
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
@@ -209,7 +202,7 @@ const only = process.env.SHOT;
 
 (async () => {
   fs.mkdirSync(OUT, { recursive: true });
-  const browser = await chromium.launch({ executablePath: exe() });
+  const browser = await chromium.launch(launchOptions());
   const ff = ffmpeg();
   if (!ff) console.warn("! no full ffmpeg found — leaving clips as .webm");
   const made = [];

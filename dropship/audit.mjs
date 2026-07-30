@@ -18,16 +18,9 @@ import { chromium } from "playwright-core";
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
+import { launchOptions } from "./lib/browser.mjs";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
-
-function exe() {
-  const base = "/opt/pw-browsers";
-  const dirs = fs.readdirSync(base);
-  const d = dirs.find((x) => x.startsWith("chromium-")) || dirs.find((x) => x.startsWith("chromium_headless_shell"));
-  const full = path.join(base, d, "chrome-linux", "chrome");
-  return fs.existsSync(full) ? full : path.join(base, d, "chrome-linux", "headless_shell");
-}
 
 /* Rules evaluated inside the page. Returns findings as plain objects so they
  * serialise across the CDP boundary. */
@@ -207,7 +200,7 @@ if (import.meta.url === `file://${process.argv[1]}`) {
 
   if (!files.length) { console.error("no pages to audit — generate one first"); process.exit(1); }
 
-  const browser = await chromium.launch({ executablePath: exe() });
+  const browser = await chromium.launch(launchOptions());
   let errors = 0, warnings = 0;
   for (const f of files) {
     const found = await auditFile(f, browser);

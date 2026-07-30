@@ -12,19 +12,12 @@ import os from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { chromium } from "playwright-core";
+import { launchOptions } from "../dropship/lib/browser.mjs";
 
 import { auditFile } from "../dropship/audit.mjs";
 import { build, contrast, accessibleOn } from "../dropship/build-page.mjs";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
-
-function exe() {
-  const base = "/opt/pw-browsers";
-  const dirs = fs.readdirSync(base);
-  const d = dirs.find((x) => x.startsWith("chromium-")) || dirs.find((x) => x.startsWith("chromium_headless_shell"));
-  const full = path.join(base, d, "chrome-linux", "chrome");
-  return fs.existsSync(full) ? full : path.join(base, d, "chrome-linux", "headless_shell");
-}
 
 const brief = () => ({
   slug: "audit-fixture", name: "Fixture", tagline: "Does the thing.", category: "home",
@@ -45,7 +38,7 @@ const brief = () => ({
 
 let browser, tmp;
 before(async () => {
-  browser = await chromium.launch({ executablePath: exe() });
+  browser = await chromium.launch(launchOptions());
   tmp = fs.mkdtempSync(path.join(os.tmpdir(), "scorpion-audit-"));
 });
 after(async () => {

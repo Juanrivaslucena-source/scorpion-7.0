@@ -1,0 +1,51 @@
+name: verify
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+  schedule:
+    - cron: "0 8 * * *"   # 08:00 UTC daily — catches rot without anyone watching
+  workflow_dispatch:
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      # playwright-core needs a browser; install only chromium to keep it fast.
+      - name: Install dependencies
+        run: |
+          npm ci --no-audit --no-fund 2>/dev/null || npm i --no-audit --no-fund
+          npx --yes playwright install --with-deps chromium
+
+      - name: Unit tests
+        run: node --test test/dropship.test.mjs
+
+      - name: Browser tests
+        env:
+          PW_CHANNEL: chromium
+        run: node --test test/audit.test.mjs
+
+      - name: Build example artefacts
+        run: |
+          node dropship/build-page.mjs dropship/products/scalp-massager.json
+          node dropship/content-kit.mjs dropship/products/scalp-massager.json
+          node dropship/research.mjs score dropship/products/_candidates.json
+
+      - name: Audit generated pages
+        run: node dropship/audit.mjs --all
+
+      - name: Upload artefacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: generated
+          path: dropship/out/
+          retention-days: 7
