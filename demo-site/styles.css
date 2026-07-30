@@ -1,0 +1,392 @@
+/* CSS Variables */
+:root {
+    --color-primary: #3b82f6;
+    --color-primary-dark: #2563eb;
+    --color-secondary: #64748b;
+    --color-text-primary: #1e293b;
+    --color-text-secondary: #64748b;
+    --color-text-faint: #6b6b85; /* This fails WCAG AA - should be caught by audit */
+    --color-bg-primary: #ffffff;
+    --color-bg-secondary: #f8fafc;
+    --color-bg-tertiary: #f1f5f9;
+    
+    --space-xs: 0.25rem;
+    --space-sm: 0.5rem;
+    --space-md: 1rem;
+    --space-lg: 1.5rem;
+    --space-xl: 2rem;
+    --space-2xl: 3rem;
+    
+    --radius-sm: 0.25rem;
+    --radius-md: 0.5rem;
+    --radius-lg: 0.75rem;
+    
+    --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    --font-size-xs: 0.75rem;
+    --font-size-sm: 0.875rem;
+    --font-size-base: 1rem;
+    --font-size-lg: 1.125rem;
+    --font-size-xl: 1.25rem;
+    --font-size-2xl: 1.5rem;
+    --font-size-3xl: 2rem;
+}
+
+/* Reset */
+*, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    font-size: 16px;
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: var(--font-sans);
+    font-size: var(--font-size-base);
+    line-height: 1.6;
+    color: var(--color-text-primary);
+    background-color: var(--color-bg-primary);
+}
+
+/* Typography */
+h1, h2, h3, h4, h5, h6 {
+    font-weight: 700;
+    line-height: 1.2;
+    color: var(--color-text-primary);
+}
+
+h1 { font-size: var(--font-size-3xl); }
+h2 { font-size: var(--font-size-2xl); }
+h3 { font-size: var(--font-size-xl); }
+
+p {
+    margin-bottom: var(--space-md);
+}
+
+a {
+    color: var(--color-primary);
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+a:hover {
+    color: var(--color-primary-dark);
+}
+
+/* Layout */
+.container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 var(--space-md);
+}
+
+/* Header */
+.header {
+    background-color: var(--color-bg-primary);
+    border-bottom: 1px solid var(--color-bg-secondary);
+    padding: var(--space-md) 0;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.header .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    font-size: var(--font-size-xl);
+    font-weight: 800;
+    color: var(--color-primary);
+}
+
+.nav {
+    display: flex;
+    gap: var(--space-lg);
+}
+
+.nav-link {
+    font-size: var(--font-size-sm);
+    font-weight: 500;
+    color: var(--color-text-secondary);
+    padding: var(--space-xs) var(--space-sm);
+    border-radius: var(--radius-sm);
+    transition: all 0.2s ease;
+}
+
+.nav-link:hover {
+    color: var(--color-primary);
+    background-color: var(--color-bg-secondary);
+}
+
+/* Main */
+.main {
+    padding: var(--space-xl) 0;
+}
+
+/* Hero */
+.hero {
+    text-align: center;
+    padding: var(--space-2xl) 0;
+    background: linear-gradient(135deg, var(--color-bg-secondary) 0%, var(--color-bg-primary) 100%);
+}
+
+.hero-title {
+    font-size: var(--font-size-3xl);
+    margin-bottom: var(--space-md);
+}
+
+.hero-subtitle {
+    font-size: var(--font-size-lg);
+    color: var(--color-text-secondary);
+    max-width: 600px;
+    margin: 0 auto var(--space-xl);
+}
+
+/* Buttons */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-sm) var(--space-lg);
+    font-size: var(--font-size-base);
+    font-weight: 600;
+    border-radius: var(--radius-md);
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-decoration: none;
+}
+
+.btn-primary {
+    background-color: var(--color-primary);
+    color: white;
+}
+
+.btn-primary:hover {
+    background-color: var(--color-primary-dark);
+}
+
+.btn-secondary {
+    background-color: var(--color-bg-secondary);
+    color: var(--color-text-primary);
+    border: 1px solid var(--color-bg-tertiary);
+}
+
+.btn-secondary:hover {
+    background-color: var(--color-bg-tertiary);
+}
+
+.btn + .btn {
+    margin-left: var(--space-sm);
+}
+
+/* Features */
+.features {
+    padding: var(--space-2xl) 0;
+}
+
+.section-title {
+    text-align: center;
+    margin-bottom: var(--space-xl);
+}
+
+.feature-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: var(--space-xl);
+}
+
+.feature-card {
+    background-color: var(--color-bg-secondary);
+    padding: var(--space-xl);
+    border-radius: var(--radius-lg);
+    text-align: center;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.feature-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+
+.feature-icon {
+    width: 48px;
+    height: 48px;
+    color: var(--color-primary);
+    margin: 0 auto var(--space-md);
+}
+
+.feature-title {
+    font-size: var(--font-size-lg);
+    margin-bottom: var(--space-sm);
+}
+
+.feature-description {
+    color: var(--color-text-secondary);
+}
+
+/* Test Section - Contains intentional bugs */
+.test-section {
+    padding: var(--space-2xl) 0;
+    background-color: var(--color-bg-tertiary);
+}
+
+.text-faint {
+    color: var(--color-text-faint); /* This fails WCAG AA contrast */
+    font-size: var(--font-size-base);
+    padding: var(--space-md);
+    background-color: var(--color-bg-primary);
+    border-radius: var(--radius-md);
+    margin-bottom: var(--space-md);
+}
+
+.overflow-box {
+    width: 200%; /* This causes horizontal overflow */
+    padding: var(--space-md);
+    background-color: var(--color-bg-primary);
+    border: 1px solid var(--color-bg-secondary);
+    border-radius: var(--radius-md);
+    margin-bottom: var(--space-md);
+}
+
+.huge-icon {
+    width: 200px; /* This is way too big for parent font size */
+    height: 200px;
+    color: var(--color-primary);
+    margin: var(--space-md) 0;
+}
+
+/* Page Header */
+.page-header {
+    padding: var(--space-xl) 0;
+    text-align: center;
+    background-color: var(--color-bg-secondary);
+}
+
+.page-title {
+    font-size: var(--font-size-2xl);
+    margin-bottom: var(--space-sm);
+}
+
+.page-subtitle {
+    color: var(--color-text-secondary);
+}
+
+/* Content */
+.content {
+    padding: var(--space-xl) 0;
+}
+
+.content-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: var(--space-lg);
+}
+
+.content-card {
+    background-color: var(--color-bg-secondary);
+    padding: var(--space-lg);
+    border-radius: var(--radius-lg);
+}
+
+.card-title {
+    font-size: var(--font-size-lg);
+    margin-bottom: var(--space-sm);
+}
+
+.card-text {
+    color: var(--color-text-secondary);
+}
+
+/* Form */
+.contact-form {
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+.form-group {
+    margin-bottom: var(--space-lg);
+}
+
+.form-label {
+    display: block;
+    font-size: var(--font-size-sm);
+    font-weight: 600;
+    color: var(--color-text-primary);
+    margin-bottom: var(--space-xs);
+}
+
+.form-input,
+.form-textarea {
+    width: 100%;
+    padding: var(--space-sm) var(--space-md);
+    font-size: var(--font-size-base);
+    border: 1px solid var(--color-bg-tertiary);
+    border-radius: var(--radius-md);
+    background-color: var(--color-bg-primary);
+    color: var(--color-text-primary);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.form-input:focus,
+.form-textarea:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.form-textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+/* Footer */
+.footer {
+    background-color: var(--color-bg-secondary);
+    padding: var(--space-xl) 0;
+    border-top: 1px solid var(--color-bg-tertiary);
+}
+
+.footer-text {
+    text-align: center;
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-sm);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .header .container {
+        flex-direction: column;
+        gap: var(--space-md);
+    }
+    
+    .nav {
+        gap: var(--space-md);
+    }
+    
+    .hero-title {
+        font-size: var(--font-size-2xl);
+    }
+    
+    .feature-grid,
+    .content-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 480px) {
+    .btn + .btn {
+        margin: var(--space-sm) 0 0 0;
+    }
+    
+    .hero-subtitle {
+        font-size: var(--font-size-base);
+    }
+}

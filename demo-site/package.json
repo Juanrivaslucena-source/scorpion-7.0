@@ -1,0 +1,16 @@
+{
+  "name": "demo-site",
+  "version": "1.0.0",
+  "description": "Demo site for Scorpion 7.0 design audit system",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "engines": {
+    "node": ">=22.0.0"
+  },
+  "keywords": ["demo", "scorpion", "design", "audit"],
+  "author": "",
+  "license": "MIT"
+}

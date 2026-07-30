@@ -25,6 +25,9 @@ npm run design:fix
 
 # Run tests + audit (pre-commit gate)
 npm run verify
+
+# Try the demo
+node demo.js
 ```
 
 ## The Pipeline
@@ -69,6 +72,38 @@ Runs tests + audit as a pre-commit gate. Fails if:
 - Any tests fail
 - Any design audit findings exist
 
+## Demo Site
+
+The repository includes a demo site with **intentional design bugs** to showcase the audit system:
+
+```bash
+# Start the demo site and run audit
+node demo.js
+```
+
+This will:
+1. Start a server at http://localhost:3000
+2. Run the design audit against the demo site
+3. Show you the findings
+
+**Intentional bugs in the demo site:**
+- Low contrast text (`--color-text-faint: #6b6b85` fails WCAG AA)
+- Horizontal overflow (`.overflow-box` is 200% wide)
+- Oversized icon (`.huge-icon` is 200px × 200px)
+
+The audit should catch all three!
+
+### Demo Site Structure
+
+```
+demo-site/
+├── index.html      # Home page with hero and features
+├── about.html     # About page with content cards
+├── contact.html   # Contact page with form
+├── styles.css     # CSS with intentional bugs
+└── server.js      # Simple HTTP server
+```
+
 ## Audit Rules
 
 | Rule | Description | Severity |
@@ -89,6 +124,7 @@ Runs tests + audit as a pre-commit gate. Fails if:
 | `DESIGN_AUDIT_TIMEOUT` | `30000` | Timeout per page in ms |
 | `CHROME_PATH` | Auto-detected | Custom Chromium path |
 | `CLAUDE_CLI_PATH` | `claude` | Path to Claude CLI |
+| `DESIGN_AUDIT_SKIP_BROWSER` | `false` | Skip browser for testing |
 
 ### Custom Viewports
 
@@ -125,6 +161,7 @@ scorpion-7.0/
 │   ├── browser-resolver.js  # Browser discovery/provisioning
 │   ├── cdp-client.js        # Chromium CDP client
 │   ├── dom-utils.js         # DOM manipulation utilities
+│   ├── websocket-fallback.js # WebSocket fallback
 │   └── rules/               # Audit rules
 │       ├── contrast-rule.js
 │       ├── overflow-rule.js
@@ -133,14 +170,21 @@ scorpion-7.0/
 ├── scripts/
 │   ├── design-audit.js      # Main audit script
 │   └── design-fix.js        # Auto-fix workflow
+├── demo-site/               # Demo website
+│   ├── index.html
+│   ├── about.html
+│   ├── contact.html
+│   ├── styles.css
+│   └── server.js
 ├── tests/
 │   ├── run.js               # Test runner
-│   ├── unit.js              # Unit tests
-│   ├── integration.js       # Integration tests
+│   ├── unit.js              # Unit tests (63 tests)
+│   ├── integration.js       # Integration tests (13 tests)
 │   └── dependency-check.js  # Dependency verification
 ├── docs/
 │   └── ci/
 │       └── design-audit.yml.example  # CI workflow template
+├── demo.js                 # Demo script
 ├── CLAUDE.md                # Project instructions for Claude Code
 ├── package.json
 └── README.md
@@ -174,7 +218,7 @@ The audit system includes several optimizations to achieve ~8s for 12 viewports:
 1. **Spatial Bucketing**: Text collision detection is O(n) per parent instead of O(n²) overall
 2. **Cached Computed Styles**: Styles are cached to avoid redundant CDP calls
 3. **Smart Navigation**: Handles same-document navigation (hash changes) without waiting for load events
-4. **Flex Container Exclusion**: Excludes flex containers with `gap` from overflow checks (false positive prevention)
+4. **Flex Container Exclusion**: Excludes flex containers with `gap` property from overflow checks (false positive prevention)
 5. **Out-of-Flow Exclusion**: Skips absolutely positioned elements from overflow checks
 
 ## Real-World Example
@@ -237,7 +281,7 @@ npm run test:unit
 npm run test:integration
 ```
 
-Current test count: 92 tests
+Current test count: **76 tests** (63 unit + 13 integration)
 
 ## Contributing
 
