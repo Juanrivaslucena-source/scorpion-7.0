@@ -9,7 +9,7 @@ Static frontend, Node scripts, JSON data files. No framework, no build step, no 
 ```
 npm run seed     # populate data/ with demo data
 npm start        # http://localhost:4173
-npm test         # 101 tests, no dependencies
+npm test         # 106 tests, no dependencies
 ```
 
 > **Status: scaffold with simulated integrations.** The console, orchestrator,
@@ -227,9 +227,11 @@ gives you an autonomous loop with no always-on server.
 
 ## Documentation
 
-Start with **PROJECT_STATUS.md** — it is the honest account of what is real,
-what is simulated, and what still needs a human.
+New here? **[KICKOFF.md](KICKOFF.md)** tells you which tool to hand this to and
+what to paste. **[docs/PROJECT_STATUS.md](docs/PROJECT_STATUS.md)** is the honest
+account of what is real, what is simulated, and what still needs a human.
 
+- **[KICKOFF.md](KICKOFF.md)** — ready-to-paste prompts for Claude Code, battle mode, and the audit loop
 - **[docs/PROJECT_STATUS.md](docs/PROJECT_STATUS.md)** — integration reality, data provenance, bugs found and how, open decisions
 - **[docs/DECISIONS.md](docs/DECISIONS.md)** — architectural decisions with rationale and revisit criteria
 - **[pipeline/PIPELINE.md](pipeline/PIPELINE.md)** — architecture, task lifecycle, model routing, deployment
@@ -240,7 +242,7 @@ what is simulated, and what still needs a human.
 
 | | |
 |---|---|
-| Tests | 101 passing, no dependencies, no network |
+| Tests | 106 passing, no dependencies, no network |
 | Design audit | 0 errors, 4 warnings |
 | Live API integrations | None connected — all simulated or fixtures |
 | Money spent | $0 |

@@ -205,12 +205,12 @@ Anything touching money, accounts, or credentials.
 ## 7. Verification
 
 ```bash
-npm test              # 101 tests, no dependencies, no network
+npm test              # 106 tests, no dependencies, no network
 npm run design:audit  # renders 6 views x 2 viewports in real Chromium
 npm run verify        # both
 ```
 
-Current state: **101 tests passing, 0 audit errors, 4 warnings** (undersized filter
+Current state: **106 tests passing, 0 audit errors, 4 warnings** (undersized filter
 chips in the scout view).
 
 What the suites do *not* cover: no live API calls are exercised, `design:fix`'s

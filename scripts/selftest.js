@@ -54,7 +54,7 @@ console.log('File layout');
   'pipeline/PIPELINE.md', 'pipeline/COMMAND_CENTER.md', 'auth/callback.html',
   'scripts/design-audit.js', 'scripts/design-fix.js', 'scripts/lib/cdp.js',
   'scripts/lib/design-rules.js', 'scripts/lib/browser-provision.js', 'CLAUDE.md',
-  'docs/PROJECT_STATUS.md', 'docs/DECISIONS.md',
+  'docs/PROJECT_STATUS.md', 'docs/DECISIONS.md', 'KICKOFF.md', 'scorpion.html',
 ].forEach((f) => {
   test(`exists: ${f}`, () => assert(fs.existsSync(path.join(ROOT, f)), `missing ${f}`));
 });
@@ -539,13 +539,40 @@ test('docs report the real test count', () => {
   // tests are generated in loops, so counting `test(` calls in the source
   // undercounts. Compare the docs against the actual total instead.
   const projected = passed + failed + 1; // +1 for this test, still in flight
-  [['README.md', readmeDoc], ['docs/PROJECT_STATUS.md', statusDoc]].forEach(([name, doc]) => {
+  const kickoffDoc = fs.readFileSync(path.join(ROOT, 'KICKOFF.md'), 'utf8');
+  [['README.md', readmeDoc], ['docs/PROJECT_STATUS.md', statusDoc], ['KICKOFF.md', kickoffDoc]].forEach(([name, doc]) => {
     const claimed = [...doc.matchAll(/(\d+)\s+tests?\b/gi)].map((m) => Number(m[1]));
     claimed.forEach((n) => {
       assert(Math.abs(n - projected) <= 3,
         `${name} claims ${n} tests but the suite runs ~${projected}`);
     });
   });
+});
+
+
+test('KICKOFF only references npm scripts that exist', () => {
+  const kickoff = fs.readFileSync(path.join(ROOT, 'KICKOFF.md'), 'utf8');
+  const scripts = read('package.json').scripts;
+  [...kickoff.matchAll(/npm run ([\w:]+)/g)].map((m) => m[1]).forEach((name) => {
+    assert(scripts[name], `KICKOFF references missing script: npm run ${name}`);
+  });
+});
+
+test('KICKOFF only references files that exist', () => {
+  const kickoff = fs.readFileSync(path.join(ROOT, 'KICKOFF.md'), 'utf8');
+  ['scorpion.html', 'CLAUDE.md', 'docs/PROJECT_STATUS.md', 'docs/DECISIONS.md']
+    .forEach((f) => {
+      if (!kickoff.includes(f)) return;
+      assert(fs.existsSync(path.join(ROOT, f)), `KICKOFF references missing file: ${f}`);
+    });
+});
+
+test('single-file build is self-contained', () => {
+  const html = fs.readFileSync(path.join(ROOT, 'scorpion.html'), 'utf8');
+  assert(!/<script[^>]+src=/.test(html), 'must not load external scripts');
+  assert(!/<link[^>]+stylesheet/.test(html), 'must not load external stylesheets');
+  assert(!/fetch\(['"`]data\//.test(html), 'must not fetch local JSON (breaks on file://)');
+  assert(html.includes('[13] VIEWS'), 'section banners must be present for navigation');
 });
 
 /* ---------- summary ------------------------------------------------------- */
