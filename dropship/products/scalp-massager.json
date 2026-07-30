@@ -1,0 +1,101 @@
+{
+  "_status": "EXAMPLE — trend signal and sources are real (captured 2026-07-29). Supplier, reviews, and media are null because no listing has been verified. Do not run ads off this until source{} is filled from a real AliExpress listing.",
+
+  "slug": "scalp-massager",
+  "name": "Scalp Relief Brush",
+  "tagline": "Five minutes that undo a whole day of tension.",
+  "category": "beauty",
+
+  "economics": {
+    "supplierCost": 3.10,
+    "shippingCost": 2.40,
+    "sellPrice": 27.00,
+    "compareAtPrice": 39.00,
+    "currency": "USD"
+  },
+
+  "source": {
+    "platform": "AliExpress",
+    "listingUrl": null,
+    "supplierRating": null,
+    "unitsSold": null,
+    "shipDays": null
+  },
+
+  "trend": {
+    "signal": "Scalp brushes named in beauty/self-care as a leading 2026 short-form category; criteria met: demonstrable in under 3 seconds, tangible problem, sits in the $20-40 impulse band.",
+    "sources": [
+      "https://news.astools.app/en/blog/tiktok-viral-products-august-2026",
+      "https://dropship-spy.com/blog/tiktok-dropshipping-winning-products-2026",
+      "https://www.trenz.ai/resource/tiktok-shop-winning-products-report"
+    ],
+    "momentum": 64,
+    "checkedOn": "2026-07-29"
+  },
+
+  "positioning": {
+    "problem": "Your head feels tight before the day is even over.",
+    "agitation": "You roll your shoulders, drink water, maybe take something. The tension sits higher up than any of that reaches.",
+    "solution": "Silicone nodes that let you work the scalp directly — in the shower or dry, in about five minutes.",
+    "demoIn3s": "Hand draws the brush slowly across a scalp; hair lifts and separates behind it.",
+    "buyer": "25-45, already spends on skincare, wants a ritual not a gadget.",
+    "objections": ["Is this just a hairbrush?", "Will it pull my hair?", "How long is shipping?"]
+  },
+
+  "benefits": [
+    { "icon": "◆", "title": "Works wet or dry", "body": "In the shower with product, or on dry hair while you read." },
+    { "icon": "✦", "title": "Soft silicone nodes", "body": "Flexible tips that move over the scalp instead of dragging hair." },
+    { "icon": "❖", "title": "Fits your hand", "body": "Shaped so your wrist stays neutral through a full five minutes." }
+  ],
+
+  "howItWorks": [
+    { "step": "01", "title": "Section", "body": "Part hair loosely so the nodes reach skin, not just hair." },
+    { "step": "02", "title": "Work in circles", "body": "Slow, small circles. Front to crown, then crown to nape." },
+    { "step": "03", "title": "Rinse and dry", "body": "Warm water, shake out, air dry. No maintenance beyond that." }
+  ],
+
+  "specs": [
+    { "label": "Material", "value": "Food-grade silicone, ABS handle" },
+    { "label": "Dimensions", "value": "" },
+    { "label": "In the box", "value": "1 brush" }
+  ],
+
+  "faq": [
+    { "q": "How long does shipping take?", "a": "" },
+    { "q": "Can I use it on wet hair?", "a": "Yes — it is designed for use in the shower with shampoo or conditioner." },
+    { "q": "Will it pull my hair?", "a": "The nodes are rounded and flexible. Work slowly in circles rather than dragging it through tangles." }
+  ],
+
+  "reviews": {
+    "rating": null,
+    "count": null,
+    "quotes": []
+  },
+
+  "guarantee": {
+    "returnDays": 30,
+    "text": "30-day returns. If it does not do what this page says, send it back."
+  },
+
+  "shipping": {
+    "freeOver": null,
+    "estimate": ""
+  },
+
+  "cta": { "primary": "Add to cart", "url": "#" },
+
+  "brand": {
+    "storeName": "Ritual Goods",
+    "accent": "#8a6b52",
+    "register": "warm",
+    "supportEmail": null
+  },
+
+  "media": { "heroImage": null, "gallery": [] },
+
+  "legal": {
+    "disclaimers": [
+      "This is a personal care accessory, not a medical device. It is not intended to diagnose, treat, cure, or prevent any condition, and makes no claim to affect hair growth."
+    ]
+  }
+}

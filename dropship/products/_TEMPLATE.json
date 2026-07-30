@@ -1,0 +1,108 @@
+{
+  "_comment": "Product brief. Copy to <slug>.json and fill. Anything left null is OMITTED from the page rather than invented — see PIPELINE.md 'Truth rules'.",
+
+  "slug": "example-product",
+  "name": "Product Name",
+  "tagline": "The one-line benefit, not the feature.",
+  "category": "beauty | home | wellness | tech | pet | outdoor",
+
+  "economics": {
+    "supplierCost": 0.00,
+    "shippingCost": 0.00,
+    "sellPrice": 0.00,
+    "compareAtPrice": null,
+    "currency": "USD",
+    "_note": "sellPrice in the $20-40 impulse band converts best. Target 3x+ on landed cost."
+  },
+
+  "source": {
+    "platform": "AliExpress",
+    "listingUrl": null,
+    "supplierRating": null,
+    "unitsSold": null,
+    "shipDays": null,
+    "_note": "Real listing data only. Null if unverified."
+  },
+
+  "trend": {
+    "signal": null,
+    "sources": [],
+    "momentum": null,
+    "checkedOn": null,
+    "_note": "momentum 0-100. Only fill from real research; cite sources."
+  },
+
+  "positioning": {
+    "problem": "The specific frustration the buyer feels today.",
+    "agitation": "Why the usual workaround fails them.",
+    "solution": "How this fixes it, plainly.",
+    "demoIn3s": "What the camera shows in the first 3 seconds.",
+    "buyer": "Who they are, in one sentence.",
+    "objections": ["Too good to be true?", "Will it actually fit/work?", "How long is shipping?"]
+  },
+
+  "benefits": [
+    { "icon": "◆", "title": "Benefit one", "body": "Concrete outcome, not an adjective." },
+    { "icon": "✦", "title": "Benefit two", "body": "Concrete outcome, not an adjective." },
+    { "icon": "❖", "title": "Benefit three", "body": "Concrete outcome, not an adjective." }
+  ],
+
+  "howItWorks": [
+    { "step": "01", "title": "Step one", "body": "" },
+    { "step": "02", "title": "Step two", "body": "" },
+    { "step": "03", "title": "Step three", "body": "" }
+  ],
+
+  "specs": [
+    { "label": "Material", "value": "" },
+    { "label": "Dimensions", "value": "" },
+    { "label": "In the box", "value": "" }
+  ],
+
+  "faq": [
+    { "q": "How long does shipping take?", "a": "" },
+    { "q": "What is the return policy?", "a": "" },
+    { "q": "Is there a warranty?", "a": "" }
+  ],
+
+  "reviews": {
+    "_RULE": "REAL reviews only, quoted from the actual supplier listing or your own customers. Never invent testimonials or ratings — fake reviews are illegal in the US (FTC) and will get a store shut down. Leave empty until you have real ones.",
+    "rating": null,
+    "count": null,
+    "quotes": []
+  },
+
+  "guarantee": {
+    "returnDays": 30,
+    "text": "30-day returns. If it does not do what this page says, send it back."
+  },
+
+  "shipping": {
+    "freeOver": null,
+    "estimate": "Add the honest estimate. Do not promise 2-day on a 14-day supplier."
+  },
+
+  "cta": {
+    "primary": "Add to cart",
+    "url": "#",
+    "_note": "Point at the real checkout URL."
+  },
+
+  "brand": {
+    "storeName": "Store",
+    "accent": "#c2532b",
+    "register": "clean | warm | bold | clinical",
+    "supportEmail": null
+  },
+
+  "media": {
+    "heroImage": null,
+    "gallery": [],
+    "_note": "Local paths or data URIs. Null falls back to generated abstract art rather than misleading stock photography."
+  },
+
+  "legal": {
+    "disclaimers": [],
+    "_note": "Health/beauty claims need care. No medical claims. No 'cures'. No before/after implying guaranteed results."
+  }
+}

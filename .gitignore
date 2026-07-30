@@ -3,3 +3,5 @@ package*.json
 scratch-*
 .DS_Store
 content/out/
+dropship/out/
+*.png
