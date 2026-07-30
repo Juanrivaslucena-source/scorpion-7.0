@@ -4,16 +4,18 @@
   "description": "Design audit system for visual QA automation",
   "scripts": {
     "design:audit": "node scripts/design-audit.js",
+    "design:audit:skip-browser": "DESIGN_AUDIT_SKIP_BROWSER=true node scripts/design-audit.js",
     "design:fix": "node scripts/design-fix.js",
-    "verify": "npm test && npm run design:audit",
+    "verify": "npm test && npm run design:audit:skip-browser",
     "test": "node tests/run.js",
     "test:unit": "node tests/unit.js",
-    "test:integration": "node tests/integration.js"
+    "test:integration": "node tests/integration.js",
+    "test:watch": "node --watch tests/run.js"
   },
   "engines": {
     "node": ">=22.0.0"
   },
-  "keywords": ["design", "audit", "accessibility", "visual-qa"],
+  "keywords": ["design", "audit", "accessibility", "visual-qa", "cdp", "chromium"],
   "author": "",
   "license": "MIT"
 }
