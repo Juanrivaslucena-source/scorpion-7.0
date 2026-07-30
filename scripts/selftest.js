@@ -54,6 +54,7 @@ console.log('File layout');
   'pipeline/PIPELINE.md', 'pipeline/COMMAND_CENTER.md', 'auth/callback.html',
   'scripts/design-audit.js', 'scripts/design-fix.js', 'scripts/lib/cdp.js',
   'scripts/lib/design-rules.js', 'scripts/lib/browser-provision.js', 'CLAUDE.md',
+  'docs/PROJECT_STATUS.md', 'docs/DECISIONS.md',
 ].forEach((f) => {
   test(`exists: ${f}`, () => assert(fs.existsSync(path.join(ROOT, f)), `missing ${f}`));
 });
@@ -488,6 +489,63 @@ test('CI workflow template is present', () => {
 test('design scripts are wired into npm', () => {
   const s = read('package.json').scripts;
   ['design:audit', 'design:fix', 'verify'].forEach((k) => assert(s[k], `missing script: ${k}`));
+});
+
+
+/* ---------- documentation accuracy ---------------------------------------- */
+
+console.log('\nDocumentation');
+
+const statusDoc = fs.readFileSync(path.join(ROOT, 'docs/PROJECT_STATUS.md'), 'utf8');
+const decisionsDoc = fs.readFileSync(path.join(ROOT, 'docs/DECISIONS.md'), 'utf8');
+const readmeDoc = fs.readFileSync(path.join(ROOT, 'README.md'), 'utf8');
+
+test('PROJECT_STATUS states that integrations are not connected', () => {
+  assert(/not connected/i.test(statusDoc), 'must be explicit about unconnected integrations');
+  ['Arena', 'Fable', 'RunwayML'].forEach((s) => {
+    assert(statusDoc.includes(s), `PROJECT_STATUS should mention ${s}`);
+  });
+});
+
+test('PROJECT_STATUS documents seed data provenance', () => {
+  assert(/AliExpress/.test(statusDoc), 'should say where product costs came from');
+  assert(/fabricated|invented/i.test(statusDoc), 'should be clear which data is invented');
+});
+
+test('README warns that integrations are simulated', () => {
+  const intro = readmeDoc.slice(0, 1600);
+  assert(/simulated/i.test(intro), 'the warning must be near the top, not buried');
+});
+
+test('README links the status and decision docs', () => {
+  assert(readmeDoc.includes('docs/PROJECT_STATUS.md'), 'README must link PROJECT_STATUS');
+  assert(readmeDoc.includes('docs/DECISIONS.md'), 'README must link DECISIONS');
+});
+
+test('CLAUDE.md points agents at the status doc', () => {
+  const md = fs.readFileSync(path.join(ROOT, 'CLAUDE.md'), 'utf8');
+  assert(md.includes('docs/PROJECT_STATUS.md'), 'agents must be told where reality is documented');
+});
+
+test('DECISIONS covers the load-bearing choices', () => {
+  ['zero runtime dependencies', 'teal', 'oauth', 'playwright', 'group']
+    .forEach((topic) => {
+      assert(decisionsDoc.toLowerCase().includes(topic), `DECISIONS missing topic: ${topic}`);
+    });
+});
+
+test('docs report the real test count', () => {
+  // `passed` is the live count of assertions run so far in this process. Some
+  // tests are generated in loops, so counting `test(` calls in the source
+  // undercounts. Compare the docs against the actual total instead.
+  const projected = passed + failed + 1; // +1 for this test, still in flight
+  [['README.md', readmeDoc], ['docs/PROJECT_STATUS.md', statusDoc]].forEach(([name, doc]) => {
+    const claimed = [...doc.matchAll(/(\d+)\s+tests?\b/gi)].map((m) => Number(m[1]));
+    claimed.forEach((n) => {
+      assert(Math.abs(n - projected) <= 3,
+        `${name} claims ${n} tests but the suite runs ~${projected}`);
+    });
+  });
 });
 
 /* ---------- summary ------------------------------------------------------- */

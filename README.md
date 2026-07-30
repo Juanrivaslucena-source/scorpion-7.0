@@ -9,8 +9,14 @@ Static frontend, Node scripts, JSON data files. No framework, no build step, no 
 ```
 npm run seed     # populate data/ with demo data
 npm start        # http://localhost:4173
-npm test         # 60+ smoke tests
+npm test         # 101 tests, no dependencies
 ```
+
+> **Status: scaffold with simulated integrations.** The console, orchestrator,
+> routing and audit tooling all work. No API keys are configured, so Arena.ai,
+> Fable 5 and RunwayML calls return simulated responses and cached fixtures.
+> Nothing here has spent money or touched a real storefront.
+> See **[docs/PROJECT_STATUS.md](docs/PROJECT_STATUS.md)** for the full picture.
 
 ---
 
@@ -221,5 +227,20 @@ gives you an autonomous loop with no always-on server.
 
 ## Documentation
 
+Start with **PROJECT_STATUS.md** — it is the honest account of what is real,
+what is simulated, and what still needs a human.
+
+- **[docs/PROJECT_STATUS.md](docs/PROJECT_STATUS.md)** — integration reality, data provenance, bugs found and how, open decisions
+- **[docs/DECISIONS.md](docs/DECISIONS.md)** — architectural decisions with rationale and revisit criteria
 - **[pipeline/PIPELINE.md](pipeline/PIPELINE.md)** — architecture, task lifecycle, model routing, deployment
 - **[pipeline/COMMAND_CENTER.md](pipeline/COMMAND_CENTER.md)** — director protocol, product criteria, kill rules, content rules
+- **[CLAUDE.md](CLAUDE.md)** — conventions and guardrails for coding agents
+
+### Status at a glance
+
+| | |
+|---|---|
+| Tests | 101 passing, no dependencies, no network |
+| Design audit | 0 errors, 4 warnings |
+| Live API integrations | None connected — all simulated or fixtures |
+| Money spent | $0 |

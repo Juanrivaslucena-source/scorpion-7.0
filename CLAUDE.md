@@ -3,6 +3,19 @@
 Autonomous AI operations platform for dropshipping. Static frontend, Node scripts,
 JSON data files. **No framework, no build step, no bundler, no dependencies.**
 
+## Orient yourself first
+
+- **[docs/PROJECT_STATUS.md](docs/PROJECT_STATUS.md)** — what is real vs simulated,
+  where the seed data came from, what still needs a human. Read this before
+  assuming any integration is live. **No API keys are configured**: Arena.ai,
+  Fable 5 and RunwayML all return simulated responses or cached fixtures.
+- **[docs/DECISIONS.md](docs/DECISIONS.md)** — why the architecture is the way it
+  is, and what would justify changing it. Check here before undoing something that
+  looks odd; most of it is deliberate.
+
+If you make a decision that constrains future work, add an entry to `DECISIONS.md`.
+If you change what is real vs simulated, update `PROJECT_STATUS.md`.
+
 ## Hard constraints
 
 1. **Zero runtime dependencies.** `package.json` has no `dependencies` block and
