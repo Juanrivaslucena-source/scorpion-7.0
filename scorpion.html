@@ -1,0 +1,1384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Scorpion — Autonomous Operations</title>
+<meta name="description" content="Scorpion — single-file autonomous AI operations console for dropshipping." />
+<meta name="theme-color" content="#0a0a0f" />
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🦂</text></svg>" />
+
+<!--
+=============================================================================
+  SCORPION 7.0 — SINGLE FILE BUILD
+=============================================================================
+
+  Autonomous AI operations console for a dropshipping business.
+  Product research, content generation, revenue tracking, model routing.
+
+  HOW TO RUN
+    Save as scorpion.html and double-click it. That's it.
+    No server, no npm, no build step, no internet.
+
+  WHY ONE FILE
+    Everything is inline — CSS, data, logic — so it runs from file://
+    where fetch() is blocked by CORS. Paste it anywhere and it works.
+
+  MAP (search for these banners to jump around)
+    [01] THEME          CSS custom properties — change the look here
+    [02] STYLES         All CSS
+    [03] MARKUP         App shell + icon sprite
+    [04] CONFIG         Tunable constants
+    [05] SEED DATA      Products + clips (real AliExpress sourcing figures)
+    [06] SALES ENGINE   Generates 30 days of orders from a seeded PRNG
+    [07] MODEL REGISTRY Specialist catalog + routing table
+    [08] AI LAYER       Arena / Fable / Runway clients (simulated w/o keys)
+    [09] TASK ROUTER    Cost-aware routing + queue
+    [10] MODULES        Scout, Studio, Tracker
+    [11] STATE          Single store, one render path
+    [12] UI HELPERS     Formatting + small components
+    [13] VIEWS          One render function per screen
+    [14] APP            Boot, nav, events
+
+  STATUS
+    No API keys are wired up, so every AI call returns a simulated
+    response. Product costs and seller ratings are real (pulled from live
+    AliExpress listings); order history and view counts are fabricated.
+    Nothing here has spent money or touched a storefront.
+
+  ADDING A VIEW
+    1. Add a render function to VIEWS in [13]
+    2. Add an entry to NAV in [04]
+    Routing, nav, and hash URLs are automatic.
+
+=============================================================================
+-->
+
+<style>
+/* ==========================================================================
+   [01] THEME — every colour and metric lives here
+   ========================================================================== */
+:root {
+  --bg: #0a0a0f;
+  --sidebar: #12121a;
+  --card: #1a1a2e;
+  --border: #2a2a3a;
+  --border-strong: #3a3a4e;
+
+  --accent: #00d4aa;
+  --accent-dim: rgba(0, 212, 170, 0.12);
+  --accent-line: rgba(0, 212, 170, 0.35);
+  --accent-ink: #04231d;
+
+  --text: #e8e8f0;
+  --text-dim: #a0a0b8;
+  /* #8585a0 clears WCAG AA (4.5:1) on every surface. Don't darken it. */
+  --text-faint: #8585a0;
+
+  --ok: #00d4aa;
+  --warn: #f0b429;
+  --danger: #f2555a;
+  --info: #7c9cf0;
+  --purple: #7c3aed;
+
+  --radius: 8px;
+  --sidebar-w: 248px;
+  --speed: 200ms;
+
+  --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+}
+
+/* ==========================================================================
+   [02] STYLES
+   ========================================================================== */
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; height: 100%; }
+body {
+  background: var(--bg); color: var(--text); font-family: var(--font);
+  font-size: 14px; line-height: 1.5; -webkit-font-smoothing: antialiased;
+}
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+h1, h2, h3 { margin: 0; font-weight: 600; letter-spacing: -0.01em; }
+h1 { font-size: 22px; } h2 { font-size: 17px; } h3 { font-size: 15px; }
+
+/* Unsized inline SVG expands to fill its container — this prevents that.
+   (A real bug once rendered 16px icons at 164px.) */
+svg:not([width]) { width: 16px; height: 16px; flex: 0 0 auto; }
+
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 6px; border: 2px solid var(--bg); }
+
+/* --- shell --------------------------------------------------------------- */
+.sidebar {
+  position: fixed; inset: 0 auto 0 0; width: var(--sidebar-w);
+  background: var(--sidebar); border-right: 1px solid var(--border);
+  display: flex; flex-direction: column; z-index: 40;
+  transition: transform var(--speed) ease;
+}
+.brand { display: flex; align-items: center; gap: 11px; padding: 20px; border-bottom: 1px solid var(--border); }
+.brand-mark {
+  width: 34px; height: 34px; border-radius: 9px; flex: 0 0 auto;
+  background: linear-gradient(135deg, var(--accent), #0891b2);
+  display: grid; place-items: center; color: var(--accent-ink);
+}
+.brand-mark svg { width: 20px; height: 20px; }
+.brand-name { font-size: 16px; font-weight: 700; letter-spacing: -0.02em; line-height: 1.2; }
+.brand-sub { font-size: 10.5px; color: var(--text-faint); text-transform: uppercase; letter-spacing: 0.09em; }
+
+.nav { flex: 1; padding: 14px 12px; overflow-y: auto; }
+.nav-label { font-size: 10.5px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-faint); padding: 10px 10px 6px; }
+.nav-item {
+  display: flex; align-items: center; gap: 11px; width: 100%;
+  padding: 9px 10px; margin-bottom: 2px; background: none; border: 0;
+  border-radius: var(--radius); color: var(--text-dim); font: inherit; font-size: 13.5px;
+  text-align: left; cursor: pointer; transition: background var(--speed), color var(--speed);
+}
+.nav-item svg { width: 17px; height: 17px; }
+.nav-item:hover { background: rgba(255,255,255,.04); color: var(--text); }
+.nav-item.active { background: var(--accent-dim); color: var(--accent); }
+.nav-count {
+  margin-left: auto; font-size: 11px; font-family: var(--mono); color: var(--text-faint);
+  background: rgba(255,255,255,.05); border-radius: 20px; padding: 1px 7px;
+}
+.nav-item.active .nav-count { background: rgba(0,212,170,.18); color: var(--accent); }
+
+.sidebar-foot { padding: 14px; border-top: 1px solid var(--border); }
+.user-chip { display: flex; align-items: center; gap: 10px; padding: 8px; border-radius: var(--radius); }
+.avatar { width: 30px; height: 30px; border-radius: 50%; background: var(--border); display: grid; place-items: center; font-size: 12px; color: var(--text-dim); }
+
+.main { margin-left: var(--sidebar-w); min-height: 100vh; }
+.topbar {
+  position: sticky; top: 0; z-index: 30; display: flex; align-items: center; gap: 14px;
+  padding: 16px 26px; background: rgba(10,10,15,.85); backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--border);
+}
+.topbar-sub { font-size: 12.5px; color: var(--text-dim); margin-top: 2px; }
+.topbar-actions { margin-left: auto; display: flex; gap: 10px; }
+.menu-toggle { display: none; background: none; border: 0; color: var(--text); cursor: pointer; padding: 4px; }
+.menu-toggle svg { width: 22px; height: 22px; }
+.content { padding: 24px 26px 60px; }
+
+/* --- buttons ------------------------------------------------------------- */
+.btn {
+  display: inline-flex; align-items: center; gap: 7px; padding: 8px 15px;
+  border-radius: 20px; border: 1px solid transparent; font: inherit; font-size: 13px;
+  font-weight: 500; cursor: pointer; transition: all var(--speed) ease; white-space: nowrap;
+}
+.btn svg { width: 15px; height: 15px; }
+.btn-primary { background: var(--accent); color: var(--accent-ink); font-weight: 600; }
+.btn-primary:hover { filter: brightness(1.1); transform: translateY(-1px); }
+.btn-ghost { background: transparent; border-color: var(--border-strong); color: var(--text-dim); }
+.btn-ghost:hover { border-color: var(--accent-line); color: var(--accent); background: var(--accent-dim); }
+.btn:disabled { opacity: .55; cursor: not-allowed; transform: none; }
+
+/* --- cards --------------------------------------------------------------- */
+.grid { display: grid; gap: 20px; }
+.grid-kpi { grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); }
+.grid-2 { grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); }
+.grid-cards { grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); }
+.card {
+  background: var(--card); border: 1px solid var(--border); border-radius: var(--radius);
+  padding: 18px; transition: transform var(--speed), border-color var(--speed), box-shadow var(--speed);
+}
+.card-hover:hover { transform: translateY(-2px); border-color: var(--border-strong); box-shadow: 0 10px 26px rgba(0,0,0,.35); }
+.card-head { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; }
+.spacer { margin-left: auto; }
+.section { margin-bottom: 26px; }
+.section-head { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+
+.kpi-label { font-size: 11.5px; text-transform: uppercase; letter-spacing: .08em; color: var(--text-faint); display: flex; align-items: center; gap: 7px; }
+.kpi-label svg { width: 14px; height: 14px; opacity: .75; }
+.kpi-value { font-size: 27px; font-weight: 700; letter-spacing: -.02em; margin: 9px 0 4px; }
+.kpi-delta { font-size: 12px; color: var(--text-dim); }
+.up { color: var(--ok); } .down { color: var(--danger); }
+
+/* --- badges -------------------------------------------------------------- */
+.badge {
+  display: inline-flex; align-items: center; gap: 5px; padding: 2px 9px; border-radius: 20px;
+  font-size: 11px; font-weight: 600; text-transform: capitalize; border: 1px solid transparent;
+}
+.badge-winning     { background: rgba(0,212,170,.13);  color: var(--ok);     border-color: rgba(0,212,170,.3); }
+.badge-active      { background: rgba(124,156,240,.13); color: var(--info);   border-color: rgba(124,156,240,.3); }
+.badge-sourcing    { background: rgba(240,180,41,.13);  color: var(--warn);   border-color: rgba(240,180,41,.3); }
+.badge-researching { background: rgba(124,58,237,.16);  color: #b48bff;       border-color: rgba(124,58,237,.35); }
+.badge-dead        { background: rgba(242,85,90,.12);   color: var(--danger); border-color: rgba(242,85,90,.3); }
+.badge-neutral     { background: rgba(255,255,255,.05); color: var(--text-dim); border-color: var(--border); }
+.badge-low    { background: rgba(0,212,170,.13);  color: var(--ok); }
+.badge-medium { background: rgba(240,180,41,.13); color: var(--warn); }
+.badge-high   { background: rgba(242,85,90,.12);  color: var(--danger); }
+.dot { width: 7px; height: 7px; border-radius: 50%; background: currentColor; flex: 0 0 auto; }
+
+/* --- chart --------------------------------------------------------------- */
+.chart { display: flex; align-items: flex-end; gap: 3px; height: 190px; padding-top: 10px; }
+.bar-wrap { flex: 1 1 0; height: 100%; display: flex; align-items: flex-end; position: relative; min-width: 0; }
+.bar {
+  width: 100%; border-radius: 3px 3px 0 0; min-height: 2px;
+  background: linear-gradient(180deg, var(--accent), rgba(0,212,170,.28));
+  transition: filter var(--speed); animation: grow .5s cubic-bezier(.22,1,.36,1) backwards;
+}
+.bar-wrap:hover .bar { filter: brightness(1.35); }
+@keyframes grow { from { height: 0 !important; } }
+.tip {
+  position: absolute; bottom: calc(100% + 8px); left: 50%; transform: translateX(-50%);
+  background: #05050a; border: 1px solid var(--border-strong); border-radius: 6px;
+  padding: 6px 9px; font-size: 11.5px; white-space: nowrap; opacity: 0; pointer-events: none;
+  transition: opacity var(--speed); z-index: 5; box-shadow: 0 6px 18px rgba(0,0,0,.5);
+}
+.bar-wrap:hover .tip { opacity: 1; }
+.tip-rev { color: var(--accent); font-weight: 600; }
+.tip-date { color: var(--text-faint); }
+.chart-axis { display: flex; justify-content: space-between; font-size: 11px; color: var(--text-faint); margin-top: 9px; border-top: 1px solid var(--border); padding-top: 8px; }
+.legend { display: flex; gap: 16px; font-size: 12px; color: var(--text-dim); }
+.legend i { width: 9px; height: 9px; border-radius: 2px; display: inline-block; background: var(--accent); }
+
+/* --- tasks --------------------------------------------------------------- */
+.task { display: flex; gap: 12px; padding: 13px 0; border-bottom: 1px solid var(--border); }
+.task:last-child { border-bottom: 0; padding-bottom: 0; }
+.task:first-child { padding-top: 0; }
+.task-icon { width: 32px; height: 32px; border-radius: 8px; display: grid; place-items: center; flex: 0 0 auto; background: rgba(255,255,255,.04); color: var(--text-dim); }
+.task-icon.running { background: var(--accent-dim); color: var(--accent); }
+.task-icon.done    { background: rgba(124,156,240,.12); color: var(--info); }
+.task-icon.failed  { background: rgba(242,85,90,.12); color: var(--danger); }
+.task-body { flex: 1; min-width: 0; }
+.task-title { font-size: 13.5px; font-weight: 500; }
+.task-meta { font-size: 11.5px; color: var(--text-faint); margin-top: 3px; }
+.task-meta code { font-family: var(--mono); color: var(--text-dim); font-size: 11px; }
+.progress { height: 4px; background: rgba(255,255,255,.06); border-radius: 4px; overflow: hidden; margin-top: 8px; }
+.progress i { display: block; height: 100%; background: var(--accent); border-radius: 4px; transition: width .4s ease; }
+.progress.failed i { background: var(--danger); }
+
+/* --- product / clip cards ------------------------------------------------ */
+.pcard { display: flex; flex-direction: column; gap: 12px; }
+.pcard-top { display: flex; align-items: flex-start; gap: 10px; }
+.pname { font-size: 14.5px; font-weight: 600; line-height: 1.35; }
+.pcat { font-size: 11.5px; color: var(--text-faint); text-transform: uppercase; letter-spacing: .06em; margin-top: 3px; }
+.metric-row { display: flex; gap: 18px; flex-wrap: wrap; }
+.metric-k { font-size: 10.5px; text-transform: uppercase; letter-spacing: .07em; color: var(--text-faint); }
+.metric-v { font-size: 15px; font-weight: 600; margin-top: 2px; }
+.metric-v.accent { color: var(--accent); }
+.meter { height: 5px; background: rgba(255,255,255,.06); border-radius: 4px; overflow: hidden; }
+.meter i { display: block; height: 100%; border-radius: 4px; background: linear-gradient(90deg, var(--accent), #0891b2); }
+.chip-row { display: flex; gap: 6px; flex-wrap: wrap; }
+.chip {
+  font-size: 11px; padding: 5px 10px; border-radius: 20px; background: rgba(255,255,255,.04);
+  border: 1px solid var(--border); color: var(--text-dim); font-family: inherit;
+}
+button.chip { cursor: pointer; transition: all var(--speed); }
+button.chip:hover, button.chip.on { border-color: var(--accent-line); color: var(--accent); }
+
+/* --- tables -------------------------------------------------------------- */
+.table-wrap { overflow-x: auto; }
+table.data { width: 100%; border-collapse: collapse; font-size: 13px; }
+table.data th {
+  text-align: left; font-size: 11px; text-transform: uppercase; letter-spacing: .07em;
+  color: var(--text-faint); font-weight: 600; padding: 0 12px 10px;
+  border-bottom: 1px solid var(--border); white-space: nowrap;
+}
+table.data td { padding: 12px; border-bottom: 1px solid var(--border); }
+table.data tbody tr:hover { background: rgba(255,255,255,.02); }
+table.data tbody tr:last-child td { border-bottom: 0; }
+td.num, th.num { text-align: right; font-family: var(--mono); font-size: 12.5px; }
+table.compact th, table.compact td { padding: 10px 8px; }
+table.compact th:first-child, table.compact td:first-child { padding-left: 0; }
+table.compact th:last-child,  table.compact td:last-child  { padding-right: 0; }
+
+/* --- misc ---------------------------------------------------------------- */
+.empty { text-align: center; padding: 46px 20px; border: 1px dashed var(--border-strong); border-radius: var(--radius); color: var(--text-dim); }
+.empty svg { width: 34px !important; height: 34px !important; color: var(--text-faint); margin-bottom: 12px; }
+.kv { display: flex; justify-content: space-between; gap: 14px; padding: 9px 0; border-bottom: 1px solid var(--border); font-size: 13px; }
+.kv:last-child { border-bottom: 0; }
+.kv .k { color: var(--text-dim); }
+.kv .v { font-family: var(--mono); font-size: 12.5px; }
+.status-row { display: flex; align-items: center; gap: 9px; padding: 9px 0; border-bottom: 1px solid var(--border); font-size: 13px; }
+.status-row:last-child { border-bottom: 0; }
+.field { margin-bottom: 16px; }
+.field label { display: block; font-size: 12px; color: var(--text-dim); margin-bottom: 6px; }
+.field input {
+  width: 100%; padding: 9px 12px; background: #0f0f18; border: 1px solid var(--border);
+  border-radius: var(--radius); color: var(--text); font: inherit; font-size: 13px;
+}
+.field input:focus { outline: none; border-color: var(--accent-line); }
+.hint { font-size: 11.5px; color: var(--text-faint); margin-top: 5px; }
+
+.toast-host { position: fixed; right: 20px; bottom: 20px; display: flex; flex-direction: column; gap: 10px; z-index: 90; }
+.toast {
+  background: var(--card); border: 1px solid var(--border-strong); border-left: 3px solid var(--accent);
+  border-radius: var(--radius); padding: 12px 16px; font-size: 13px; max-width: 340px;
+  box-shadow: 0 12px 30px rgba(0,0,0,.45); animation: slidein .22s ease;
+}
+.toast.err { border-left-color: var(--danger); }
+@keyframes slidein { from { opacity: 0; transform: translateX(16px); } }
+.scrim { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.55); z-index: 35; }
+.scrim.show { display: block; }
+
+@media (max-width: 900px) {
+  .sidebar { transform: translateX(-100%); box-shadow: 0 0 40px rgba(0,0,0,.6); }
+  .sidebar.open { transform: none; }
+  .main { margin-left: 0; }
+  .menu-toggle { display: block; }
+  .content { padding: 18px 16px 50px; }
+  .topbar { padding: 14px 16px; }
+  h1 { font-size: 18px; }
+  .grid { gap: 14px; }
+}
+@media (max-width: 560px) {
+  .topbar-sub { display: none; }
+  .grid-kpi { grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); }
+  .chart { height: 150px; }
+  .btn span { display: none; }
+}
+@media (prefers-reduced-motion: reduce) { * { animation-duration: .01ms !important; transition-duration: .01ms !important; } }
+</style>
+</head>
+<body>
+
+<!-- =========================================================================
+     [03] MARKUP — icon sprite + app shell
+     ========================================================================= -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+  <symbol id="i-scorpion" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8v3a4 4 0 0 0 4 4h6"/><path d="M20 6v5a6 6 0 0 1-2 4.5"/><path d="M14 15l3 3"/><circle cx="18.5" cy="19.5" r="1.8"/><path d="M4 8 2 6"/><path d="M8 8 6 5"/></symbol>
+  <symbol id="i-grid" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></symbol>
+  <symbol id="i-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></symbol>
+  <symbol id="i-film" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M7 4v16M17 4v16M2 12h20M2 8h5M2 16h5M17 8h5M17 16h5"/></symbol>
+  <symbol id="i-chart" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M7 15l3-4 3 3 5-7"/></symbol>
+  <symbol id="i-cpu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="6" width="12" height="12" rx="2"/><path d="M9 2v4M15 2v4M9 18v4M15 18v4M2 9h4M2 15h4M18 9h4M18 15h4"/></symbol>
+  <symbol id="i-gear" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.6 1.6 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.6 1.6 0 0 0-1.8-.3 1.6 1.6 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1A1.6 1.6 0 0 0 9 19.4a1.6 1.6 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.6 1.6 0 0 0 .3-1.8 1.6 1.6 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1A1.6 1.6 0 0 0 4.6 9a1.6 1.6 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.6 1.6 0 0 0 1.8.3H9a1.6 1.6 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.6 1.6 0 0 0 1 1.5 1.6 1.6 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.6 1.6 0 0 0-.3 1.8V9a1.6 1.6 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.6 1.6 0 0 0-1.5 1z"/></symbol>
+  <symbol id="i-menu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 6h18M3 12h18M3 18h18"/></symbol>
+  <symbol id="i-refresh" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-2.6-6.4"/><path d="M21 3v6h-6"/></symbol>
+  <symbol id="i-play" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="m6 4 14 8-14 8z"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></symbol>
+  <symbol id="i-alert" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16.5v.01"/></symbol>
+  <symbol id="i-clock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+  <symbol id="i-box" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8 12 3 3 8v8l9 5 9-5z"/><path d="m3 8 9 5 9-5M12 13v8"/></symbol>
+  <symbol id="i-bolt" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 4 14h7l-1 8 9-12h-7z"/></symbol>
+  <symbol id="i-dollar" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2v20"/><path d="M17 6.5C17 4.6 14.8 3.5 12 3.5S7 4.6 7 6.5 9.2 9.5 12 9.5s5 1.4 5 3.5-2.2 3.5-5 3.5-5-1.1-5-3"/></symbol>
+</defs></svg>
+
+<div class="scrim" id="scrim"></div>
+
+<aside class="sidebar" id="sidebar">
+  <div class="brand">
+    <div class="brand-mark"><svg><use href="#i-scorpion"/></svg></div>
+    <div>
+      <div class="brand-name">Scorpion</div>
+      <div class="brand-sub">v7.0 · Ops</div>
+    </div>
+  </div>
+  <nav class="nav" id="nav"></nav>
+  <div class="sidebar-foot">
+    <div class="user-chip">
+      <div class="avatar">D</div>
+      <div>
+        <div style="font-size:12.5px;font-weight:600">Director</div>
+        <div style="font-size:10.5px;color:var(--text-faint)">Local session</div>
+      </div>
+    </div>
+  </div>
+</aside>
+
+<main class="main">
+  <header class="topbar">
+    <button class="menu-toggle" id="menuToggle" aria-label="Toggle navigation"><svg><use href="#i-menu"/></svg></button>
+    <div>
+      <h1 id="viewTitle">Dashboard</h1>
+      <div class="topbar-sub" id="viewSub">Live operational overview</div>
+    </div>
+    <div class="topbar-actions">
+      <button class="btn btn-ghost" id="btnReset"><svg><use href="#i-refresh"/></svg> <span>Reset data</span></button>
+      <button class="btn btn-primary" id="btnRun"><svg><use href="#i-play"/></svg> <span>Run cycle</span></button>
+    </div>
+  </header>
+  <div class="content" id="content"></div>
+</main>
+
+<div class="toast-host" id="toastHost"></div>
+
+<script>
+"use strict";
+/* =========================================================================
+   [04] CONFIG — tune the system here
+   ========================================================================= */
+const CONFIG = {
+  storageKey: 'scorpion.v7',
+  currency: 'USD',
+  salesDays: 30,
+  salesSeed: 70725,          // change for a different revenue curve
+  marginRule: 3,             // minimum markup multiple (3x)
+  persist: true,             // save to localStorage
+};
+
+const NAV = [
+  { id: 'dashboard', label: 'Dashboard',      icon: 'i-grid',   group: 'Operations', title: 'Dashboard',       sub: 'Live operational overview' },
+  { id: 'scout',     label: 'Product Scout',  icon: 'i-search', group: 'Operations', title: 'Product Scout',   sub: 'Sourcing, margin and saturation intelligence', count: () => S.products.length },
+  { id: 'studio',    label: 'Content Studio', icon: 'i-film',   group: 'Operations', title: 'Content Studio',  sub: 'Short-form clips, hooks and render queue',      count: () => S.clips.length },
+  { id: 'sales',     label: 'Sales Tracker',  icon: 'i-chart',  group: 'Operations', title: 'Sales Tracker',   sub: 'Orders, channels and unit economics' },
+  { id: 'models',    label: 'Model Registry', icon: 'i-cpu',    group: 'System',     title: 'Model Registry',  sub: 'Available specialists and routing policy',      count: () => MODELS.length },
+  { id: 'settings',  label: 'Settings',       icon: 'i-gear',   group: 'System',     title: 'Settings',        sub: 'Credentials and system state' },
+];
+
+/* =========================================================================
+   [05] SEED DATA
+   Costs, seller ratings and ship windows are REAL — pulled from live
+   AliExpress listings. Sales history and view counts are fabricated.
+   ========================================================================= */
+const SEED_PRODUCTS = [
+  {
+    id: 'prd_grout01', name: 'Grout Restore Pen (10-Color)', category: 'home', stage: 'winning',
+    cost: 2.66, salePrice: 19.95,
+    supplier: { url: 'https://www.aliexpress.us/item/3256811827741618.html', rating: 4.9, unitsSold: 2000, ship: [8, 13] },
+    trend: { hashtag: '#groutcleaning', momentum: 'rising', evidence: 'Grout restoration demos recirculating hard on CleanTok; TikTok Shop carries multiple colorant pens with heavy creator-pick placement.' },
+    saturation: { score: 'medium', sellers: 7, evidence: 'Several TikTok Shop listings, but few branded stores running dedicated organic content.' },
+    angles: ['POV: your landlord said the grout was "just old"', '$3 pen vs a $600 regrouting quote', 'One swipe. No scrubbing. Watch the line change colour.'],
+    risks: ['Cheap tips clog — sample before scaling', '8-13 day shipping needs a clear ETA on the PDP', 'Colour-match complaints if buyers expect pure white'],
+    score: 91,
+  },
+  {
+    id: 'prd_cargel1', name: 'Car Detailing Cleaning Gel', category: 'auto', stage: 'active',
+    cost: 1.33, salePrice: 14.95,
+    supplier: { url: 'https://www.aliexpress.us/item/3256808158408968.html', rating: 4.9, unitsSold: 1000, ship: [9, 15] },
+    trend: { hashtag: '#detailing', momentum: 'peaking', evidence: 'Vent-dust lift shots are a staple of satisfying auto content; steady evergreen demand rather than a spike.' },
+    saturation: { score: 'high', sellers: 20, evidence: 'Long-running dropship staple with dozens of storefronts and heavy Amazon presence.' },
+    angles: ['The dust in your vents has been there since 2019', 'Press. Peel. Look at what came out.', "A detailer's $2 trick they don't put on the invoice"],
+    risks: ['Saturation compresses price below $12', 'Gel dries out in transit during summer heat', 'Low AOV — needs bundling'],
+    score: 68,
+  },
+  {
+    id: 'prd_posture', name: 'Adjustable Posture Corrector', category: 'fitness', stage: 'active',
+    cost: 3.85, salePrice: 24.95,
+    supplier: { url: 'https://www.aliexpress.com/w/wholesale-posture-corrector.html', rating: 4.7, unitsSold: 5000, ship: [10, 18] },
+    trend: { hashtag: '#deskjob', momentum: 'flat', evidence: 'Evergreen remote-work category; consistent search demand without a current viral spike.' },
+    saturation: { score: 'high', sellers: 25, evidence: 'Mature category with entrenched Amazon brands and review moats.' },
+    angles: ['Your tech neck is ageing you faster than the sun', 'Before/after side profile after 14 days', 'A physio explains why slouching costs you an inch'],
+    risks: ['Sizing returns are the #1 refund driver', 'Health claims need careful compliance wording', 'Hard to differentiate in 3 seconds'],
+    score: 54,
+  },
+  {
+    id: 'prd_ledmask', name: '7-Color LED Therapy Face Mask', category: 'beauty', stage: 'sourcing',
+    cost: 12.40, salePrice: 59.95,
+    supplier: { url: 'https://www.aliexpress.com/w/wholesale-led-face-mask.html', rating: 4.6, unitsSold: 800, ship: [12, 20] },
+    trend: { hashtag: '#ledmask', momentum: 'rising', evidence: 'At-home beauty tech keeps climbing; high perceived value versus in-clinic pricing.' },
+    saturation: { score: 'medium', sellers: 12, evidence: 'Premium tier is brand-dominated, but the sub-$70 dropship tier still has room.' },
+    angles: ['$1,200 clinic session vs the mask on my nightstand', 'Red light for 10 minutes — a 30-day skin diary', 'The blue setting is the one nobody talks about'],
+    risks: ['FDA-adjacent claims risk — avoid medical language', 'Highest unit cost, ties up float', 'Electronics DOA rate demands a tested supplier'],
+    score: 76,
+  },
+  {
+    id: 'prd_petbrsh', name: 'Self-Cleaning Pet Grooming Brush', category: 'pets', stage: 'dead',
+    cost: 2.10, salePrice: 16.95,
+    supplier: { url: 'https://www.aliexpress.com/w/wholesale-self-cleaning-pet-brush.html', rating: 4.4, unitsSold: 3000, ship: [11, 19] },
+    trend: { hashtag: '#petgrooming', momentum: 'cooling', evidence: 'Peaked in prior cycles; current creator output is mostly reposted older footage.' },
+    saturation: { score: 'high', sellers: 30, evidence: 'Commodity item sold below $10 on Amazon with Prime shipping — unwinnable on price.' },
+    angles: ['The fur that came off my couch cat in 60 seconds', 'One button and the whole brush empties itself', 'Vacuum vs brush: which pulls more undercoat?'],
+    risks: ['Amazon Prime undercuts price and delivery', 'Bristle-quality complaints drove refunds', 'No differentiation left in the creative'],
+    score: 28,
+  },
+];
+
+const SEED_CLIPS = [
+  { id: 'clp_g1', productId: 'prd_grout01', hook: "My landlord said the grout was 'just old'", platform: 'tiktok', format: 'transformation', status: 'published', engine: 'manual',
+    script: [ { t: '0-3s', shot: 'Close-up on stained brown grout, phone light raking across' }, { t: '3-8s', shot: 'Single continuous pen swipe, half line white / half brown' }, { t: '8-14s', shot: 'Pull back to full floor, before/after wipe transition' } ],
+    tags: ['#cleantok', '#groutcleaning', '#renterfriendly'], metrics: { views: 412000, likes: 38400, clicks: 9840, cvr: 3.9 } },
+  { id: 'clp_g2', productId: 'prd_grout01', hook: 'They quoted me $600 to regrout this', platform: 'reels', format: 'problem-solution', status: 'published', engine: 'manual',
+    script: [ { t: '0-3s', shot: 'Screenshot of contractor quote, zoom on total' }, { t: '3-9s', shot: 'Hands unbox pen, uncap, prime tip on paper towel' }, { t: '9-15s', shot: 'Split screen: quote vs finished floor' } ],
+    tags: ['#homehacks', '#diy', '#budgetreno'], metrics: { views: 187500, likes: 14200, clicks: 4120, cvr: 3.1 } },
+  { id: 'clp_g3', productId: 'prd_grout01', hook: 'ASMR: one grout line, zero scrubbing', platform: 'tiktok', format: 'satisfying-demo', status: 'queued', engine: 'runway-gen3',
+    script: [ { t: '0-3s', shot: 'Macro lens on tip meeting grout, shallow depth of field' }, { t: '3-12s', shot: 'Slow tracking pull along a 4-foot run' }, { t: '12-18s', shot: 'Rack focus to full grid of restored tile' } ],
+    tags: ['#asmr', '#oddlysatisfying'], metrics: { views: 0, likes: 0, clicks: 0, cvr: 0 } },
+  { id: 'clp_c1', productId: 'prd_cargel1', hook: 'The dust in your vents has been there since 2019', platform: 'tiktok', format: 'satisfying-demo', status: 'published', engine: 'manual',
+    script: [ { t: '0-3s', shot: 'Overhead of filthy dashboard vents' }, { t: '3-9s', shot: 'Gel pressed into vent slats, slow peel' }, { t: '9-13s', shot: 'Gel held to camera, debris visible inside' } ],
+    tags: ['#cartok', '#detailing'], metrics: { views: 268000, likes: 21100, clicks: 5360, cvr: 2.8 } },
+  { id: 'clp_c2', productId: 'prd_cargel1', hook: 'Detailers charge $80 for this 4-minute job', platform: 'reels', format: 'problem-solution', status: 'published', engine: 'manual',
+    script: [ { t: '0-3s', shot: 'Invoice line item on phone screen' }, { t: '3-10s', shot: 'Speed-run through cupholders, seams, gearshift' }, { t: '10-14s', shot: 'Clean interior beauty pan' } ],
+    tags: ['#carcleaning', '#lifehack'], metrics: { views: 94300, likes: 6800, clicks: 1980, cvr: 2.2 } },
+  { id: 'clp_c3', productId: 'prd_cargel1', hook: "Rating my car's filthiest crevices 1-10", platform: 'shorts', format: 'ugc-testimonial', status: 'draft', engine: 'manual',
+    script: [ { t: '0-3s', shot: 'Handheld pan across messy console' }, { t: '3-11s', shot: 'Three quick gel presses with rating overlays' }, { t: '11-16s', shot: 'Final wide of spotless interior' } ],
+    tags: ['#cartok', '#cleaningtiktok'], metrics: { views: 0, likes: 0, clicks: 0, cvr: 0 } },
+  { id: 'clp_p1', productId: 'prd_posture', hook: 'Your tech neck is ageing you faster than the sun', platform: 'tiktok', format: 'transformation', status: 'published', engine: 'manual',
+    script: [ { t: '0-3s', shot: 'Side-profile silhouette at a desk, forward head posture' }, { t: '3-10s', shot: 'Strap on, shoulders roll back, spine straightens' }, { t: '10-15s', shot: 'Before/after side-by-side profile' } ],
+    tags: ['#posture', '#deskjob'], metrics: { views: 76400, likes: 4900, clicks: 1450, cvr: 2.1 } },
+  { id: 'clp_p2', productId: 'prd_posture', hook: 'A physio told me slouching costs you an inch', platform: 'reels', format: 'problem-solution', status: 'published', engine: 'manual',
+    script: [ { t: '0-3s', shot: 'Talking head, measuring tape against wall' }, { t: '3-9s', shot: 'Measure slouched vs corrected height' }, { t: '9-14s', shot: 'Product close-up, adjustable straps' } ],
+    tags: ['#physio', '#wfh'], metrics: { views: 41200, likes: 2600, clicks: 690, cvr: 1.6 } },
+  { id: 'clp_p3', productId: 'prd_posture', hook: 'POV: your chiropractor sees your desk setup', platform: 'tiktok', format: 'ugc-testimonial', status: 'archived', engine: 'manual',
+    script: [ { t: '0-3s', shot: 'Comedic reaction shot at laptop on couch' }, { t: '3-9s', shot: 'Quick cuts of bad ergonomics' }, { t: '9-15s', shot: 'Corrector on, seated upright' } ],
+    tags: ['#chiropractor'], metrics: { views: 18900, likes: 940, clicks: 210, cvr: 0.9 } },
+  { id: 'clp_l1', productId: 'prd_ledmask', hook: '$1,200 clinic session vs the mask on my nightstand', platform: 'tiktok', format: 'transformation', status: 'queued', engine: 'runway-gen3',
+    script: [ { t: '0-3s', shot: 'Clinic invoice, then cut to mask glowing red in a dark room' }, { t: '3-10s', shot: 'Mask on, red glow across face, timer overlay' }, { t: '10-16s', shot: 'Day 1 / Day 30 skin close-ups' } ],
+    tags: ['#beautytok', '#ledmask'], metrics: { views: 0, likes: 0, clicks: 0, cvr: 0 } },
+  { id: 'clp_l2', productId: 'prd_ledmask', hook: 'Nobody talks about the blue setting', platform: 'reels', format: 'reveal', status: 'draft', engine: 'runway-gen3',
+    script: [ { t: '0-3s', shot: 'Cycle through colour modes fast, stop on blue' }, { t: '3-10s', shot: 'Explainer overlay on what blue targets' }, { t: '10-15s', shot: 'Jawline before/after' } ],
+    tags: ['#skincaretips', '#acne'], metrics: { views: 0, likes: 0, clicks: 0, cvr: 0 } },
+  { id: 'clp_l3', productId: 'prd_ledmask', hook: 'Esthetician reacts to my $60 LED mask', platform: 'tiktok', format: 'ugc-testimonial', status: 'draft', engine: 'manual',
+    script: [ { t: '0-3s', shot: 'Duet-style frame, esthetician squinting at mask' }, { t: '3-11s', shot: 'Spec sheet overlay: wavelength, LED count' }, { t: '11-17s', shot: 'Verdict card on screen' } ],
+    tags: ['#esthetician'], metrics: { views: 0, likes: 0, clicks: 0, cvr: 0 } },
+  { id: 'clp_b1', productId: 'prd_petbrsh', hook: 'The fur that came off my cat in 60 seconds', platform: 'tiktok', format: 'satisfying-demo', status: 'archived', engine: 'manual',
+    script: [ { t: '0-3s', shot: 'Cat on couch, visible loose undercoat' }, { t: '3-10s', shot: 'Brushing montage, fur accumulating' }, { t: '10-14s', shot: 'Button press, fur mat ejects clean' } ],
+    tags: ['#pettok', '#catsoftiktok'], metrics: { views: 52100, likes: 3400, clicks: 780, cvr: 1.2 } },
+  { id: 'clp_b2', productId: 'prd_petbrsh', hook: 'Vacuum vs brush: which pulls more undercoat?', platform: 'reels', format: 'reveal', status: 'archived', engine: 'manual',
+    script: [ { t: '0-3s', shot: 'Two piles side by side, empty' }, { t: '3-11s', shot: 'Alternating vacuum and brush passes' }, { t: '11-15s', shot: 'Weigh both piles on a kitchen scale' } ],
+    tags: ['#dogsoftiktok'], metrics: { views: 23800, likes: 1210, clicks: 260, cvr: 0.8 } },
+  { id: 'clp_b3', productId: 'prd_petbrsh', hook: 'My couch was 40% cat', platform: 'shorts', format: 'transformation', status: 'archived', engine: 'manual',
+    script: [ { t: '0-3s', shot: 'Wide of fur-covered sectional' }, { t: '3-10s', shot: 'Brush passes over upholstery' }, { t: '10-14s', shot: 'Clean cushion reveal' } ],
+    tags: ['#cleantok', '#pethacks'], metrics: { views: 11400, likes: 520, clicks: 90, cvr: 0.5 } },
+];
+
+const SEED_TASKS = [
+  { id: 'tsk_scout29', type: 'product-scout', title: 'Product Scout Cycle #2 — kitchen gadgets', status: 'running', model: 'perplexity-sonar', progress: 62, at: Date.now() - 36e5 * 12 },
+  { id: 'tsk_clip881', type: 'video-generation', title: 'Render ASMR grout clip — clp_g3', status: 'running', model: 'runway-gen3', progress: 34, at: Date.now() - 36e5 * 11 },
+  { id: 'tsk_margin7', type: 'margin-analysis', title: 'Re-price LED face mask against landed cost', status: 'queued', model: 'gpt-5-thinking', progress: 0, at: Date.now() - 36e5 * 2 },
+  { id: 'tsk_hooks12', type: 'hook-generation', title: '10 new hooks for car cleaning gel', status: 'done', model: 'gpt-4o-mini', progress: 100, at: Date.now() - 36e5 * 26 },
+  { id: 'tsk_fail01', type: 'supplier-verification', title: 'Verify backup supplier for pet brush', status: 'failed', model: 'fable-5', progress: 45, at: Date.now() - 36e5 * 300, error: 'Blocked by supplier login wall' },
+];
+
+/* =========================================================================
+   [06] SALES ENGINE
+   Generates a believable 30-day order history from a seeded PRNG, so the
+   curve is identical on every load without shipping 2,000 lines of JSON.
+   Change CONFIG.salesSeed for a different shape.
+   ========================================================================= */
+function mulberry32(seed) {
+  return function () {
+    seed |= 0; seed = (seed + 0x6D2B79F5) | 0;
+    let t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+const round2 = (n) => Math.round(n * 100) / 100;
+
+function generateSales(products, days, seed) {
+  const rand = mulberry32(seed);
+  const byId = Object.fromEntries(products.map((p) => [p.id, p]));
+  const dates = [];
+  const end = new Date(); end.setHours(0, 0, 0, 0);
+  for (let i = days - 1; i >= 0; i--) {
+    const d = new Date(end); d.setDate(d.getDate() - i);
+    dates.push(d.toISOString().slice(0, 10));
+  }
+
+  const orders = [];
+  let n = 0;
+  dates.forEach((date, idx) => {
+    const ramp = 0.35 + (idx / (days - 1)) * 1.5;                                  // growth over the month
+    const weekend = [0, 6].includes(new Date(date + 'T00:00:00').getDay()) ? 1.25 : 1;
+    const spike = (idx === 12 || idx === 13) ? 1.9 : 1;                             // a clip went viral
+    // 4.9 lands the 30-day total near $4,200 whichever weekday you open it on.
+    const count = Math.max(0, Math.round(4.9 * ramp * weekend * spike + (rand() - 0.5) * 2.2));
+
+    for (let k = 0; k < count; k++) {
+      const r = rand();
+      // Product mix shifts over the month as winners emerge.
+      let pid;
+      if (idx < 6)       pid = r < 0.42 ? 'prd_cargel1' : r < 0.70 ? 'prd_grout01' : r < 0.86 ? 'prd_posture' : 'prd_petbrsh';
+      else if (idx < 18) pid = r < 0.50 ? 'prd_grout01' : r < 0.78 ? 'prd_cargel1' : r < 0.94 ? 'prd_posture' : 'prd_petbrsh';
+      else               pid = r < 0.62 ? 'prd_grout01' : r < 0.84 ? 'prd_cargel1' : r < 0.96 ? 'prd_posture' : 'prd_ledmask';
+
+      const p = byId[pid]; if (!p) continue;
+      const statusRoll = rand();
+      orders.push({
+        id: 'ord_' + date.replace(/-/g, '').slice(4) + String(++n).padStart(4, '0'),
+        date, productId: pid,
+        channel: rand() < (idx < 10 ? 0.42 : 0.55) ? 'tiktok-shop' : 'shopify',
+        quantity: rand() < 0.16 ? 2 : 1,
+        unitPrice: p.salePrice, unitCost: p.cost,
+        status: statusRoll < 0.035 ? 'refunded'
+              : idx > days - 5 ? (statusRoll < 0.5 ? 'paid' : 'shipped')
+              : (statusRoll < 0.75 ? 'delivered' : 'shipped'),
+      });
+    }
+  });
+  return { orders, dates };
+}
+
+/** Recompute every derived figure from the order list. Single source of truth. */
+function summarize(orders, dates) {
+  const live = orders.filter((o) => o.status !== 'refunded');
+  const revenue = round2(live.reduce((s, o) => s + o.unitPrice * o.quantity, 0));
+  const cogs = round2(live.reduce((s, o) => s + o.unitCost * o.quantity, 0));
+
+  const byChannel = {};
+  const daily = Object.fromEntries(dates.map((d) => [d, { date: d, revenue: 0, orders: 0 }]));
+  for (const o of orders) {
+    const c = (byChannel[o.channel] ||= { revenue: 0, orders: 0 });
+    c.orders++;
+    if (daily[o.date]) daily[o.date].orders++;
+    if (o.status === 'refunded') continue;
+    const rev = o.unitPrice * o.quantity;
+    c.revenue = round2(c.revenue + rev);
+    if (daily[o.date]) daily[o.date].revenue = round2(daily[o.date].revenue + rev);
+  }
+
+  return {
+    revenue, cogs,
+    grossProfit: round2(revenue - cogs),
+    orders: live.length,
+    aov: live.length ? round2(revenue / live.length) : 0,
+    marginPct: revenue ? round2(((revenue - cogs) / revenue) * 100) : 0,
+    byChannel,
+    daily: dates.map((d) => daily[d]),
+  };
+}
+
+/* =========================================================================
+   [07] MODEL REGISTRY — the specialist catalog and routing table
+   ========================================================================= */
+const MODELS = [
+  { id: 'claude-sonnet',    label: 'Claude Sonnet',      vendor: 'anthropic',  caps: ['reasoning','long-form-writing','analysis','listing-copy'], strengths: 'Director-layer synthesis, listing copy, nuanced judgement calls.', cost: 0.009,  quality: 0.94, status: 'available' },
+  { id: 'gpt-5-thinking',   label: 'GPT-5 Thinking',     vendor: 'openai',     caps: ['reasoning','margin-analysis','saturation-check','sales-analysis'], strengths: 'Co-director. Numeric reasoning, unit economics, saturation scoring.', cost: 0.011, quality: 0.95, status: 'available' },
+  { id: 'perplexity-sonar', label: 'Perplexity Sonar',   vendor: 'perplexity', caps: ['live-search','trend-research','product-scout'], strengths: 'Live web knowledge with sources. First stop for trend discovery.', cost: 0.004, quality: 0.86, status: 'available' },
+  { id: 'gemini-flash',     label: 'Gemini Flash',       vendor: 'google',     caps: ['vision','image-analysis'], strengths: 'Cheap, fast multimodal. Product image QA and thumbnail scoring.', cost: 0.0008, quality: 0.81, status: 'available' },
+  { id: 'gpt-4o-mini',      label: 'GPT-4o mini',        vendor: 'openai',     caps: ['copywriting','hook-generation'], strengths: 'High-volume hook generation at near-zero cost.', cost: 0.0006, quality: 0.78, status: 'available' },
+  { id: 'llama-3-70b',      label: 'Llama 3 70B',        vendor: 'meta',       caps: ['copywriting','summarization'], strengths: 'Open-weight fallback when budget is tight.', cost: 0.0005, quality: 0.74, status: 'available' },
+  { id: 'fable-5',          label: 'Fable 5 Browser',    vendor: 'fable',      caps: ['browser-automation','supplier-verification','scraping'], strengths: 'Live AliExpress / TikTok interaction. Metered — use sparingly.', costPerRun: 0.35, quality: 0.88, status: 'metered', spendUsed: 3.15, spendLimit: 12 },
+  { id: 'runway-gen3',      label: 'RunwayML Gen-3',     vendor: 'runwayml',   caps: ['video-generation'], strengths: '5s and 10s clip generation for hook and reveal shots.', creditsPerSec: 5, quality: 0.83, status: 'metered', credits: 125 },
+];
+
+/** taskType -> { primary, fallback, escalate } */
+const ROUTES = {
+  'trend-research':        { primary: 'perplexity-sonar', fallback: 'gpt-5-thinking', escalate: 'fable-5' },
+  'product-scout':         { primary: 'perplexity-sonar', fallback: 'claude-sonnet',  escalate: 'fable-5' },
+  'supplier-verification': { primary: 'fable-5',          fallback: 'perplexity-sonar' },
+  'margin-analysis':       { primary: 'gpt-5-thinking',   fallback: 'claude-sonnet' },
+  'saturation-check':      { primary: 'gpt-5-thinking',   fallback: 'perplexity-sonar', escalate: 'fable-5' },
+  'image-analysis':        { primary: 'gemini-flash',     fallback: 'claude-sonnet' },
+  'hook-generation':       { primary: 'gpt-4o-mini',      fallback: 'llama-3-70b' },
+  'listing-copy':          { primary: 'claude-sonnet',    fallback: 'gpt-5-thinking' },
+  'video-generation':      { primary: 'runway-gen3',      fallback: null },
+  'sales-analysis':        { primary: 'gpt-5-thinking',   fallback: 'claude-sonnet' },
+};
+
+const modelById = (id) => MODELS.find((m) => m.id === id) || null;
+
+function usable(m) {
+  if (!m || m.status === 'offline') return false;
+  if (m.id === 'fable-5' && m.spendUsed >= m.spendLimit) return false;
+  if (m.id === 'runway-gen3' && m.credits <= 0) return false;
+  return true;
+}
+
+/** Pick the cheapest capable model. Order: override -> route -> capability. */
+function selectModel(taskType, opts = {}) {
+  const route = ROUTES[taskType] || {};
+  const candidates = [
+    opts.model,
+    opts.escalate ? route.escalate : null,
+    route.primary, route.fallback,
+    ...MODELS.filter((m) => m.caps.includes(taskType)).map((m) => m.id),
+    'claude-sonnet',
+  ].filter(Boolean);
+
+  for (const id of [...new Set(candidates)]) {
+    const m = modelById(id);
+    if (!usable(m)) continue;
+    const reason = opts.model === id ? 'explicit override'
+      : route.escalate === id && opts.escalate ? 'escalated to browser agent'
+      : route.primary === id ? 'primary route'
+      : route.fallback === id ? 'fallback route' : 'capability match';
+    return { model: m, reason };
+  }
+  return null;
+}
+
+/* =========================================================================
+   [08] AI LAYER — Arena / Fable / Runway
+   With no key set, every call returns a simulated response. Swap the bodies
+   of callArena / callFable for real fetch() calls when you have keys.
+   ========================================================================= */
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+
+function getKeys() {
+  try { return JSON.parse(localStorage.getItem('scorpion.keys') || '{}'); } catch { return {}; }
+}
+function setKeys(patch) {
+  const next = { ...getKeys(), ...patch };
+  localStorage.setItem('scorpion.keys', JSON.stringify(next));
+  return next;
+}
+const isDemo = () => !getKeys().arena;
+
+async function callArena(modelId, taskType, payload) {
+  const keys = getKeys();
+  if (!keys.arena) { await sleep(400 + Math.random() * 700); return { simulated: true, data: simulate(taskType, payload) }; }
+
+  // --- real call (uncomment and adjust when you have a key) ---------------
+  const res = await fetch('https://api.arena.ai/v1/chat/completions', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + keys.arena },
+    body: JSON.stringify({
+      model: modelId,
+      messages: [
+        { role: 'system', content: 'You are a Scorpion specialist agent. Return JSON only.' },
+        { role: 'user', content: `Task: ${taskType}\nPayload: ${JSON.stringify(payload)}` },
+      ],
+    }),
+  });
+  if (!res.ok) throw new Error('Arena HTTP ' + res.status);
+  const json = await res.json();
+  return { simulated: false, data: json.choices?.[0]?.message?.content };
+}
+
+/** Deterministic stand-ins. Keep these schema-correct or the UI lies. */
+function simulate(taskType, payload = {}) {
+  switch (taskType) {
+    case 'trend-research':
+      return { items: [
+        { name: 'Grout restoration pen', momentum: 'rising',  source: 'TikTok #cleantok' },
+        { name: 'Heatless curling ribbon', momentum: 'peaking', source: 'TikTok #beautytok' },
+        { name: 'Magnetic gym phone mount', momentum: 'rising', source: 'Amazon Sports' },
+      ] };
+    case 'product-scout':
+      return { candidates: [
+        { name: 'Grout Restore Pen',   category: 'home', cost: 2.66, price: 19.95 },
+        { name: 'UV Resin Repair Pen', category: 'tech', cost: 0.99, price: 16.95 },
+        { name: 'Rust Remover Gel',    category: 'auto', cost: 1.33, price: 14.95 },
+      ] };
+    case 'margin-analysis': {
+      const cost = payload.cost ?? 2.66, price = payload.salePrice ?? 19.95;
+      const marginPct = round2(((price - cost) / price) * 100);
+      return { cost, salePrice: price, marginPct, verdict: price >= cost * CONFIG.marginRule ? 'clears the 3x threshold' : 'below the 3x threshold' };
+    }
+    case 'saturation-check':
+      return { score: 'medium', activeSellers: 7, evidence: 'Sampled 40 listings; 7 storefronts posting consistently.' };
+    case 'hook-generation': {
+      const name = payload.productName || 'this';
+      const pool = [
+        'POV: you found the cheap version of a $600 job',
+        `Nobody told me ${String(name).toLowerCase()} could do this`,
+        'One pass. No scrubbing. Watch.',
+        'This should be illegal for the price',
+        'I was quoted four figures for this exact result',
+        'Do NOT buy the expensive version first',
+      ];
+      // Rotate by product name so different products get different hooks.
+      let h = 0; for (let i = 0; i < name.length; i++) h = (h * 31 + name.charCodeAt(i)) >>> 0;
+      const off = h % pool.length;
+      return { hooks: [...pool.slice(off), ...pool.slice(0, off)].slice(0, payload.count || 3) };
+    }
+    case 'sales-analysis':
+      return { trend: 'up', topProduct: 'prd_grout01', recommendation: 'Shift content budget toward the grout pen; retire the pet brush.' };
+    case 'supplier-verification':
+      return { verified: true, liveCost: 2.66, rating: 4.9, ship: [8, 13] };
+    case 'video-generation':
+      return { jobId: 'sim_' + Math.random().toString(36).slice(2, 10), credits: 25 };
+    default:
+      return { note: 'simulated ' + taskType };
+  }
+}
+
+/* =========================================================================
+   [09] TASK ROUTER — queue + execution
+   ========================================================================= */
+async function runTask(type, payload = {}, opts = {}) {
+  const choice = selectModel(type, opts);
+  if (!choice) { toast('No usable model for ' + type, true); return null; }
+
+  const task = {
+    id: 'tsk_' + Math.random().toString(36).slice(2, 8),
+    type, title: opts.title || type.replace(/-/g, ' '),
+    status: 'running', model: choice.model.id, progress: 5, at: Date.now(),
+  };
+  S.tasks.unshift(task);
+  render();
+
+  const ticker = setInterval(() => {
+    task.progress = Math.min(95, task.progress + 8 + Math.random() * 10);
+    render();
+  }, 380);
+
+  try {
+    const result = await callArena(choice.model.id, type, payload);
+    clearInterval(ticker);
+    Object.assign(task, { status: 'done', progress: 100, result: result.data, simulated: result.simulated });
+    // Debit metered resources so the budget stays honest.
+    if (choice.model.id === 'runway-gen3') choice.model.credits = Math.max(0, choice.model.credits - 25);
+    if (choice.model.id === 'fable-5') choice.model.spendUsed = round2(choice.model.spendUsed + choice.model.costPerRun);
+    toast('✓ ' + task.title);
+  } catch (err) {
+    clearInterval(ticker);
+    Object.assign(task, { status: 'failed', error: err.message });
+    toast('✕ ' + task.title + ' — ' + err.message, true);
+  }
+  save(); render();
+  return task;
+}
+
+/* =========================================================================
+   [10] MODULES — scout, studio, tracker
+   ========================================================================= */
+const Scout = {
+  /** 0-100 score against the five criteria. Tune the weights here. */
+  score({ marginPct, momentum, saturation, visualDemo = true, shipMax }) {
+    let s = 0;
+    s += Math.min(35, Math.max(0, (marginPct - 50)));                       // margin, cap 35
+    s += { rising: 25, peaking: 18, flat: 8, cooling: 2 }[momentum] ?? 8;   // trend
+    s += { low: 25, medium: 14, high: 3 }[saturation] ?? 10;                // competition
+    s += visualDemo ? 10 : 0;
+    s += shipMax != null && shipMax <= 14 ? 5 : 0;
+    return Math.round(Math.min(100, s));
+  },
+
+  async runCycle() {
+    const t = await runTask('product-scout', { niche: 'auto-select' }, { title: 'Product Scout — manual run' });
+    if (!t || !t.result?.candidates) return;
+
+    const known = new Set(S.products.map((p) => p.name.toLowerCase()));
+    const fresh = t.result.candidates.filter((c) => !known.has(c.name.toLowerCase()));
+    if (!fresh.length) { toast('No new candidates — all already tracked'); return; }
+
+    for (const c of fresh) {
+      const marginPct = round2(((c.price - c.cost) / c.price) * 100);
+      S.products.push({
+        id: 'prd_' + Math.random().toString(36).slice(2, 8),
+        name: c.name, category: c.category, stage: 'researching',
+        cost: c.cost, salePrice: c.price,
+        supplier: { url: 'https://www.aliexpress.com/w/wholesale-' + c.name.toLowerCase().replace(/\s+/g, '-') + '.html', rating: 4.6, unitsSold: 0, ship: [9, 16] },
+        trend: { hashtag: '#new', momentum: 'rising', evidence: 'Surfaced by the scout cycle.' },
+        saturation: { score: 'medium', sellers: 7, evidence: 'Pending verification.' },
+        angles: simulate('hook-generation', { productName: c.name, count: 3 }).hooks,
+        risks: ['Unverified supplier — confirm cost before scaling'],
+        score: Scout.score({ marginPct, momentum: 'rising', saturation: 'medium', shipMax: 16 }),
+      });
+    }
+    toast(`Added ${fresh.length} product(s)`);
+    save(); render();
+  },
+};
+
+const Studio = {
+  async generate(productId) {
+    const p = S.products.find((x) => x.id === productId) || S.products[0];
+    if (!p) return;
+    const t = await runTask('hook-generation', { productName: p.name, count: 3 }, { title: 'Hooks — ' + p.name });
+    if (!t?.result?.hooks) return;
+
+    const formats = ['transformation', 'reveal', 'satisfying-demo'];
+    const platforms = ['tiktok', 'reels', 'shorts'];
+    t.result.hooks.forEach((hook, i) => {
+      S.clips.push({
+        id: 'clp_' + Math.random().toString(36).slice(2, 8),
+        productId: p.id, hook,
+        platform: platforms[i % 3], format: formats[i % 3],
+        status: 'draft', engine: 'manual',
+        script: [
+          { t: '0-3s',  shot: 'Tight shot of the problem state' },
+          { t: '3-10s', shot: 'One continuous action — no cuts' },
+          { t: '10-15s', shot: 'Pull back to the result' },
+        ],
+        tags: ['#' + p.category, '#tiktokmademebuyit'],
+        metrics: { views: 0, likes: 0, clicks: 0, cvr: 0 },
+      });
+    });
+    toast(`Added ${t.result.hooks.length} clips for ${p.name}`);
+    save(); render();
+  },
+};
+
+const Tracker = {
+  /** Trailing-window revenue plus the delta against the prior window. */
+  window(days = 7) {
+    const d = S.sales.daily;
+    const sum = (a) => round2(a.reduce((s, x) => s + x.revenue, 0));
+    const cur = sum(d.slice(-days));
+    const prev = sum(d.slice(-days * 2, -days));
+    return { cur, prev, deltaPct: prev > 0 ? round2(((cur - prev) / prev) * 100) : (cur > 0 ? 100 : 0) };
+  },
+  byProduct() {
+    const acc = {};
+    for (const o of S.orders) {
+      if (o.status === 'refunded') continue;
+      const a = (acc[o.productId] ||= { productId: o.productId, revenue: 0, units: 0 });
+      a.revenue = round2(a.revenue + o.unitPrice * o.quantity);
+      a.units += o.quantity;
+    }
+    return Object.values(acc).sort((a, b) => b.revenue - a.revenue);
+  },
+};
+
+/* =========================================================================
+   [11] STATE — one store, one render path
+   ========================================================================= */
+let S = null;
+let currentView = 'dashboard';
+
+function freshState() {
+  const products = structuredClone(SEED_PRODUCTS).map((p) => ({
+    ...p, marginPct: round2(((p.salePrice - p.cost) / p.salePrice) * 100),
+  }));
+  const { orders, dates } = generateSales(products, CONFIG.salesDays, CONFIG.salesSeed);
+  return {
+    products,
+    clips: structuredClone(SEED_CLIPS),
+    tasks: structuredClone(SEED_TASKS),
+    orders, dates,
+    sales: summarize(orders, dates),
+  };
+}
+
+function save() {
+  if (!CONFIG.persist) return;
+  try {
+    localStorage.setItem(CONFIG.storageKey, JSON.stringify({
+      products: S.products, clips: S.clips, tasks: S.tasks.slice(0, 40), orders: S.orders, dates: S.dates,
+    }));
+  } catch { /* quota or private mode — run in memory */ }
+}
+
+function load() {
+  if (!CONFIG.persist) return freshState();
+  try {
+    const raw = localStorage.getItem(CONFIG.storageKey);
+    if (!raw) return freshState();
+    const d = JSON.parse(raw);
+    if (!d.products?.length || !d.orders?.length) return freshState();
+    return { ...d, sales: summarize(d.orders, d.dates) };
+  } catch { return freshState(); }
+}
+
+/* =========================================================================
+   [12] UI HELPERS
+   ========================================================================= */
+const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const icon = (id) => `<svg><use href="#${id}"/></svg>`;
+const badge = (t, k = 'neutral') => `<span class="badge badge-${k}">${esc(t)}</span>`;
+const money = (n) => '$' + (Number(n) || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+const pct = (n) => (Number(n) || 0).toFixed(1) + '%';
+const compact = (n) => { n = Number(n) || 0; return n >= 1e6 ? (n / 1e6).toFixed(1) + 'M' : n >= 1e3 ? (n / 1e3).toFixed(1) + 'K' : String(n); };
+const rel = (ts) => { const s = (Date.now() - ts) / 1000; return s < 60 ? 'just now' : s < 3600 ? Math.round(s / 60) + 'm ago' : s < 86400 ? Math.round(s / 3600) + 'h ago' : Math.round(s / 86400) + 'd ago'; };
+const productName = (id) => S.products.find((p) => p.id === id)?.name || id;
+
+const kpi = (label, value, ic, delta = '') =>
+  `<div class="card card-hover">
+     <div class="kpi-label">${icon(ic)}${esc(label)}</div>
+     <div class="kpi-value">${esc(value)}</div>
+     <div class="kpi-delta">${delta}</div>
+   </div>`;
+
+const metric = (k, v, accent) =>
+  `<div><div class="metric-k">${esc(k)}</div><div class="metric-v${accent ? ' accent' : ''}">${esc(v)}</div></div>`;
+
+const empty = (ic, title, body, action = '') =>
+  `<div class="empty">${icon(ic)}<h3>${esc(title)}</h3><p>${esc(body)}</p>${action}</div>`;
+
+function chart(daily) {
+  if (!daily?.length) return empty('i-chart', 'No revenue yet', 'Orders will plot here.');
+  const max = Math.max(...daily.map((d) => d.revenue)) || 1;
+  const fmt = (s) => new Date(s + 'T00:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+  const bars = daily.map((d, i) => `
+    <div class="bar-wrap">
+      <div class="tip"><div class="tip-rev">${money(d.revenue)}</div><div class="tip-date">${fmt(d.date)} · ${d.orders} orders</div></div>
+      <div class="bar" style="height:${Math.max(2, (d.revenue / max) * 100)}%;animation-delay:${i * 12}ms"></div>
+    </div>`).join('');
+  return `<div class="chart">${bars}</div>
+          <div class="chart-axis"><span>${fmt(daily[0].date)}</span><span>${fmt(daily[daily.length - 1].date)}</span></div>`;
+}
+
+function taskRow(t) {
+  const ic = t.status === 'running' ? { i: 'i-bolt', c: 'running' }
+           : t.status === 'done'    ? { i: 'i-check', c: 'done' }
+           : t.status === 'failed'  ? { i: 'i-alert', c: 'failed' }
+           : { i: 'i-clock', c: '' };
+  const bar = t.status === 'running' || t.status === 'queued'
+    ? `<div class="progress"><i style="width:${t.progress || 0}%"></i></div>`
+    : t.status === 'failed' ? `<div class="progress failed"><i style="width:${t.progress || 100}%"></i></div>` : '';
+  return `<div class="task">
+    <div class="task-icon ${ic.c}">${icon(ic.i)}</div>
+    <div class="task-body">
+      <div class="task-title">${esc(t.title)}</div>
+      <div class="task-meta"><code>${esc(t.model || '—')}</code> · ${esc(t.status)} · ${rel(t.at)}${t.error ? ` · <span style="color:var(--danger)">${esc(t.error)}</span>` : ''}</div>
+      ${bar}
+    </div></div>`;
+}
+
+function toast(msg, err) {
+  const host = document.getElementById('toastHost');
+  const el = document.createElement('div');
+  el.className = 'toast' + (err ? ' err' : '');
+  el.textContent = msg;
+  host.appendChild(el);
+  setTimeout(() => { el.style.opacity = '0'; el.style.transition = 'opacity .2s'; setTimeout(() => el.remove(), 220); }, 3400);
+}
+
+/* =========================================================================
+   [13] VIEWS — one function per screen, each returns an HTML string
+   Add a view: write a function here, add an entry to NAV in [04].
+   ========================================================================= */
+const VIEWS = {
+
+  dashboard() {
+    const w = Tracker.window(7);
+    const t = S.sales;
+    const views = S.clips.reduce((s, c) => s + c.metrics.views, 0);
+    const clicks = S.clips.reduce((s, c) => s + c.metrics.clicks, 0);
+    const active = S.tasks.filter((x) => x.status === 'running' || x.status === 'queued');
+    const running = active.filter((x) => x.status === 'running').length;
+    const queued = active.length - running;
+    const runway = modelById('runway-gen3'), fable = modelById('fable-5');
+    const failed = S.tasks.filter((x) => x.status === 'failed').length;
+
+    const top = Tracker.byProduct().slice(0, 4).map((r) => {
+      const p = S.products.find((x) => x.id === r.productId) || {};
+      return `<tr>
+        <td>${esc(p.name || r.productId)}</td>
+        <td>${badge(p.stage || '—', p.stage)}</td>
+        <td class="num">${money(r.revenue)}</td>
+        <td class="num" style="color:var(--accent)">${pct(p.marginPct)}</td></tr>`;
+    }).join('');
+
+    const statusRow = (label, value, tone) =>
+      `<div class="status-row"><span class="dot" style="color:var(--${tone})"></span>${esc(label)}
+       <span class="spacer"></span><span style="font-family:var(--mono);font-size:12.5px">${esc(value)}</span></div>`;
+
+    return `
+      <div class="section"><div class="grid grid-kpi">
+        ${kpi('Revenue · 30d', money(t.revenue), 'i-dollar', `<span class="${w.deltaPct >= 0 ? 'up' : 'down'}">${w.deltaPct >= 0 ? '▲' : '▼'} ${Math.abs(w.deltaPct).toFixed(1)}%</span> <span style="color:var(--text-faint)">vs prior 7d</span>`)}
+        ${kpi('Gross profit', money(t.grossProfit), 'i-chart', `<span style="color:var(--text-faint)">${pct(t.marginPct)} margin</span>`)}
+        ${kpi('Orders', String(t.orders), 'i-box', `<span style="color:var(--text-faint)">${money(t.aov)} AOV</span>`)}
+        ${kpi('Content reach', compact(views), 'i-film', `<span style="color:var(--text-faint)">${views ? pct((clicks / views) * 100) : '0.0%'} CTR</span>`)}
+      </div></div>
+
+      <div class="grid grid-2 section">
+        <div class="card">
+          <div class="card-head"><h2>Revenue overview</h2><span class="spacer"></span>
+            <div class="legend"><span><i></i> Daily revenue</span></div></div>
+          ${chart(t.daily)}
+        </div>
+        <div class="card">
+          <div class="card-head"><h2>Active tasks</h2><span class="spacer"></span>
+            ${badge(active.length ? `${running} running${queued ? ` · ${queued} queued` : ''}` : 'idle', active.length ? 'active' : 'neutral')}</div>
+          ${active.length ? active.map(taskRow).join('')
+            : empty('i-check', 'No active tasks', 'The orchestrator is idle.', `<button class="btn btn-primary" data-act="run">${icon('i-play')} Run cycle</button>`)}
+        </div>
+      </div>
+
+      <div class="grid grid-2">
+        <div class="card">
+          <div class="card-head"><h2>Recent products</h2><span class="spacer"></span>
+            <button class="btn btn-ghost" data-nav="scout">View all</button></div>
+          ${top ? `<div class="table-wrap"><table class="data compact">
+            <thead><tr><th>Product</th><th>Stage</th><th class="num">Revenue</th><th class="num">Margin</th></tr></thead>
+            <tbody>${top}</tbody></table></div>`
+            : empty('i-box', 'No products', 'Run the scout to populate the catalog.')}
+        </div>
+        <div class="card">
+          <div class="card-head"><h2>System status</h2><span class="spacer"></span>
+            ${badge(failed ? 'attention' : 'healthy', failed ? 'dead' : 'winning')}</div>
+          ${statusRow('AI models online', MODELS.filter((m) => m.status === 'available').length + ' / ' + MODELS.length, 'ok')}
+          ${statusRow('RunwayML credits', String(runway.credits), runway.credits > 20 ? 'ok' : 'warn')}
+          ${statusRow('Fable 5 spend', money(fable.spendUsed) + ' / ' + money(fable.spendLimit), fable.spendUsed < fable.spendLimit * 0.8 ? 'ok' : 'warn')}
+          ${statusRow('Failed tasks', String(failed), failed ? 'danger' : 'ok')}
+          ${statusRow('Mode', isDemo() ? 'Demo (simulated)' : 'Live keys set', isDemo() ? 'warn' : 'ok')}
+        </div>
+      </div>`;
+  },
+
+  scout() {
+    if (!S.products.length) {
+      return empty('i-search', 'No products yet', 'Run a scout cycle to find candidates.',
+        `<button class="btn btn-primary" data-act="scout">${icon('i-play')} Run scout cycle</button>`);
+    }
+    const order = { winning: 0, active: 1, sourcing: 2, researching: 3, dead: 4 };
+    const sorted = [...S.products].sort((a, b) => (order[a.stage] - order[b.stage]) || b.score - a.score);
+    const counts = S.products.reduce((a, p) => (a[p.stage] = (a[p.stage] || 0) + 1, a), {});
+
+    const filters = `<button class="chip on" data-filter="all">All ${S.products.length}</button>` +
+      Object.keys(order).filter((k) => counts[k]).map((k) => `<button class="chip" data-filter="${k}">${k} ${counts[k]}</button>`).join('');
+
+    const cards = sorted.map((p) => {
+      const clips = S.clips.filter((c) => c.productId === p.id).length;
+      return `<div class="card card-hover pcard" data-stage="${esc(p.stage)}">
+        <div class="pcard-top">
+          <div style="min-width:0"><div class="pname">${esc(p.name)}</div><div class="pcat">${esc(p.category)}</div></div>
+          <span class="spacer"></span>${badge(p.stage, p.stage)}
+        </div>
+        <div class="metric-row">
+          ${metric('Cost', money(p.cost))}${metric('Sale', money(p.salePrice))}
+          ${metric('Margin', pct(p.marginPct), true)}${metric('Clips', String(clips))}
+        </div>
+        <div><div class="metric-k" style="margin-bottom:5px">Scout score ${p.score}/100</div>
+          <div class="meter"><i style="width:${p.score}%"></i></div></div>
+        <div class="chip-row">
+          <span class="chip">${esc(p.trend.hashtag)}</span>
+          <span class="chip">${esc(p.trend.momentum)}</span>
+          <span class="badge badge-${esc(p.saturation.score)}">${esc(p.saturation.score)} saturation</span>
+        </div>
+        <div style="font-size:12.5px;color:var(--text-dim);line-height:1.55">${esc(p.trend.evidence)}</div>
+        <div class="kv" style="border-top:1px solid var(--border);padding-top:11px">
+          <span class="k">Supplier</span>
+          <span class="v"><a href="${esc(p.supplier.url)}" target="_blank" rel="noopener">aliexpress ★${p.supplier.rating}</a></span></div>
+        <div class="kv"><span class="k">Ship window</span><span class="v">${p.supplier.ship[0]}–${p.supplier.ship[1]} days</span></div>
+      </div>`;
+    }).join('');
+
+    return `<div class="section-head"><div class="chip-row">${filters}</div><span class="spacer"></span>
+      <button class="btn btn-primary" data-act="scout">${icon('i-play')} Run scout cycle</button></div>
+      <div class="grid grid-cards" id="pgrid">${cards}</div>`;
+  },
+
+  studio() {
+    if (!S.clips.length) {
+      return empty('i-film', 'No clips yet', 'Generate hooks for a product to start the content engine.',
+        `<button class="btn btn-primary" data-act="studio">${icon('i-play')} Generate clips</button>`);
+    }
+    const views = S.clips.reduce((s, c) => s + c.metrics.views, 0);
+    const clicks = S.clips.reduce((s, c) => s + c.metrics.clicks, 0);
+    const published = S.clips.filter((c) => c.status === 'published').length;
+    const rendering = S.clips.filter((c) => c.status === 'queued' || c.status === 'rendering').length;
+
+    const order = { published: 0, rendering: 1, queued: 2, draft: 3, archived: 4 };
+    const cards = [...S.clips]
+      .sort((a, b) => (order[a.status] - order[b.status]) || b.metrics.views - a.metrics.views)
+      .map((c) => {
+        const kind = c.status === 'published' ? 'winning' : c.status === 'archived' ? 'dead' : c.status === 'draft' ? 'neutral' : 'sourcing';
+        return `<div class="card card-hover pcard">
+          <div class="pcard-top">
+            <div style="min-width:0"><div class="pname">“${esc(c.hook)}”</div>
+              <div class="pcat">${esc(productName(c.productId))} · ${esc(c.platform)}</div></div>
+            <span class="spacer"></span>${badge(c.status, kind)}
+          </div>
+          <div class="metric-row">
+            ${metric('Views', compact(c.metrics.views))}${metric('Likes', compact(c.metrics.likes))}
+            ${metric('Clicks', compact(c.metrics.clicks))}${metric('CVR', pct(c.metrics.cvr), true)}
+          </div>
+          <div style="font-size:12.5px;color:var(--text-dim)">
+            ${c.script.map((b) => `<div style="display:flex;gap:9px;padding:3px 0">
+              <code style="font-family:var(--mono);font-size:11px;color:var(--text-faint);flex:0 0 46px">${esc(b.t)}</code>
+              <span>${esc(b.shot)}</span></div>`).join('')}
+          </div>
+          <div class="chip-row">${c.tags.map((t) => `<span class="chip">${esc(t)}</span>`).join('')}</div>
+          <div class="kv" style="border-top:1px solid var(--border);padding-top:11px">
+            <span class="k">Format</span><span class="v">${esc(c.format)}</span></div>
+          <div class="kv"><span class="k">Engine</span><span class="v">${esc(c.engine)}</span></div>
+        </div>`;
+      }).join('');
+
+    return `<div class="section"><div class="grid grid-kpi">
+        ${kpi('Total views', compact(views), 'i-film', `<span style="color:var(--text-faint)">across ${S.clips.length} clips</span>`)}
+        ${kpi('Clicks', compact(clicks), 'i-bolt', `<span style="color:var(--text-faint)">${views ? pct((clicks / views) * 100) : '0.0%'} CTR</span>`)}
+        ${kpi('Published', String(published), 'i-check', `<span style="color:var(--text-faint)">${S.clips.length - published} in pipeline</span>`)}
+        ${kpi('Render queue', String(rendering), 'i-clock', `<span style="color:var(--text-faint)">RunwayML Gen-3</span>`)}
+      </div></div>
+      <div class="section-head"><h2>Clip library</h2><span class="spacer"></span>
+        <button class="btn btn-primary" data-act="studio">${icon('i-play')} Generate clips</button></div>
+      <div class="grid grid-cards">${cards}</div>`;
+  },
+
+  sales() {
+    const t = S.sales;
+    if (!S.orders.length) return empty('i-chart', 'No sales recorded', 'Connect a channel or run the tracker ingest.');
+
+    const chanTotal = Object.values(t.byChannel).reduce((s, c) => s + c.revenue, 0) || 1;
+    const channels = Object.entries(t.byChannel).map(([k, c]) => `
+      <div style="margin-bottom:14px">
+        <div style="display:flex;font-size:13px;margin-bottom:6px"><span>${esc(k)}</span><span class="spacer"></span>
+          <span style="font-family:var(--mono);font-size:12.5px">${money(c.revenue)} · ${c.orders}</span></div>
+        <div class="meter"><i style="width:${((c.revenue / chanTotal) * 100).toFixed(1)}%"></i></div>
+      </div>`).join('');
+
+    const rows = [...S.orders].slice(-14).reverse().map((o) => {
+      const tone = o.status === 'refunded' ? 'dead' : o.status === 'delivered' ? 'winning' : 'active';
+      return `<tr>
+        <td style="font-family:var(--mono);font-size:12px;color:var(--text-faint)">${esc(o.id)}</td>
+        <td>${esc(o.date)}</td><td>${esc(productName(o.productId))}</td><td>${esc(o.channel)}</td>
+        <td class="num">${o.quantity}</td><td class="num">${money(o.unitPrice * o.quantity)}</td>
+        <td>${badge(o.status, tone)}</td></tr>`;
+    }).join('');
+
+    return `<div class="section"><div class="grid grid-kpi">
+        ${kpi('Revenue', money(t.revenue), 'i-dollar', `<span style="color:var(--text-faint)">${S.dates[0]} → ${S.dates[S.dates.length - 1]}</span>`)}
+        ${kpi('COGS', money(t.cogs), 'i-box', '<span style="color:var(--text-faint)">landed cost</span>')}
+        ${kpi('Gross profit', money(t.grossProfit), 'i-chart', `<span class="up">${pct(t.marginPct)} margin</span>`)}
+        ${kpi('AOV', money(t.aov), 'i-bolt', `<span style="color:var(--text-faint)">${t.orders} paid orders</span>`)}
+      </div></div>
+      <div class="grid grid-2 section">
+        <div class="card"><div class="card-head"><h2>Daily revenue</h2></div>${chart(t.daily)}</div>
+        <div class="card"><div class="card-head"><h2>Channel split</h2></div>${channels}</div>
+      </div>
+      <div class="card"><div class="card-head"><h2>Recent orders</h2><span class="spacer"></span>
+        <span style="font-size:12px;color:var(--text-faint)">last 14 of ${S.orders.length}</span></div>
+        <div class="table-wrap"><table class="data"><thead><tr>
+          <th>Order</th><th>Date</th><th>Product</th><th>Channel</th><th class="num">Qty</th><th class="num">Total</th><th>Status</th>
+        </tr></thead><tbody>${rows}</tbody></table></div></div>`;
+  },
+
+  models() {
+    const cards = MODELS.map((m) => {
+      const tone = m.status === 'available' ? 'winning' : 'sourcing';
+      const cost = m.cost != null ? '$' + m.cost.toFixed(4) + ' / 1k tok'
+        : m.costPerRun != null ? '$' + m.costPerRun.toFixed(2) + ' / run'
+        : m.creditsPerSec + ' credits / sec';
+      return `<div class="card card-hover pcard">
+        <div class="pcard-top">
+          <div style="min-width:0"><div class="pname">${esc(m.label)}</div><div class="pcat">${esc(m.vendor)}</div></div>
+          <span class="spacer"></span>${badge(m.status, tone)}</div>
+        <div style="font-size:12.5px;color:var(--text-dim);line-height:1.55">${esc(m.strengths)}</div>
+        <div class="chip-row">${m.caps.map((c) => `<span class="chip">${esc(c)}</span>`).join('')}</div>
+        <div class="kv" style="border-top:1px solid var(--border);padding-top:11px"><span class="k">Cost</span><span class="v">${esc(cost)}</span></div>
+        <div class="kv"><span class="k">Quality index</span><span class="v">${m.quality.toFixed(2)}</span></div>
+        ${m.credits != null ? `<div class="kv"><span class="k">Credits left</span><span class="v">${m.credits}</span></div>` : ''}
+        ${m.spendLimit != null ? `<div class="kv"><span class="k">Spend</span><span class="v">${money(m.spendUsed)} / ${money(m.spendLimit)}</span></div>` : ''}
+      </div>`;
+    }).join('');
+
+    const rows = Object.entries(ROUTES).map(([k, r]) => `<tr>
+      <td>${esc(k)}</td>
+      <td><code style="font-family:var(--mono);font-size:12px;color:var(--accent)">${esc(r.primary || '—')}</code></td>
+      <td><code style="font-family:var(--mono);font-size:12px;color:var(--text-dim)">${esc(r.fallback || '—')}</code></td>
+      <td><code style="font-family:var(--mono);font-size:12px;color:var(--warn)">${esc(r.escalate || '—')}</code></td></tr>`).join('');
+
+    return `<div class="grid grid-cards section">${cards}</div>
+      <div class="card"><div class="card-head"><h2>Task routing table</h2></div>
+        <div class="table-wrap"><table class="data"><thead><tr>
+          <th>Task type</th><th>Primary</th><th>Fallback</th><th>Escalation</th>
+        </tr></thead><tbody>${rows}</tbody></table></div></div>`;
+  },
+
+  settings() {
+    const k = getKeys();
+    const field = (id, label, val, hint) =>
+      `<div class="field"><label for="${id}">${esc(label)}</label>
+       <input id="${id}" type="password" value="${esc(val || '')}" autocomplete="off" spellcheck="false" />
+       <div class="hint">${esc(hint)}</div></div>`;
+
+    return `<div class="grid grid-2">
+      <div class="card">
+        <div class="card-head"><h2>API credentials</h2><span class="spacer"></span>
+          ${badge(isDemo() ? 'demo mode' : 'live', isDemo() ? 'sourcing' : 'winning')}</div>
+        <p style="font-size:12.5px;color:var(--text-dim);margin:0 0 16px">
+          Stored in this browser only. Leave blank to keep every service simulated.</p>
+        ${field('k_arena', 'Arena.ai API key', k.arena, 'Routes all specialist model calls.')}
+        ${field('k_fable', 'Fable 5 API key', k.fable, 'Browser agent for live scraping. Metered.')}
+        ${field('k_runway', 'RunwayML API key', k.runway, '125 credits in the current pool.')}
+        <button class="btn btn-primary" data-act="save-keys">Save</button>
+        <button class="btn btn-ghost" data-act="clear-keys">Clear</button>
+      </div>
+      <div class="card">
+        <div class="card-head"><h2>System</h2></div>
+        <div class="kv"><span class="k">Products</span><span class="v">${S.products.length}</span></div>
+        <div class="kv"><span class="k">Clips</span><span class="v">${S.clips.length}</span></div>
+        <div class="kv"><span class="k">Orders</span><span class="v">${S.orders.length}</span></div>
+        <div class="kv"><span class="k">Tasks</span><span class="v">${S.tasks.length}</span></div>
+        <div class="kv"><span class="k">Persistence</span><span class="v">${CONFIG.persist ? 'localStorage' : 'memory only'}</span></div>
+        <div class="kv"><span class="k">Sales seed</span><span class="v">${CONFIG.salesSeed}</span></div>
+        <p style="font-size:12px;color:var(--text-faint);margin:14px 0 0">
+          Everything runs offline. No data leaves this browser unless you add a key.</p>
+        <div style="margin-top:16px"><button class="btn btn-ghost" data-act="reset">Reset to seed data</button></div>
+      </div>
+    </div>`;
+  },
+};
+
+/* =========================================================================
+   [14] APP — boot, nav, events
+   ========================================================================= */
+function renderNav() {
+  let html = '';
+  let group = null;
+  for (const item of NAV) {
+    if (item.group !== group) { group = item.group; html += `<div class="nav-label">${esc(group)}</div>`; }
+    const n = item.count ? item.count() : null;
+    html += `<button class="nav-item${item.id === currentView ? ' active' : ''}" data-view="${item.id}">
+      ${icon(item.icon)} ${esc(item.label)}${n != null ? `<span class="nav-count">${n}</span>` : ''}</button>`;
+  }
+  document.getElementById('nav').innerHTML = html;
+}
+
+function render() {
+  const meta = NAV.find((n) => n.id === currentView) || NAV[0];
+  document.getElementById('viewTitle').textContent = meta.title;
+  document.getElementById('viewSub').textContent = meta.sub;
+  document.getElementById('content').innerHTML = VIEWS[currentView]();
+  renderNav();
+}
+
+function setView(id) {
+  if (!VIEWS[id]) id = 'dashboard';
+  currentView = id;
+  if (location.hash.slice(1) !== id) history.replaceState(null, '', '#' + id);
+  render();
+  closeNav();
+}
+
+const openNav = () => { document.getElementById('sidebar').classList.add('open'); document.getElementById('scrim').classList.add('show'); };
+const closeNav = () => { document.getElementById('sidebar').classList.remove('open'); document.getElementById('scrim').classList.remove('show'); };
+
+document.addEventListener('click', async (e) => {
+  const nav = e.target.closest('[data-view]');
+  if (nav) return setView(nav.dataset.view);
+
+  const jump = e.target.closest('[data-nav]');
+  if (jump) return setView(jump.dataset.nav);
+
+  const filter = e.target.closest('[data-filter]');
+  if (filter) {
+    const want = filter.dataset.filter;
+    document.querySelectorAll('#pgrid .pcard').forEach((c) => {
+      c.style.display = (want === 'all' || c.dataset.stage === want) ? '' : 'none';
+    });
+    document.querySelectorAll('[data-filter]').forEach((b) => b.classList.toggle('on', b === filter));
+    return;
+  }
+
+  const act = e.target.closest('[data-act]');
+  if (!act) return;
+  switch (act.dataset.act) {
+    case 'run': runCycle(); break;
+    case 'scout':  Scout.runCycle(); break;
+    case 'studio': Studio.generate(S.products.find((p) => p.stage !== 'dead')?.id); break;
+    case 'save-keys':
+      setKeys({
+        arena: document.getElementById('k_arena').value.trim(),
+        fable: document.getElementById('k_fable').value.trim(),
+        runway: document.getElementById('k_runway').value.trim(),
+      });
+      toast('Credentials saved to this browser'); render();
+      break;
+    case 'clear-keys':
+      localStorage.removeItem('scorpion.keys'); toast('Credentials cleared'); render();
+      break;
+    case 'reset':
+      localStorage.removeItem(CONFIG.storageKey);
+      S = freshState(); save(); toast('Reset to seed data'); render();
+      break;
+  }
+});
+
+document.getElementById('menuToggle').addEventListener('click', () =>
+  document.getElementById('sidebar').classList.contains('open') ? closeNav() : openNav());
+document.getElementById('scrim').addEventListener('click', closeNav);
+function runCycle() {
+  toast('Orchestration cycle started');
+  runTask('trend-research', {}, { title: 'Trend sweep — all niches' });
+  setTimeout(() => runTask('hook-generation',
+    { productName: S.products[0]?.name, count: 3 },
+    { title: 'Hook batch — ' + (S.products[0]?.name || 'top product') }), 600);
+  setTimeout(() => runTask('sales-analysis', { window: 7 }, { title: 'Weekly revenue analysis' }), 1200);
+}
+document.getElementById('btnRun').addEventListener('click', runCycle);
+document.getElementById('btnReset').addEventListener('click', () => {
+  localStorage.removeItem(CONFIG.storageKey);
+  S = freshState(); save(); toast('Reset to seed data'); render();
+});
+window.addEventListener('hashchange', () => {
+  const id = location.hash.slice(1);
+  if (VIEWS[id] && id !== currentView) setView(id);
+});
+
+/* --- boot ----------------------------------------------------------------- */
+S = load();
+const initial = location.hash.slice(1);
+if (VIEWS[initial]) currentView = initial;
+render();
+
+// Exposed for console tinkering: Scorpion.state(), Scorpion.run('trend-research')
+window.Scorpion = {
+  state: () => S, render, setView,
+  run: runTask, scout: Scout, studio: Studio, tracker: Tracker,
+  models: MODELS, routes: ROUTES, config: CONFIG,
+  reset: () => { localStorage.removeItem(CONFIG.storageKey); S = freshState(); render(); },
+};
+</script>
+</body>
+</html>
