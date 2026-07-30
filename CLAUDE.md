@@ -57,10 +57,13 @@ node -e 'const{getContrastRatio}=require("./lib/rules/contrast-rule.js");
          console.log(getContrastRatio("#767690","#ffffff").toFixed(2))'
 ```
 
-A previous version of this file claimed `#6b6b85` was 3.30:1 (it is 5.16:1, passing)
-and directed agents to "fix" it to `#8585a0` (which is 3.58:1, failing). That guidance
+A previous version of this file claimed `#6b6b85` was 3.30:1 (it is 5.16:1, passing) <!-- ratio-check:ignore -->
+and directed agents to "fix" it to `#8585a0` (which is 3.58:1, failing). That guidance <!-- ratio-check:ignore -->
 was wrong in the most damaging possible direction — it turned a passing color into a
 failing one. The machine-check above exists so that cannot recur.
+
+(Those two lines carry `ratio-check:ignore` because they quote the historical *wrong*
+number on purpose. Every other ratio in this file is verified against the code.)
 
 ### Horizontal Overflow
 

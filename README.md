@@ -9,7 +9,7 @@ A zero-dependency design audit system that automates visual QA by driving real C
 - **Automatic Browser Provisioning**: Finds system Chromium or downloads it to `.cache/`
 - **Comprehensive Rules**: Contrast, overflow, icon sizing, text collision, and more
 - **Claude Code Integration**: Generates FIXME.md for automated fixes
-- **Performance Optimized**: Full audit in ~8 seconds (12 viewports)
+- **Honest Reporting**: distinguishes "clean" from "did not run" via exit codes
 
 ## Quick Start
 
@@ -39,7 +39,7 @@ npm run design:audit
 ```
 
 This:
-- Renders all six views at 1440px and 390px in real Chromium
+- Renders each configured route at 1440px and 390px in real Chromium
 - Inspects the live DOM using CDP
 - Runs all audit rules against each viewport
 - Generates reports in `design-report/`
@@ -120,7 +120,7 @@ demo-site/
 | Variable | Default | Description |
 |----------|---------|-------------|
 | `DESIGN_AUDIT_BASE_URL` | `http://localhost:3000` | Base URL for audit |
-| `DESIGN_AUDIT_ROUTES` | `/,/about,/contact,/dashboard,/settings,/profile` | Routes to audit |
+| `DESIGN_AUDIT_ROUTES` | `/,/about,/contact` | Routes to audit |
 | `DESIGN_AUDIT_TIMEOUT` | `30000` | Timeout per page in ms |
 | `CHROME_PATH` | Auto-detected | Custom Chromium path |
 | `CLAUDE_CLI_PATH` | `claude` | Path to Claude CLI |
@@ -161,7 +161,9 @@ scorpion-7.0/
 │   ├── browser-resolver.js  # Browser discovery/provisioning
 │   ├── cdp-client.js        # Chromium CDP client
 │   ├── dom-utils.js         # DOM manipulation utilities
-│   ├── websocket-fallback.js # WebSocket fallback
+│   ├── cdp-socket.js     # EventEmitter adapter over the global WebSocket
+│   ├── chrome-launcher.js # Launch + DevToolsActivePort endpoint discovery
+│   ├── color.js          # CSS colour parsing and WCAG luminance
 │   └── rules/               # Audit rules
 │       ├── contrast-rule.js
 │       ├── overflow-rule.js
@@ -213,7 +215,9 @@ cp docs/ci/design-audit.yml.example .github/workflows/design-audit.yml
 
 ## Performance Optimizations
 
-The audit system includes several optimizations to achieve ~8s for 12 viewports:
+The audit runs 6 page-renders (3 routes x 2 viewports) in roughly 5 seconds on a
+warm machine. Any earlier figure in this file was measured while the browser layer
+was a no-op that inspected nothing. Optimizations:
 
 1. **Spatial Bucketing**: Text collision detection is O(n) per parent instead of O(n²) overall
 2. **Cached Computed Styles**: Styles are cached to avoid redundant CDP calls
@@ -262,7 +266,8 @@ The system uses only Node 22 built-in modules:
 - `node:os` - OS information
 - `node:child_process` - Process spawning
 - `node:events` - Event handling
-- `node:websocket` - WebSocket client (for CDP)
+- Global `WebSocket` (built into Node 22) - CDP transport
+- Global `fetch` (built into Node 22) - route status pre-checks
 - `node:test` - Test runner
 - `node:assert` - Assertions
 
@@ -348,3 +353,19 @@ CLAUDE_CLI_PATH=/usr/local/bin/claude npm run design:fix
 ## License
 
 MIT
+
+## Exit codes
+
+`design:audit` distinguishes "clean" from "did not run". Conflating the two is how a
+no-op audit acted as a passing pre-commit gate for the life of this project.
+
+| Code | Meaning |
+|------|---------|
+| `0` | Audit ran and found nothing |
+| `1` | Audit ran and found issues — see `design-report/FIXME.md` |
+| `2` | Skipped by request (`DESIGN_AUDIT_SKIP_BROWSER=true`). **Not a pass.** |
+| `3` | Infrastructure failure: could not launch, a route returned non-2xx, or zero pages were inspected |
+
+Only `0` is a pass. `npm run verify` runs the real audit — it can no longer be
+satisfied by the skip path. Reports lead with `pagesAudited` / `pagesFailed` so
+"0 findings" is never readable without its denominator.

@@ -12,7 +12,10 @@ const path = require('node:path');
 const url = require('node:url');
 
 const PORT = process.env.PORT || 3000;
-const BASE_DIR = process.cwd();
+// Resolve against this file's directory, not the caller's cwd. Using
+// process.cwd() meant `node demo-site/server.js` from the repo root served the
+// repo root and returned 404 for every page, including the audit's own routes.
+const BASE_DIR = __dirname;
 
 // MIME types
 const mimeTypes = {
@@ -68,6 +71,17 @@ const server = http.createServer(async (req, res) => {
       serveFile(absPath, res);
       
     } catch (err) {
+      // Extensionless routes like /about map to about.html, so the audit can
+      // target clean URLs rather than .html filenames.
+      if (!path.extname(absPath)) {
+        const htmlPath = `${absPath}.html`;
+        try {
+          await fs.promises.access(htmlPath);
+          serveFile(htmlPath, res);
+          return;
+        } catch { /* fall through to 404 */ }
+      }
+
       // File not found
       res.writeHead(404);
       res.end('Not Found');

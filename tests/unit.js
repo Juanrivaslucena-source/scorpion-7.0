@@ -502,9 +502,9 @@ describe('AuditEngine', () => {
     assert.strictEqual(engine.viewports[1].name, 'mobile');
   });
 
-  it('should have default routes', () => {
+  it('should default only to routes the demo site actually serves', () => {
     const engine = new AuditEngine();
-    assert.strictEqual(engine.routes.length, 6);
+    assert.deepStrictEqual(engine.routes, ['/', '/about', '/contact']);
   });
 
   it('should have default rules', () => {
@@ -608,6 +608,151 @@ describe('Mock DOM Tree', () => {
     const svgElement = mockDOMTree.children[1];
     assert.strictEqual(svgElement.nodeName, 'SVG');
     assert.strictEqual(svgElement.className, 'icon');
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Color parser
+//
+// The previous parser understood only #hex and rgb(). Everything else returned
+// luminance 0 (black), which against the hardcoded white background scored 21:1
+// — turning every unparsed color into a perfect pass. These tests exist so that
+// failure mode cannot come back.
+// ---------------------------------------------------------------------------
+const { parseColor, compositeOver, contrastRatio, relativeLuminance } = require('../lib/color');
+
+describe('Color parser', () => {
+  it('parses 6-digit hex', () => {
+    assert.deepStrictEqual(parseColor('#6b6b85'), { r: 107, g: 107, b: 133, a: 1 });
+  });
+
+  it('parses 3-digit hex shorthand', () => {
+    assert.deepStrictEqual(parseColor('#fff'), { r: 255, g: 255, b: 255, a: 1 });
+  });
+
+  it('parses 8-digit hex with alpha', () => {
+    const c = parseColor('#00000080');
+    assert.strictEqual(c.r, 0);
+    assert.ok(Math.abs(c.a - 0.502) < 0.01);
+  });
+
+  it('parses rgb()', () => {
+    assert.deepStrictEqual(parseColor('rgb(107, 107, 133)'), { r: 107, g: 107, b: 133, a: 1 });
+  });
+
+  it('parses rgba() — the case that used to silently become black', () => {
+    assert.deepStrictEqual(parseColor('rgba(107, 107, 133, 0.5)'),
+      { r: 107, g: 107, b: 133, a: 0.5 });
+  });
+
+  it('parses space-separated rgb with slash alpha', () => {
+    assert.deepStrictEqual(parseColor('rgb(0 0 0 / 50%)'), { r: 0, g: 0, b: 0, a: 0.5 });
+  });
+
+  it('parses hsl()', () => {
+    assert.deepStrictEqual(parseColor('hsl(0, 0%, 100%)'), { r: 255, g: 255, b: 255, a: 1 });
+  });
+
+  it('parses hsla() with alpha', () => {
+    const c = parseColor('hsla(240, 100%, 50%, 0.25)');
+    assert.strictEqual(c.b, 255);
+    assert.strictEqual(c.a, 0.25);
+  });
+
+  it('parses named colors', () => {
+    assert.deepStrictEqual(parseColor('white'), { r: 255, g: 255, b: 255, a: 1 });
+  });
+
+  it('parses transparent as zero alpha', () => {
+    assert.strictEqual(parseColor('transparent').a, 0);
+  });
+
+  it('returns null for unparseable input rather than defaulting to black', () => {
+    for (const bad of ['', 'not-a-color', 'var(--x)', '#12345', 'rgb(1,2)', null, undefined]) {
+      assert.strictEqual(parseColor(bad), null, `expected null for ${JSON.stringify(bad)}`);
+    }
+  });
+
+  it('composites a translucent color over a backdrop', () => {
+    const result = compositeOver({ r: 0, g: 0, b: 0, a: 0.5 }, { r: 255, g: 255, b: 255, a: 1 });
+    assert.deepStrictEqual(result, { r: 128, g: 128, b: 128, a: 1 });
+  });
+
+  it('matches known WCAG reference ratios', () => {
+    const white = parseColor('#ffffff');
+    const ratio = (hex) => contrastRatio(parseColor(hex), white);
+    assert.strictEqual(ratio('#000000').toFixed(2), '21.00');
+    assert.strictEqual(ratio('#777777').toFixed(2), '4.48');
+    assert.strictEqual(ratio('#6b6b85').toFixed(2), '5.16');
+    assert.strictEqual(ratio('#8585a0').toFixed(2), '3.58');
+  });
+
+  it('luminance of black is 0 and white is 1', () => {
+    assert.strictEqual(relativeLuminance({ r: 0, g: 0, b: 0 }), 0);
+    assert.strictEqual(relativeLuminance({ r: 255, g: 255, b: 255 }), 1);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Documentation machine-check
+//
+// CLAUDE.md once claimed #6b6b85 was 3.30:1 and instructed agents to replace it
+// with #8585a0 "at 4.76:1" — inverting a passing color into a failing one. Every
+// contrast ratio quoted in the docs is recomputed here against the real code, so
+// a wrong number fails the build instead of misleading the next agent.
+// ---------------------------------------------------------------------------
+describe('Documented contrast ratios are accurate', () => {
+  const fs = require('node:fs');
+  const path = require('node:path');
+
+  const DOCUMENTED = [
+    { color: '#767690', onWhite: '4.41', passes: false },
+    { color: '#6b6b85', onWhite: '5.16', passes: true },
+    { color: '#8585a0', onWhite: '3.58', passes: false },
+  ];
+
+  for (const { color, onWhite, passes } of DOCUMENTED) {
+    it(`${color} on white is ${onWhite}:1`, () => {
+      const actual = getContrastRatio(color, '#ffffff');
+      assert.strictEqual(actual.toFixed(2), onWhite);
+      assert.strictEqual(actual >= 4.5, passes,
+        `${color} should ${passes ? 'pass' : 'fail'} WCAG AA for normal text`);
+    });
+  }
+
+  it('CLAUDE.md quotes no contrast ratio that the code disagrees with', () => {
+    const claudeMd = fs.readFileSync(path.join(__dirname, '..', 'CLAUDE.md'), 'utf8');
+    let checked = 0;
+
+    for (const line of claudeMd.split('\n')) {
+      // Lines that deliberately quote a historically wrong figure opt out.
+      if (line.includes('ratio-check:ignore')) continue;
+
+      // Match "#rrggbb ... N.NN:1" stated together on one line, in either order.
+      const pattern = /(#[0-9a-f]{6})[^\n]*?(\d\.\d{2}):1|(\d\.\d{2}):1[^\n]*?(#[0-9a-f]{6})/gi;
+      let match;
+      while ((match = pattern.exec(line)) !== null) {
+        const hex = (match[1] || match[4]).toLowerCase();
+        const claimed = match[2] || match[3];
+        const actual = getContrastRatio(hex, '#ffffff');
+        if (actual === null) continue;
+        assert.strictEqual(actual.toFixed(2), claimed,
+          `CLAUDE.md says ${hex} is ${claimed}:1 on white, but the code computes ${actual.toFixed(2)}:1`);
+        checked += 1;
+      }
+    }
+    assert.ok(checked > 0, 'expected at least one documented ratio to verify');
+  });
+
+  it('the demo site colour genuinely fails, as its comment claims', () => {
+    const css = fs.readFileSync(
+      path.join(__dirname, '..', 'demo-site', 'styles.css'), 'utf8');
+    const match = /--color-text-faint:\s*(#[0-9a-f]{6})/i.exec(css);
+    assert.ok(match, 'expected --color-text-faint in demo-site/styles.css');
+    const ratio = getContrastRatio(match[1], '#ffffff');
+    assert.ok(ratio < 4.5,
+      `demo-site --color-text-faint ${match[1]} is ${ratio.toFixed(2)}:1, which passes AA — ` +
+      `the demo is supposed to contain a real contrast failure`);
   });
 });
 
