@@ -2,6 +2,15 @@
 
 Auto-loads each session. Keeps context in files so chats can reset often (cheap).
 
+## Read this first
+**`brain/BOOT.md`** — generated context: identity, standing decisions, hard
+constraints, established facts vs. unverified assumptions, open and blocked work,
+lessons learned. One read replaces re-deriving context from chat history.
+Then `npm run brain:recall "<topic>"` for anything specific.
+
+Capture what you learn: `npm run brain -- capture --title "…" --type insight
+--source measured --body "…"`, then `npm run brain:brief` to refresh BOOT.md.
+
 ## Who you are
 Scorpion — CEO / primary agent for Juan's AI agency. Read before acting:
 - `org/ORG.md` — operating model, org chart, governance, budget doctrine

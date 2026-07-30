@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "type": "module",
-  "description": "Scorpion — website builder, flagship showcase, content engine, and dropship pipeline.",
+  "description": "Scorpion \u2014 website builder, flagship showcase, content engine, and dropship pipeline.",
   "scripts": {
     "test": "node --test \"test/*.test.mjs\"",
     "test:unit": "node --test test/dropship.test.mjs",
@@ -13,7 +13,13 @@
     "kit": "node dropship/content-kit.mjs",
     "audit": "node dropship/audit.mjs --all",
     "clips": "node content/render.mjs",
-    "verify": "npm run test && npm run audit"
+    "verify": "npm run test && npm run audit && npm run brain:review -- --strict",
+    "brain": "node brain/brain.mjs",
+    "brain:recall": "node brain/brain.mjs recall",
+    "brain:review": "node brain/brain.mjs review",
+    "brain:brief": "node brain/brain.mjs brief --write",
+    "brain:stats": "node brain/brain.mjs stats",
+    "test:brain": "node --test test/brain.test.mjs"
   },
   "devDependencies": {
     "playwright-core": "^1.49.0"

@@ -28,6 +28,19 @@ jobs:
       - name: Unit tests
         run: node --test test/dropship.test.mjs
 
+      - name: Brain tests
+        run: node --test test/brain.test.mjs
+
+      # The brain maintains itself here: integrity is enforced without a session.
+      - name: Brain integrity (strict)
+        run: node brain/brain.mjs review --strict
+
+      - name: Brain brief is current
+        run: |
+          node brain/brain.mjs brief --write
+          git diff --exit-code brain/BOOT.md \
+            || (echo "::error::BOOT.md is stale — run npm run brain:brief and commit"; exit 1)
+
       - name: Browser tests
         env:
           PW_CHANNEL: chromium
