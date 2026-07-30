@@ -1,0 +1,22 @@
+{
+  "name": "scorpion",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Scorpion — website builder, flagship showcase, content engine, and dropship pipeline.",
+  "scripts": {
+    "test": "node --test \"test/*.test.mjs\"",
+    "test:unit": "node --test test/dropship.test.mjs",
+    "test:audit": "node --test test/audit.test.mjs",
+    "research": "node dropship/research.mjs score dropship/products/_candidates.json",
+    "page": "node dropship/build-page.mjs",
+    "kit": "node dropship/content-kit.mjs",
+    "audit": "node dropship/audit.mjs --all",
+    "clips": "node content/render.mjs",
+    "verify": "npm run test && npm run audit"
+  },
+  "devDependencies": {
+    "playwright-core": "^1.49.0"
+  },
+  "dependencies": {}
+}

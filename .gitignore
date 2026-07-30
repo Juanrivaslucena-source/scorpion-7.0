@@ -1,5 +1,5 @@
 node_modules/
-package*.json
+package-lock.json
 scratch-*
 .DS_Store
 content/out/

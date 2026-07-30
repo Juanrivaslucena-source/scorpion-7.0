@@ -1,0 +1,81 @@
+{
+  "_comment": "Research worksheet. The agent fills this from live search, then `research.mjs score` ranks it. Costs are entered by hand from real AliExpress listings — there is no connector. Momentum is a 0-100 judgement backed by the cited sources; leave it null rather than guessing.",
+  "_researchedOn": "2026-07-29",
+  "_criteriaSource": "https://news.astools.app/en/blog/tiktok-viral-products-august-2026",
+
+  "candidates": [
+    {
+      "id": "scalp-massager",
+      "name": "Scalp Relief Brush",
+      "category": "beauty",
+      "tagline": "Five minutes that undo a whole day of tension.",
+      "supplierCost": 3.10,
+      "shippingCost": 2.40,
+      "sellPrice": 27.00,
+      "compareAtPrice": 39.00,
+      "momentum": 64,
+      "demoIn3s": "Hand draws the brush across a scalp; hair lifts and separates behind it.",
+      "problem": "Your head feels tight before the day is even over.",
+      "sources": [
+        "https://news.astools.app/en/blog/tiktok-viral-products-august-2026",
+        "https://dropship-spy.com/blog/tiktok-dropshipping-winning-products-2026"
+      ]
+    },
+    {
+      "id": "rotating-spice-rack",
+      "name": "Rotating Spice Carousel",
+      "category": "home",
+      "tagline": "Every jar, one turn away.",
+      "supplierCost": 8.90,
+      "shippingCost": 6.20,
+      "sellPrice": 34.00,
+      "compareAtPrice": 49.00,
+      "momentum": 71,
+      "demoIn3s": "Cluttered cabinet, then one spin and every label faces forward.",
+      "problem": "You buy the same spice twice because you cannot see what you own.",
+      "sources": [
+        "https://dropship-spy.com/blog/best-dropshipping-products-2026",
+        "https://www.trenz.ai/resource/tiktok-shop-winning-products-report"
+      ]
+    },
+    {
+      "id": "led-face-mask",
+      "name": "LED Therapy Mask",
+      "category": "beauty",
+      "supplierCost": 22.00,
+      "shippingCost": 9.00,
+      "sellPrice": 79.00,
+      "momentum": 78,
+      "demoIn3s": "Room goes dark, mask lights up.",
+      "problem": "Clinic sessions cost more than the device.",
+      "sources": ["https://news.astools.app/en/blog/tiktok-viral-products-august-2026"],
+      "_note": "Rejected on margin and price band — high ticket, needs a warmed audience and compliance review on any skin claim."
+    },
+    {
+      "id": "cable-organizer",
+      "name": "Magnetic Cable Tidy",
+      "category": "home",
+      "supplierCost": 1.20,
+      "shippingCost": 1.60,
+      "sellPrice": 14.00,
+      "momentum": 55,
+      "demoIn3s": "Tangle of cables snaps into a row.",
+      "problem": "Cables slide off the desk every time you unplug one.",
+      "sources": ["https://cjdropshipping.com/blogs/dropshipping-knowledge/TikTok-Dropshipping-Products"],
+      "_note": "Below the impulse band and momentum floor — good demo, thin economics."
+    },
+    {
+      "id": "posture-corrector",
+      "name": "Posture Band",
+      "category": "wellness",
+      "supplierCost": 4.50,
+      "shippingCost": 3.00,
+      "sellPrice": 29.00,
+      "momentum": 48,
+      "demoIn3s": "",
+      "problem": "Desk work rounds your shoulders.",
+      "sources": [],
+      "_note": "Vetoed — nothing to show in three seconds, unsourced, and wellness claims invite regulatory risk."
+    }
+  ]
+}

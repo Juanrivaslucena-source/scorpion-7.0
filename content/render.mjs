@@ -66,17 +66,56 @@ function toMp4(ff, webm) {
 }
 
 /**
- * Shot list. Each shot: a name, the hook caption, and a director function that
- * drives the page while the recorder runs.
+ * Shot lists are page-specific: a shot that targets `#ba` is meaningless on a
+ * product page. Each shot declares a `needs` selector; shots whose target is
+ * absent are skipped rather than silently recording a still frame.
  */
+async function has(page, sel) {
+  try { return (await page.locator(sel).count()) > 0; } catch { return false; }
+}
+
+/** Shots that work on any page — the fallback set for product pages. */
+const GENERIC_SHOTS = [ /* generic: used only when no page-specific shot fills the role */
+  {
+    name: "g1-hero",
+    role: "hero",
+    hook: "Open on the product, not the pitch.",
+    async run(p) { await p.goto(URL); await sleep(1400); await p.mouse.move(540, 900);
+      for (let i = 0; i < 18; i++) { await p.mouse.wheel(0, 30); await sleep(48); } await sleep(700); },
+  },
+  {
+    name: "g2-fullscroll",
+    role: "scroll",
+    hook: "The whole page in ten seconds.",
+    async run(p) { await p.goto(URL); await sleep(1200); await p.mouse.move(540, 900);
+      for (let i = 0; i < 120; i++) { await p.mouse.wheel(0, 80); await sleep(20); } await sleep(700); },
+  },
+  {
+    name: "g3-cta",
+    role: "cta",
+    hook: "One clear action.",
+    needs: ".btn, [href*='cart'], button",
+    async run(p) {
+      await p.goto(URL); await sleep(1200);
+      const b = await p.locator(".btn, button").first().boundingBox();
+      if (b) { await p.mouse.move(b.x + b.width / 2, b.y + b.height / 2, { steps: 14 }); }
+      await sleep(1400);
+    },
+  },
+];
+
 const SHOTS = [
   {
     name: "01-loader",
+    role: "loader",
+    needs: "#loader",
     hook: "Most small-business sites load like it's 2014.",
     async run(p) { await p.goto(URL); await sleep(4200); },
   },
   {
     name: "02-hero",
+    role: "hero",
+    needs: "h1",
     hook: "One HTML file. No template. No page builder.",
     async run(p) {
       await p.goto(URL); await sleep(3400);
@@ -87,6 +126,8 @@ const SHOTS = [
   },
   {
     name: "03-beforeafter",
+    role: "feature-ba",
+    needs: "#ba",
     hook: "Proof beats promises.",
     async run(p) {
       await p.goto(URL); await sleep(3200);
@@ -103,6 +144,8 @@ const SHOTS = [
   },
   {
     name: "04-services",
+    role: "feature-svc",
+    needs: ".svc-row",
     hook: "Every detail is a decision.",
     async run(p) {
       await p.goto(URL); await sleep(3200);
@@ -119,6 +162,8 @@ const SHOTS = [
   },
   {
     name: "05-scroll",
+    role: "scroll",
+    needs: "body",
     hook: "$300/month. No setup fee.",
     async run(p) {
       await p.goto(URL); await sleep(3200);
@@ -129,6 +174,8 @@ const SHOTS = [
   },
   {
     name: "06-pricing",
+    role: "feature-plan",
+    needs: ".plan",
     hook: "Agency work. Small-business price.",
     async run(p) {
       await p.goto(URL); await sleep(3200);
@@ -145,6 +192,8 @@ const SHOTS = [
   },
   {
     name: "07-reducedmotion",
+    role: "motion",
+    needs: "body",
     hook: "Accessible isn't a downgrade.",
     reducedMotion: "reduce",
     async run(p) {
@@ -165,7 +214,32 @@ const only = process.env.SHOT;
   if (!ff) console.warn("! no full ffmpeg found — leaving clips as .webm");
   const made = [];
 
-  for (const shot of SHOTS) {
+  // Probe the page once, then keep only shots whose target actually exists.
+  // A product page has no #ba or .svc-row; without this it would record
+  // seven near-identical still frames and report success.
+  const probe = await browser.newPage({ viewport: { width: W, height: H } });
+  await probe.goto(URL);
+  await sleep(1200);
+  const applicable = [];
+  for (const s of [...SHOTS, ...GENERIC_SHOTS]) {
+    if (!s.needs || (await has(probe, s.needs))) applicable.push(s);
+  }
+  // Dedupe by role, preferring the page-specific shot. A generic shot still
+  // runs when it fills a role nothing else covers (e.g. the CTA hover on a
+  // product page), so we neither duplicate coverage nor lose a useful clip.
+  const byRole = new Map();
+  for (const s of applicable) {
+    const generic = s.name.startsWith("g");
+    const held = byRole.get(s.role);
+    if (!held || (held.name.startsWith("g") && !generic)) byRole.set(s.role, s);
+  }
+  const chosen = [...byRole.values()];
+  await probe.close();
+
+  const skipped = [...SHOTS, ...GENERIC_SHOTS].length - chosen.length;
+  if (skipped) console.log(`· ${chosen.length} applicable shots (${skipped} not present on this page)`);
+
+  for (const shot of chosen) {
     if (only && shot.name !== only) continue;
     const dir = path.join(OUT, shot.name);
     fs.rmSync(dir, { recursive: true, force: true });

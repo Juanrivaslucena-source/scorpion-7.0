@@ -14,6 +14,7 @@
  */
 import fs from "fs";
 import path from "path";
+import { validate } from "./lib/schema.mjs";
 
 const esc = (s) =>
   String(s ?? "").replace(/[&<>"']/g, (c) =>
@@ -21,6 +22,40 @@ const esc = (s) =>
 
 const money = (n, cur = "USD") =>
   new Intl.NumberFormat("en-US", { style: "currency", currency: cur }).format(n);
+
+/* --- contrast ------------------------------------------------------------
+ * A brand accent chosen for buttons (dark text on light) will usually fail
+ * WCAG AA when reused as text on the dark closing section. Rather than ship a
+ * failure or hard-code a second colour, derive an accessible variant: lighten
+ * the accent until it clears 4.5:1 against the dark ground.
+ */
+const hex2rgb = (h) => {
+  const s = h.replace("#", "");
+  const n = s.length === 3 ? s.split("").map((c) => c + c).join("") : s;
+  return [0, 2, 4].map((i) => parseInt(n.slice(i, i + 2), 16));
+};
+const rgb2hex = (r, g, b) =>
+  "#" + [r, g, b].map((v) => Math.max(0, Math.min(255, Math.round(v))).toString(16).padStart(2, "0")).join("");
+const relLum = ([r, g, b]) => {
+  const f = (v) => { v /= 255; return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4); };
+  return 0.2126 * f(r) + 0.7152 * f(g) + 0.0722 * f(b);
+};
+export const contrast = (a, b) => {
+  const [l1, l2] = [relLum(hex2rgb(a)), relLum(hex2rgb(b))];
+  return (Math.max(l1, l2) + 0.05) / (Math.min(l1, l2) + 0.05);
+};
+/** Lightest-touch adjustment of `accent` that reaches `target` contrast on `bg`. */
+export function accessibleOn(accent, bg, target = 4.5) {
+  if (contrast(accent, bg) >= target) return accent;
+  let [r, g, b] = hex2rgb(accent);
+  for (let i = 0; i < 100; i++) {
+    // Move toward white in small steps; preserves hue far better than a jump to #fff.
+    r += (255 - r) * 0.06; g += (255 - g) * 0.06; b += (255 - b) * 0.06;
+    const c = rgb2hex(r, g, b);
+    if (contrast(c, bg) >= target) return c;
+  }
+  return "#ffffff";
+}
 
 /** Abstract product-shape art. Used only when no real photo is supplied — a
  *  neutral placeholder never implies a product look we can't back up. */
@@ -42,6 +77,9 @@ function build(p) {
   const e = p.economics || {};
   const cur = e.currency || "USD";
   const accent = (p.brand && p.brand.accent) || "#c2532b";
+  const INK = "#1a1815";
+  // Accent as text on the dark closing section must clear AA on its own.
+  const accentOnDark = accessibleOn(accent, INK, 4.5);
   const pos = p.positioning || {};
   const rv = p.reviews || {};
   const hasReviews = !!(rv.quotes && rv.quotes.length && rv.rating);
@@ -168,7 +206,7 @@ function build(p) {
 <meta name="description" content="${esc(p.tagline || "")}" />
 <style>
 :root{--ink:#1a1815;--soft:#5c5850;--paper:#fbf9f6;--card:#fff;--line:rgba(26,24,21,.12);
- --accent:${accent};--serif:"Iowan Old Style",Palatino,Georgia,serif;
+ --accent:${accent};--accent-dk:${accentOnDark};--serif:"Iowan Old Style",Palatino,Georgia,serif;
  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Helvetica,Arial,sans-serif;
  --ease:cubic-bezier(.22,1,.36,1)}
 *{box-sizing:border-box}
@@ -223,7 +261,7 @@ cite{font-style:normal;font-size:12.5px;color:var(--soft);letter-spacing:.04em}
 .faq p{margin:14px 0 0;color:var(--soft);line-height:1.7;font-size:15.5px}
 .final{background:var(--ink);color:var(--paper)}
 .final h2{margin:14px 0 18px}.final .price{font-size:44px}
-.guar{color:var(--accent);font-size:14px;letter-spacing:.03em;margin:0}
+.guar{color:var(--accent-dk);font-size:14px;letter-spacing:.03em;margin:0}
 .ship{color:rgba(251,249,246,.6);font-size:13.5px;margin:18px 0 0}
 .big{margin:0 0 26px}
 /* sticky buy */
@@ -240,6 +278,10 @@ footer a{color:rgba(251,249,246,.8)}
 .rv.in{opacity:1;transform:none}
 :focus-visible{outline:2px solid var(--accent);outline-offset:3px}
 @media(max-width:860px){.hero,.steps,.bens{grid-template-columns:1fr}.gal{grid-template-columns:1fr 1fr}}
+/* WCAG 2.5.8: interactive targets stay finger-sized on touch screens */
+@media(max-width:500px){.faq summary{min-height:44px;align-items:center}
+ footer a,.trust span{display:inline-flex;align-items:center;min-height:44px}
+ .btn{min-height:48px;display:inline-flex;align-items:center;justify-content:center}}
 @media(prefers-reduced-motion:reduce){*{transition-duration:.001ms!important;animation:none!important}
  .rv{opacity:1!important;transform:none!important}}
 </style>
@@ -299,30 +341,31 @@ ${sec.join("\n")}
 `;
 }
 
+export { build };
+
 /* ---- cli ---- */
-const file = process.argv[2];
-if (!file) {
-  console.error("usage: node dropship/build-page.mjs <product.json> [outdir]");
-  process.exit(2);
+if (import.meta.url === `file://${process.argv[1]}`) {
+  const file = process.argv[2];
+  if (!file) {
+    console.error("usage: node dropship/build-page.mjs <product.json> [outdir]");
+    process.exit(2);
+  }
+  const p = JSON.parse(fs.readFileSync(file, "utf8"));
+
+  // Validation gate — a brief with errors never becomes a page.
+  const v = validate(p);
+  if (!v.ok) {
+    console.error("✗ brief invalid — refusing to generate:");
+    v.errors.forEach((e) => console.error("  - " + e));
+    process.exit(1);
+  }
+
+  const outdir = process.argv[3] || path.join(path.dirname(file), "..", "out");
+  fs.mkdirSync(outdir, { recursive: true });
+  const out = path.join(outdir, (p.slug || "product") + ".html");
+  fs.writeFileSync(out, build(p));
+
+  v.warnings.forEach((w) => console.log("  ! " + w));
+  if (v.gates.marginMultiple) console.log(`  · margin ${v.gates.marginMultiple}x on landed cost`);
+  console.log("✓ " + out + "  (" + (fs.statSync(out).size / 1024).toFixed(1) + "KB)");
 }
-const p = JSON.parse(fs.readFileSync(file, "utf8"));
-
-// Guardrails — refuse to emit a page that fakes proof.
-const warn = [];
-const rv = p.reviews || {};
-if (rv.rating && (!rv.quotes || !rv.quotes.length)) warn.push("rating set with no quotes — omitting reviews");
-if (!rv.rating) warn.push("no verified reviews — review section omitted (correct until you have real ones)");
-if (!p.economics || !p.economics.sellPrice) warn.push("no sellPrice — price blocks will be blank");
-if (p.economics && p.economics.sellPrice && p.economics.supplierCost) {
-  const landed = p.economics.supplierCost + (p.economics.shippingCost || 0);
-  const mult = p.economics.sellPrice / landed;
-  warn.push(`margin ${mult.toFixed(2)}x on landed cost${mult < 3 ? " — below the 3x target" : ""}`);
-}
-
-const outdir = process.argv[3] || path.join(path.dirname(file), "..", "out");
-fs.mkdirSync(outdir, { recursive: true });
-const out = path.join(outdir, (p.slug || "product") + ".html");
-fs.writeFileSync(out, build(p));
-
-warn.forEach((w) => console.log("  ! " + w));
-console.log("✓ " + out + "  (" + (fs.statSync(out).size / 1024).toFixed(1) + "KB)");
