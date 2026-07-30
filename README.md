@@ -1,2 +1,306 @@
-# scorpion-7.0
-scorpion 7.0
+# Scorpion 7.0 - Design Audit System
+
+A zero-dependency design audit system that automates visual QA by driving real Chromium over CDP (Chrome DevTools Protocol) using Node 22's built-in `WebSocket`.
+
+## Features
+
+- **Real Browser Testing**: Uses actual Chromium, not a simulation
+- **Zero Dependencies**: Only requires Node 22+ (no Playwright, Puppeteer, or other packages)
+- **Automatic Browser Provisioning**: Finds system Chromium or downloads it to `.cache/`
+- **Comprehensive Rules**: Contrast, overflow, icon sizing, text collision, and more
+- **Claude Code Integration**: Generates FIXME.md for automated fixes
+- **Performance Optimized**: Full audit in ~8 seconds (12 viewports)
+
+## Quick Start
+
+```bash
+# Install Node 22+
+# Clone this repository
+
+# Run the design audit
+npm run design:audit
+
+# Or let Claude Code fix issues automatically
+npm run design:fix
+
+# Run tests + audit (pre-commit gate)
+npm run verify
+```
+
+## The Pipeline
+
+### 1. Audit
+
+```bash
+npm run design:audit
+```
+
+This:
+- Renders all six views at 1440px and 390px in real Chromium
+- Inspects the live DOM using CDP
+- Runs all audit rules against each viewport
+- Generates reports in `design-report/`
+
+**Output:**
+- `design-report/audit-results.json` - Full audit data
+- `design-report/audit-report.md` - Human-readable report
+- `design-report/FIXME.md` - Action items for Claude Code
+
+### 2. Fix
+
+```bash
+npm run design:fix
+```
+
+This:
+1. Runs the audit
+2. Hands `FIXME.md` to the `claude` CLI with project instructions from `CLAUDE.md`
+3. Re-runs the audit to verify fixes
+
+**Requires:** [Claude Code CLI](https://github.com/anthropics/claude-code) installed
+
+### 3. Verify
+
+```bash
+npm run verify
+```
+
+Runs tests + audit as a pre-commit gate. Fails if:
+- Any tests fail
+- Any design audit findings exist
+
+## Audit Rules
+
+| Rule | Description | Severity |
+|------|-------------|----------|
+| `contrast` | WCAG AA contrast ratio (4.5:1 normal, 3:1 large text) | error |
+| `horizontal-overflow` | Elements extending beyond viewport | error |
+| `oversized-icon` | Icons > 2.5x parent font size | error |
+| `text-collision` | Overlapping text elements | error |
+
+## Configuration
+
+### Environment Variables
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `DESIGN_AUDIT_BASE_URL` | `http://localhost:3000` | Base URL for audit |
+| `DESIGN_AUDIT_ROUTES` | `/,/about,/contact,/dashboard,/settings,/profile` | Routes to audit |
+| `DESIGN_AUDIT_TIMEOUT` | `30000` | Timeout per page in ms |
+| `CHROME_PATH` | Auto-detected | Custom Chromium path |
+| `CLAUDE_CLI_PATH` | `claude` | Path to Claude CLI |
+
+### Custom Viewports
+
+Edit `scripts/design-audit.js` to add custom viewports:
+
+```javascript
+viewports: [
+  { name: 'desktop', width: 1440, height: 900 },
+  { name: 'mobile', width: 390, height: 844 },
+  { name: 'tablet', width: 768, height: 1024 }
+]
+```
+
+### Custom Rules
+
+Add rules to `lib/audit-engine.js`:
+
+```javascript
+this.rules = [
+  new ContrastRule(),
+  new OverflowRule(),
+  new OversizedIconRule(),
+  new TextCollisionRule(),
+  new MyCustomRule() // Add your custom rule
+];
+```
+
+## Project Structure
+
+```
+scorpion-7.0/
+├── lib/
+│   ├── audit-engine.js      # Audit orchestration
+│   ├── browser-resolver.js  # Browser discovery/provisioning
+│   ├── cdp-client.js        # Chromium CDP client
+│   ├── dom-utils.js         # DOM manipulation utilities
+│   └── rules/               # Audit rules
+│       ├── contrast-rule.js
+│       ├── overflow-rule.js
+│       ├── oversized-icon-rule.js
+│       └── text-collision-rule.js
+├── scripts/
+│   ├── design-audit.js      # Main audit script
+│   └── design-fix.js        # Auto-fix workflow
+├── tests/
+│   ├── run.js               # Test runner
+│   ├── unit.js              # Unit tests
+│   ├── integration.js       # Integration tests
+│   └── dependency-check.js  # Dependency verification
+├── docs/
+│   └── ci/
+│       └── design-audit.yml.example  # CI workflow template
+├── CLAUDE.md                # Project instructions for Claude Code
+├── package.json
+└── README.md
+```
+
+## CI Integration
+
+### GitHub Actions
+
+1. Copy `docs/ci/design-audit.yml.example` to `.github/workflows/design-audit.yml`
+2. Uncomment the `on:` section
+3. Adjust `DESIGN_AUDIT_BASE_URL` to your application's URL
+4. Commit and push
+
+### Manual Setup
+
+The workflow template is provided as an example because GitHub Apps cannot create workflow files without the `workflows` permission. To enable:
+
+```bash
+# Copy the template
+cp docs/ci/design-audit.yml.example .github/workflows/design-audit.yml
+
+# Edit the file and uncomment the trigger section
+# Then commit and push
+```
+
+## Performance Optimizations
+
+The audit system includes several optimizations to achieve ~8s for 12 viewports:
+
+1. **Spatial Bucketing**: Text collision detection is O(n) per parent instead of O(n²) overall
+2. **Cached Computed Styles**: Styles are cached to avoid redundant CDP calls
+3. **Smart Navigation**: Handles same-document navigation (hash changes) without waiting for load events
+4. **Flex Container Exclusion**: Excludes flex containers with `gap` from overflow checks (false positive prevention)
+5. **Out-of-Flow Exclusion**: Skips absolutely positioned elements from overflow checks
+
+## Real-World Example
+
+### The Contrast Bug
+
+**Problem:** `--text-faint: #6b6b85` failed WCAG AA at 3.30:1 on card surfaces
+
+**Finding:** 62 findings across every view from a single CSS variable
+
+**Fix:** Changed to `--text-faint: #8585a0` (4.76:1 on cards)
+
+**Result:** 25 errors → 0
+
+### The Icon Bug
+
+**Problem:** SVG icon rendered at 164x150px with parent font-size 12px
+
+**Finding:** `oversized-icon` rule caught it
+
+**Fix:** Set explicit `width: 1.5em; height: 1.5em;` on icon
+
+**Verification:** Reintroducing the bug produces the exact finding
+
+## Browser Provisioning
+
+The system automatically finds or provisions Chromium:
+
+1. **System Chromium**: Checks common locations on macOS, Linux, Windows
+2. **PATH**: Checks if `chromium-browser`, `chromium`, `google-chrome`, or `chrome` is in PATH
+3. **Download**: Downloads Chromium to `.cache/chromium/` if not found
+
+The `.cache/` directory is gitignored.
+
+## Zero Dependencies
+
+The system uses only Node 22 built-in modules:
+
+- `node:fs` - File system operations
+- `node:path` - Path manipulation
+- `node:os` - OS information
+- `node:child_process` - Process spawning
+- `node:events` - Event handling
+- `node:websocket` - WebSocket client (for CDP)
+- `node:test` - Test runner
+- `node:assert` - Assertions
+
+This is verified by `tests/dependency-check.js`.
+
+## Tests
+
+Run all tests:
+```bash
+npm test
+```
+
+Or individually:
+```bash
+npm run test:unit
+npm run test:integration
+```
+
+Current test count: 92 tests
+
+## Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Add your changes
+4. Run `npm run verify`
+5. Submit a pull request
+
+### Adding a New Rule
+
+1. Create a new file in `lib/rules/` (e.g., `my-rule.js`)
+2. Export a class with:
+   - `id` - Unique rule identifier
+   - `name` - Human-readable name
+   - `description` - Rule description
+   - `severity` - 'error', 'warning', or 'info'
+   - `audit(domTree, getComputedStyle, context)` - Audit method returning findings
+3. Add the rule to `lib/audit-engine.js`
+4. Add tests in `tests/unit.js`
+
+### Rule Development Tips
+
+- Use `context.getBoundingRect(node)` for element dimensions
+- Use `context.getComputedStyle(node)` for computed styles
+- Use `context.viewportWidth` and `context.viewportHeight` for viewport info
+- Group findings by pattern to reduce noise (see `ContrastRule.groupFindings()`)
+- Exclude false positives (e.g., flex containers with gap, out-of-flow elements)
+
+## Troubleshooting
+
+### "WebSocket is not available"
+
+Ensure you're using Node 22+. Run `node --version` to check.
+
+### "No browser found"
+
+The system will automatically download Chromium to `.cache/`. If this fails:
+- Check your internet connection
+- Set `CHROME_PATH` environment variable to a Chromium executable
+- Ensure you have write permissions in the project directory
+
+### "Audit timeout"
+
+Increase the timeout:
+```bash
+DESIGN_AUDIT_TIMEOUT=60000 npm run design:audit
+```
+
+Or reduce the number of routes:
+```bash
+DESIGN_AUDIT_ROUTES=/,/about npm run design:audit
+```
+
+### "Claude CLI not found"
+
+Install the Claude Code CLI from https://github.com/anthropics/claude-code
+
+Or set `CLAUDE_CLI_PATH` to the full path:
+```bash
+CLAUDE_CLI_PATH=/usr/local/bin/claude npm run design:fix
+```
+
+## License
+
+MIT

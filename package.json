@@ -1,0 +1,19 @@
+{
+  "name": "scorpion-7.0",
+  "version": "1.0.0",
+  "description": "Design audit system for visual QA automation",
+  "scripts": {
+    "design:audit": "node scripts/design-audit.js",
+    "design:fix": "node scripts/design-fix.js",
+    "verify": "npm test && npm run design:audit",
+    "test": "node tests/run.js",
+    "test:unit": "node tests/unit.js",
+    "test:integration": "node tests/integration.js"
+  },
+  "engines": {
+    "node": ">=22.0.0"
+  },
+  "keywords": ["design", "audit", "accessibility", "visual-qa"],
+  "author": "",
+  "license": "MIT"
+}
