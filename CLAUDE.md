@@ -35,12 +35,17 @@ Always prefer fixing issues in the design system (CSS variables, base styles) ov
 
 **Example:**
 ```css
-/* Before - fails at 3.30:1 on white */
---text-faint: #6b6b85;
+/* Before - fails at 3.58:1 on white */
+--text-faint: #8585a0;
 
 /* After - passes at 4.76:1 on white */
---text-faint: #8585a0;
+--text-faint: #64748b;
 ```
+
+**Always compute the ratio; never assume one.** Darker text on a light
+background raises contrast, so a "fix" that lightens a color usually makes
+things worse. `#767676` on white is exactly 4.54:1 — a useful reference point
+for sanity-checking any figure.
 
 ### Horizontal Overflow
 
@@ -217,23 +222,23 @@ All changes must pass:
 ```
 ## CONTRAST (error)
 
-**Pattern:** Color: #6b6b85
+**Pattern:** Color: #8585a0
 **Count:** 62 occurrences
 
 ### Example Findings:
-- Contrast ratio 3.30:1 fails WCAG AA
+- Contrast ratio 3.58:1 fails WCAG AA
   - Selector: .text-faint
   - Viewport: desktop (/)
 
 ### Suggested Fix
-Update CSS variable or color value to meet WCAG AA contrast (4.5:1 for normal text, 3:1 for large text). Current color: #6b6b85
+Update CSS variable or color value to meet WCAG AA contrast (4.5:1 for normal text, 3:1 for large text). Current color: #8585a0
 ```
 
 **Claude Code Action:**
-1. Find the CSS variable: `grep -r "6b6b85" src/`
-2. Locate in `src/styles/variables.css`: `--text-faint: #6b6b85;`
-3. Calculate new color: Use contrast checker to find minimum adjustment
-4. Update: `--text-faint: #8585a0;` (4.76:1 on white)
+1. Find the CSS variable: `grep -r "8585a0" src/`
+2. Locate in `src/styles/variables.css`: `--text-faint: #8585a0;`
+3. Calculate the new ratio rather than estimating it - darkening raises contrast
+4. Update: `--text-faint: #64748b;` (4.76:1 on white)
 5. Verify: `npm run design:audit` shows 0 contrast findings
 
 ## Resources

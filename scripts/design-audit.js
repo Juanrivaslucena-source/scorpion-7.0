@@ -58,6 +58,10 @@ async function main() {
     if (results.totalFindings > 0) {
       console.log('\n❌ Design audit found issues. Please review FIXME.md');
       process.exit(1);
+    } else if (results.skipped) {
+      // Not a pass: no browser was launched, so no page was inspected.
+      console.log('\n⏭️  Design audit skipped — no pages were inspected, nothing was verified.');
+      process.exit(0);
     } else {
       console.log('\n✅ Design audit passed with no findings');
       process.exit(0);

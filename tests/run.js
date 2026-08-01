@@ -27,6 +27,18 @@ function runTests() {
     failed++;
   }
 
+  // Run CDP shape tests
+  console.log('\n[CDP Shape Tests]');
+  try {
+    execSync('node tests/cdp-shape.js', {
+      stdio: 'inherit',
+      cwd: process.cwd()
+    });
+    passed++;
+  } catch {
+    failed++;
+  }
+
   // Run integration tests
   console.log('\n[Integration Tests]');
   try {
