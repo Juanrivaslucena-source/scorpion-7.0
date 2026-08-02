@@ -1,0 +1,18 @@
+{
+  "_comment": "The same market as TEST-IMBALANCED in tests/fixtures/kalshi-markets.json, expressed in the newer dollars-string and fixed-point field family. Normalization must produce identical canonical output from both.",
+  "ticker": "TEST-IMBALANCED",
+  "event_ticker": "TEST-EVENT-A",
+  "series_ticker": "TEST",
+  "title": "Liquid market with a heavily bid-weighted book",
+  "status": "active",
+  "close_time": "2030-01-01T00:00:00Z",
+  "yes_bid_dollars": "0.40",
+  "yes_ask_dollars": "0.46",
+  "no_bid_dollars": "0.54",
+  "no_ask_dollars": "0.60",
+  "last_price_dollars": "0.42",
+  "volume_fp": "12000",
+  "volume_24h_fp": "3400",
+  "open_interest_fp": "8100",
+  "rules_primary": "Resolves YES if the referenced index closes above 100.00 on the settlement date."
+}

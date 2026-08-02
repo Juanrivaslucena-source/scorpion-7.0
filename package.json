@@ -6,10 +6,13 @@
     "design:audit": "node scripts/design-audit.js",
     "design:audit:skip-browser": "DESIGN_AUDIT_SKIP_BROWSER=true node scripts/design-audit.js",
     "design:fix": "node scripts/design-fix.js",
+    "kalshi:scan": "KALSHI_SCAN_ONLY=true node scripts/kalshi-agent.js",
+    "kalshi:agent": "node scripts/kalshi-agent.js",
     "verify": "npm test && npm run design:audit:skip-browser",
     "test": "node tests/run.js",
     "test:unit": "node tests/unit.js",
     "test:integration": "node tests/integration.js",
+    "test:kalshi": "node tests/kalshi.js",
     "test:watch": "node --watch tests/run.js"
   },
   "engines": {

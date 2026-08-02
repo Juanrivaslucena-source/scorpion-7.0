@@ -6,7 +6,12 @@ node_modules/
 
 # Reports
 design-report/
+kalshi-report/
 FIXME.md
+
+# Trading credentials — never commit a private key
+*.pem
+kalshi-key*
 
 # Logs
 *.log

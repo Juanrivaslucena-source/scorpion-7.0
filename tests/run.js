@@ -39,6 +39,18 @@ function runTests() {
     failed++;
   }
 
+  // Run Kalshi agent tests
+  console.log('\n[Kalshi Tests]');
+  try {
+    execSync('node tests/kalshi.js', {
+      stdio: 'inherit',
+      cwd: process.cwd()
+    });
+    passed++;
+  } catch {
+    failed++;
+  }
+
   // Run dependency check
   console.log('\n[Dependency Check]');
   try {

@@ -242,6 +242,33 @@ Update CSS variable or color value to meet WCAG AA contrast (4.5:1 for normal te
 - [Color Contrast Checker](https://webaim.org/resources/contrastchecker/)
 - [Chrome DevTools Protocol](https://chromedevtools.github.io/devtools-protocol/)
 
+## Kalshi Probability Agent
+
+`lib/kalshi/` and `scripts/kalshi-agent.js` are a second, independent subsystem —
+unrelated to the design audit. They estimate fair probabilities for Kalshi prediction
+markets and size positions against them. See the README for usage.
+
+When working in this area:
+
+- **Never widen the trading gate.** Placing an order requires `KALSHI_ENV=prod`,
+  `KALSHI_ALLOW_LIVE=I_UNDERSTAND_REAL_MONEY`, the `--place` flag, and a passing risk
+  preflight. All four are deliberate; do not add a shortcut or a new default that
+  bypasses any of them.
+- **Keep `paper-broker.js` the only caller of `client.createOrder()`.** Routing every
+  order through one function is what makes the gate real. If another module needs to
+  place an order, route it through the broker instead.
+- **Do not weaken risk limits to make a scan produce more orders.** Same principle as
+  "fix the UI, never the rules": an empty order list usually means there is no
+  tradeable edge, which is the correct answer.
+- **Keep the zero-dependency invariant.** `tests/dependency-check.js` enforces it. Node
+  22's global `fetch` and `node:crypto` cover the HTTP and RSA-PSS signing needs, which
+  is why the Anthropic Messages API is called over raw `fetch` rather than the SDK.
+- **The LLM overlay must never be able to block a run.** Every failure path — missing
+  key, network error, malformed reply, safety refusal — degrades to the deterministic
+  baseline.
+- Tests live in `tests/kalshi.js` and run fully offline via injected `fetch`/`fs` stubs
+  and `tests/fixtures/`. Keep them that way; the suite must not require credentials.
+
 ## Version
 
 This file is for Scorpion 7.0. Update as the design system evolves.

@@ -162,14 +162,29 @@ scorpion-7.0/
 │   ├── cdp-client.js        # Chromium CDP client
 │   ├── dom-utils.js         # DOM manipulation utilities
 │   ├── websocket-fallback.js # WebSocket fallback
-│   └── rules/               # Audit rules
-│       ├── contrast-rule.js
-│       ├── overflow-rule.js
-│       ├── oversized-icon-rule.js
-│       └── text-collision-rule.js
+│   ├── rules/               # Audit rules
+│   │   ├── contrast-rule.js
+│   │   ├── overflow-rule.js
+│   │   ├── oversized-icon-rule.js
+│   │   └── text-collision-rule.js
+│   └── kalshi/              # Kalshi probability agent
+│       ├── signer.js            # RSA-PSS request signing
+│       ├── client.js            # Trade API v2 client
+│       ├── markets.js           # Market schema normalization
+│       ├── probability-engine.js # Liquidity gates + signal blending
+│       ├── llm-overlay.js       # Optional Claude refinement
+│       ├── strategy.js          # Fractional Kelly sizing
+│       ├── risk.js              # Hard limits + kill switch
+│       ├── paper-broker.js      # The only order-placing module
+│       ├── report.js            # kalshi-report/ output
+│       └── signals/
+│           ├── orderbook-signal.js
+│           ├── no-arb-signal.js
+│           └── event-consistency-signal.js
 ├── scripts/
 │   ├── design-audit.js      # Main audit script
-│   └── design-fix.js        # Auto-fix workflow
+│   ├── design-fix.js        # Auto-fix workflow
+│   └── kalshi-agent.js      # Kalshi agent entry point
 ├── demo-site/               # Demo website
 │   ├── index.html
 │   ├── about.html
@@ -180,6 +195,8 @@ scorpion-7.0/
 │   ├── run.js               # Test runner
 │   ├── unit.js              # Unit tests (63 tests)
 │   ├── integration.js       # Integration tests (13 tests)
+│   ├── kalshi.js            # Kalshi agent tests (87 tests)
+│   ├── fixtures/            # Offline Kalshi payloads
 │   └── dependency-check.js  # Dependency verification
 ├── docs/
 │   └── ci/
@@ -263,10 +280,74 @@ The system uses only Node 22 built-in modules:
 - `node:child_process` - Process spawning
 - `node:events` - Event handling
 - `node:websocket` - WebSocket client (for CDP)
+- `node:crypto` - RSA-PSS request signing
 - `node:test` - Test runner
 - `node:assert` - Assertions
 
 This is verified by `tests/dependency-check.js`.
+
+## Kalshi Probability Agent
+
+A second, independent subsystem lives under `lib/kalshi/` and `scripts/kalshi-agent.js`.
+It scans [Kalshi](https://kalshi.com) prediction markets, estimates a fair probability
+for each, and sizes positions on the ones the market appears to misprice.
+
+```bash
+# Analysis only — cannot place orders regardless of flags
+npm run kalshi:scan
+
+# Full loop; still a dry run unless --place is given
+npm run kalshi:agent
+
+# Paper trade against Kalshi's demo environment
+KALSHI_ENV=demo npm run kalshi:agent -- --place
+```
+
+### Safety model
+
+Placing an order requires four independent conditions, and every one is off by default:
+
+1. `KALSHI_ENV=prod`
+2. `KALSHI_ALLOW_LIVE=I_UNDERSTAND_REAL_MONEY` (exact string)
+3. The `--place` flag
+4. A passing risk preflight
+
+Without all four the agent runs in dry-run or paper mode. `lib/kalshi/paper-broker.js`
+is the only module that submits orders — nothing else calls the order endpoint, which
+is what makes that gate meaningful. Dropping a file at `kalshi-report/.halt` halts
+trading immediately, and the halt check fails closed if it cannot read that path.
+
+Risk limits (`lib/kalshi/risk.js`) cap per-order size, per-market exposure, total
+exposure, and daily realized loss. Sizing is quarter-Kelly, not full Kelly, because
+the probability estimate is an estimate.
+
+### How probabilities are estimated
+
+Deterministic signals produce the baseline:
+
+| Signal | What it uses |
+| --- | --- |
+| `orderbook-signal.js` | Size-weighted microprice from the resting book |
+| `no-arb-signal.js` | Detects `yesBid + noBid > 100` — reported, never traded single-leg |
+| `event-consistency-signal.js` | Mutually exclusive event legs that do not sum to 1 |
+
+An optional Claude pass (`llm-overlay.js`) then refines the top candidates. It is
+capped at half the blend weight, and no API key, a network failure, a malformed
+reply, or a safety refusal all degrade silently to the deterministic baseline.
+
+### Configuration
+
+`KALSHI_ENV`, `KALSHI_API_KEY_ID`, `KALSHI_PRIVATE_KEY_PATH`, `ANTHROPIC_API_KEY`,
+plus tuning variables documented in the JSDoc header of each module. Private keys are
+gitignored; never commit one.
+
+### Running offline
+
+The whole pipeline runs without network access or credentials from a fixture:
+
+```bash
+npm run kalshi:scan -- --fixture tests/fixtures/kalshi-markets.json --no-llm
+```
 
 ## Tests
 
@@ -279,9 +360,10 @@ Or individually:
 ```bash
 npm run test:unit
 npm run test:integration
+npm run test:kalshi
 ```
 
-Current test count: **76 tests** (63 unit + 13 integration)
+Current test count: **163 tests** (63 unit + 13 integration + 87 Kalshi)
 
 ## Contributing
 
