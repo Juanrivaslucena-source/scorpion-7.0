@@ -589,6 +589,81 @@ describe('DOM Utilities', () => {
   it('should export evaluate', () => {
     assert(typeof domUtils.evaluate === 'function');
   });
+
+  it('should export snapshot', () => {
+    assert(typeof domUtils.snapshot === 'function');
+  });
+
+  it('should read computed style off a snapshot node without a client', async () => {
+    const node = { style: { color: 'rgb(0, 0, 0)', fontSize: '16px' } };
+    const style = await domUtils.getComputedStyle(null, node);
+    assert.strictEqual(style.color, 'rgb(0, 0, 0)');
+  });
+
+  it('should read bounding rect off a snapshot node without a client', async () => {
+    const node = { rect: { x: 1, y: 2, width: 3, height: 4 } };
+    const rect = await domUtils.getBoundingRect(null, node);
+    assert.deepStrictEqual(rect, { x: 1, y: 2, width: 3, height: 4 });
+  });
+
+  it('should read scrollWidth off a snapshot node without a client', async () => {
+    const width = await domUtils.getScrollWidth(null, { scrollWidth: 812 });
+    assert.strictEqual(width, 812);
+  });
+
+  it('should preserve a zero scrollWidth rather than falling through', async () => {
+    const width = await domUtils.getScrollWidth(null, { scrollWidth: 0 });
+    assert.strictEqual(width, 0);
+  });
+});
+
+describe('WebSocket Resolution', () => {
+  const wsModule = require('../lib/websocket-fallback');
+
+  it('should resolve a real implementation, not the mock', () => {
+    // A silently mocked socket makes a dead CDP connection look healthy,
+    // which is how the audit used to "pass" without driving a browser.
+    assert.notStrictEqual(wsModule.getImplementation(), 'mock');
+  });
+
+  it('should expose an EventEmitter-style API on the mock', () => {
+    const socket = new wsModule.MockWebSocket('ws://localhost:0/test');
+    assert(typeof socket.on === 'function');
+    assert(typeof socket.once === 'function');
+    assert(typeof socket.send === 'function');
+    assert(typeof socket.close === 'function');
+  });
+
+  it('should emit open on the mock so once() can await it', async () => {
+    const socket = new wsModule.MockWebSocket('ws://localhost:0/test');
+    await require('node:events').once(socket, 'open');
+    assert.strictEqual(socket.readyState, wsModule.READY_STATE.OPEN);
+  });
+});
+
+describe('CDPClient event subscriptions', () => {
+  it('should expose off and once', () => {
+    const client = new CDPClient();
+    assert(typeof client.off === 'function');
+    assert(typeof client.once === 'function');
+  });
+
+  it('should remove listeners via off', () => {
+    const client = new CDPClient();
+    const handler = () => {};
+    client.on('Page.loadEventFired', handler);
+    assert.strictEqual(client.listeners.get('Page.loadEventFired').length, 1);
+    client.off('Page.loadEventFired', handler);
+    assert.strictEqual(client.listeners.has('Page.loadEventFired'), false);
+  });
+
+  it('should reject send() when no socket is connected', async () => {
+    const client = new CDPClient();
+    await assert.rejects(
+      () => client.send('Page.navigate', { url: 'about:blank' }),
+      /not connected/
+    );
+  });
 });
 
 describe('Mock DOM Tree', () => {

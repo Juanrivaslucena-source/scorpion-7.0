@@ -12,7 +12,9 @@ const path = require('node:path');
 const url = require('node:url');
 
 const PORT = process.env.PORT || 3000;
-const BASE_DIR = process.cwd();
+// Anchored to this file, not the cwd, so the demo serves the same content
+// regardless of where it is launched from.
+const BASE_DIR = __dirname;
 
 // MIME types
 const mimeTypes = {
@@ -42,13 +44,20 @@ const server = http.createServer(async (req, res) => {
     }
     
     // Remove leading slash
-    const filePath = pathname.slice(1);
-    const absPath = path.join(BASE_DIR, filePath);
-    
+    const filePath = decodeURIComponent(pathname.slice(1));
+    const absPath = path.resolve(BASE_DIR, filePath);
+
+    // Keep traversal (e.g. /../../etc/passwd) inside the demo directory
+    if (absPath !== BASE_DIR && !absPath.startsWith(BASE_DIR + path.sep)) {
+      res.writeHead(403);
+      res.end('Forbidden');
+      return;
+    }
+
     // Check if file exists
     try {
       const stats = await fs.promises.stat(absPath);
-      
+
       if (stats.isDirectory()) {
         // Try index.html in directory
         const indexPath = path.join(absPath, 'index.html');
@@ -68,7 +77,19 @@ const server = http.createServer(async (req, res) => {
       serveFile(absPath, res);
       
     } catch (err) {
-      // File not found
+      // Extensionless routes (/about) map to their page, so the audit's
+      // route list resolves without every link needing a .html suffix.
+      if (!path.extname(absPath)) {
+        try {
+          const htmlPath = `${absPath}.html`;
+          await fs.promises.access(htmlPath);
+          serveFile(htmlPath, res);
+          return;
+        } catch {
+          // Fall through to 404
+        }
+      }
+
       res.writeHead(404);
       res.end('Not Found');
     }

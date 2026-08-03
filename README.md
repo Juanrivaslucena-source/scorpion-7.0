@@ -87,7 +87,7 @@ This will:
 3. Show you the findings
 
 **Intentional bugs in the demo site:**
-- Low contrast text (`--color-text-faint: #6b6b85` fails WCAG AA)
+- Low contrast text (`--color-text-faint: #8585a0` fails WCAG AA at 3.58:1)
 - Horizontal overflow (`.overflow-box` is 200% wide)
 - Oversized icon (`.huge-icon` is 200px × 200px)
 
@@ -225,11 +225,11 @@ The audit system includes several optimizations to achieve ~8s for 12 viewports:
 
 ### The Contrast Bug
 
-**Problem:** `--text-faint: #6b6b85` failed WCAG AA at 3.30:1 on card surfaces
+**Problem:** `--text-faint: #8585a0` failed WCAG AA at 3.58:1 on card surfaces
 
 **Finding:** 62 findings across every view from a single CSS variable
 
-**Fix:** Changed to `--text-faint: #8585a0` (4.76:1 on cards)
+**Fix:** Changed to `--text-faint: #6b6b85` (5.16:1 on cards)
 
 **Result:** 25 errors → 0
 

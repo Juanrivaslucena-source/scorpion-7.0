@@ -5,7 +5,7 @@
     --color-secondary: #64748b;
     --color-text-primary: #1e293b;
     --color-text-secondary: #64748b;
-    --color-text-faint: #6b6b85; /* This fails WCAG AA - should be caught by audit */
+    --color-text-faint: #8585a0; /* 3.58:1 on white - fails WCAG AA, caught by the audit */
     --color-bg-primary: #ffffff;
     --color-bg-secondary: #f8fafc;
     --color-bg-tertiary: #f1f5f9;
