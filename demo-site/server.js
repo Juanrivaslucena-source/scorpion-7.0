@@ -12,7 +12,9 @@ const path = require('node:path');
 const url = require('node:url');
 
 const PORT = process.env.PORT || 3000;
-const BASE_DIR = process.cwd();
+// Serve this directory, not the caller's. With process.cwd() the server 404s
+// every route unless it happens to be started from inside demo-site/.
+const BASE_DIR = __dirname;
 
 // MIME types
 const mimeTypes = {
@@ -43,8 +45,19 @@ const server = http.createServer(async (req, res) => {
     
     // Remove leading slash
     const filePath = pathname.slice(1);
-    const absPath = path.join(BASE_DIR, filePath);
-    
+    let absPath = path.join(BASE_DIR, filePath);
+
+    // The nav links to extensionless paths (/about), and the pages on disk are
+    // about.html. Resolve one to the other rather than 404ing.
+    if (!path.extname(absPath)) {
+      try {
+        await fs.promises.access(`${absPath}.html`);
+        absPath = `${absPath}.html`;
+      } catch {
+        // Fall through; the stat below reports the miss.
+      }
+    }
+
     // Check if file exists
     try {
       const stats = await fs.promises.stat(absPath);

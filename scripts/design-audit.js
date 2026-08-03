@@ -54,9 +54,21 @@ async function main() {
     console.log(`Total findings: ${results.totalFindings}`);
     console.log(`Report: ${path.join(process.cwd(), 'design-report')}`);
 
+    const routeErrors = results.routeErrors || [];
+    if (routeErrors.length > 0) {
+      console.log(`\n⚠️  ${routeErrors.length} route(s) could not be audited:`);
+      for (const { url, viewport, error } of routeErrors) {
+        console.log(`   - ${url} (${viewport}): ${error}`);
+      }
+    }
+
     // Exit with error code if findings exist
     if (results.totalFindings > 0) {
       console.log('\n❌ Design audit found issues. Please review FIXME.md');
+      process.exit(1);
+    } else if (routeErrors.length > 0) {
+      // Zero findings across routes that never rendered is not a clean audit.
+      console.log('\n❌ Design audit incomplete — routes above were never inspected.');
       process.exit(1);
     } else if (results.skipped) {
       // Not a pass: no browser was launched, so no page was inspected.

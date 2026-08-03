@@ -12,7 +12,7 @@
 const assert = require('node:assert');
 const { describe, it } = require('node:test');
 
-const { normalizeDOMTree } = require('../lib/dom-utils');
+const { normalizeDOMTree, navigate } = require('../lib/dom-utils');
 const { OversizedIconRule } = require('../lib/rules/oversized-icon-rule');
 const { OverflowRule } = require('../lib/rules/overflow-rule');
 const { ContrastRule } = require('../lib/rules/contrast-rule');
@@ -191,5 +191,96 @@ describe('rules against CDP-shaped trees', () => {
 
     assert.ok(nodes.length > 0, 'CDP nodes carry no textContent of their own; normalization must supply it');
     assert.ok(nodes.some(n => n.className === 'logo'));
+  });
+});
+
+/**
+ * A CDP client that loads a page with a chosen document status. Enough of the
+ * surface for navigate(): send/on/off, a load event, and a readyState answer.
+ */
+function fakeClient({ status = 200, statusText = 'OK', errorText, frameId = 'FRAME-1' } = {}) {
+  const listeners = new Map();
+  const emit = (event, params) => {
+    for (const fn of listeners.get(event) || []) fn(params);
+  };
+
+  return {
+    calls: [],
+    on(event, fn) {
+      if (!listeners.has(event)) listeners.set(event, []);
+      listeners.get(event).push(fn);
+    },
+    off(event, fn) {
+      const fns = listeners.get(event) || [];
+      const i = fns.indexOf(fn);
+      if (i !== -1) fns.splice(i, 1);
+    },
+    listenerCount: (event) => (listeners.get(event) || []).length,
+    async send(method) {
+      this.calls.push(method);
+
+      if (method === 'Page.navigate') {
+        // Chromium reports the document response before the load event.
+        setImmediate(() => {
+          emit('Network.responseReceived', {
+            frameId,
+            type: 'Document',
+            response: { status, statusText }
+          });
+          emit('Page.loadEventFired', {});
+        });
+        return errorText ? { frameId, errorText } : { frameId };
+      }
+
+      if (method === 'Runtime.evaluate') {
+        return { result: { value: 'loading' } };
+      }
+
+      return {};
+    }
+  };
+}
+
+describe('navigate() treats error pages as failures', () => {
+  it('resolves for a 200 response', async () => {
+    const client = fakeClient({ status: 200 });
+    await navigate(client, 'http://localhost:3000/', 2000);
+
+    assert.ok(client.calls.includes('Network.enable'), 'response status cannot be read without the Network domain');
+  });
+
+  it('rejects a 404 rather than auditing the error page', async () => {
+    const client = fakeClient({ status: 404, statusText: 'Not Found' });
+
+    await assert.rejects(
+      () => navigate(client, 'http://localhost:3000/dashboard', 2000),
+      /HTTP 404/,
+      'a 404 loads successfully and yields zero findings, which must not read as a clean audit'
+    );
+  });
+
+  it('rejects a 500 response', async () => {
+    const client = fakeClient({ status: 500, statusText: 'Internal Server Error' });
+
+    await assert.rejects(() => navigate(client, 'http://localhost:3000/', 2000), /HTTP 500/);
+  });
+
+  it('surfaces a CDP navigation error', async () => {
+    const client = fakeClient({ errorText: 'net::ERR_CONNECTION_REFUSED' });
+
+    await assert.rejects(
+      () => navigate(client, 'http://localhost:9999/', 2000),
+      /ERR_CONNECTION_REFUSED/
+    );
+  });
+
+  it('removes its response listener on both paths', async () => {
+    const ok = fakeClient({ status: 200 });
+    await navigate(ok, 'http://localhost:3000/', 2000);
+    assert.strictEqual(ok.listenerCount('Network.responseReceived'), 0);
+
+    const bad = fakeClient({ status: 404 });
+    await assert.rejects(() => navigate(bad, 'http://localhost:3000/x', 2000));
+    assert.strictEqual(bad.listenerCount('Network.responseReceived'), 0, 'a failed navigation must not leak listeners');
   });
 });
