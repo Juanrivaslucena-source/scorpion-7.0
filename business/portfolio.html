@@ -1,0 +1,226 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Clip Portfolio</title>
+<!--
+  HOW TO USE
+  1. Replace every [BRACKETED] placeholder below.
+  2. Drop your clip files next to this file as clip1.mp4, clip2.mp4, clip3.mp4.
+     (No clips yet? The poster image shows instead - see clip1.jpg etc.)
+  3. Host free: Netlify Drop (drag this folder onto app.netlify.com/drop),
+     Cloudflare Pages, or GitHub Pages. Takes ~60 seconds.
+  4. Put the resulting link in every outreach message and every gig profile.
+
+  No external dependencies - fonts, CSS and JS are all inline, so it works
+  offline and can't break because a CDN went down.
+-->
+<style>
+  :root {
+    --bg: #ffffff;
+    --surface: #f6f7f9;
+    --text: #16181d;
+    --muted: #5b6070;
+    --accent: #2563eb;
+    --border: #e3e6ec;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0f1115;
+      --surface: #171a21;
+      --text: #f2f4f8;
+      --muted: #a6adbf;
+      --accent: #6ea8ff;
+      --border: #262b36;
+    }
+  }
+  :root[data-theme="light"] {
+    --bg: #ffffff; --surface: #f6f7f9; --text: #16181d;
+    --muted: #5b6070; --accent: #2563eb; --border: #e3e6ec;
+  }
+  :root[data-theme="dark"] {
+    --bg: #0f1115; --surface: #171a21; --text: #f2f4f8;
+    --muted: #a6adbf; --accent: #6ea8ff; --border: #262b36;
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font: 16px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 960px; margin: 0 auto; padding: 4rem 1.25rem 5rem; }
+
+  header { margin-bottom: 3.5rem; }
+  h1 {
+    font-size: clamp(1.9rem, 5vw, 2.75rem);
+    line-height: 1.15;
+    margin: 0 0 .75rem;
+    letter-spacing: -0.02em;
+  }
+  .tagline { font-size: 1.125rem; color: var(--muted); margin: 0 0 1.75rem; max-width: 46ch; }
+
+  .cta {
+    display: inline-block;
+    background: var(--accent);
+    color: #fff;
+    text-decoration: none;
+    font-weight: 600;
+    padding: .8rem 1.5rem;
+    border-radius: 8px;
+  }
+  .cta:hover { opacity: .9; }
+
+  h2 {
+    font-size: .8rem;
+    text-transform: uppercase;
+    letter-spacing: .09em;
+    color: var(--muted);
+    margin: 0 0 1.25rem;
+    font-weight: 600;
+  }
+
+  .clips {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 3.5rem;
+  }
+  .clip {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  .clip video, .clip .placeholder {
+    width: 100%;
+    aspect-ratio: 9 / 16;
+    display: block;
+    background: #000;
+    object-fit: cover;
+  }
+  .clip .placeholder {
+    display: grid;
+    place-items: center;
+    color: #8a90a2;
+    font-size: .85rem;
+    text-align: center;
+    padding: 1rem;
+  }
+  .clip .meta { padding: .9rem 1rem 1.1rem; }
+  .clip .hook { font-weight: 600; margin: 0 0 .3rem; font-size: .95rem; }
+  .clip .src { color: var(--muted); font-size: .82rem; margin: 0; }
+
+  .services {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1.25rem;
+    margin-bottom: 3.5rem;
+  }
+  .card {
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.4rem;
+    background: var(--surface);
+  }
+  .card h3 { margin: 0 0 .4rem; font-size: 1.05rem; }
+  .card .price { color: var(--accent); font-weight: 700; margin: 0 0 .6rem; }
+  .card p { margin: 0; color: var(--muted); font-size: .92rem; }
+
+  footer {
+    border-top: 1px solid var(--border);
+    padding-top: 2rem;
+    color: var(--muted);
+    font-size: .95rem;
+  }
+  footer a { color: var(--accent); }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <h1>I turn long videos into short clips people finish.</h1>
+    <p class="tagline">
+      Podcasts and YouTube videos cut into vertical clips for TikTok, Reels and
+      Shorts &mdash; hooks written, captions burned in, ready to post.
+    </p>
+    <a class="cta" href="mailto:[YOUR@EMAIL.COM]">Get clips from your next episode</a>
+  </header>
+
+  <h2>Recent clips</h2>
+  <div class="clips">
+
+    <div class="clip">
+      <video src="clip1.mp4" poster="clip1.jpg" controls playsinline muted preload="metadata"></video>
+      <div class="meta">
+        <p class="hook">[THE HOOK LINE YOU WROTE]</p>
+        <p class="src">Cut from [CREATOR / SHOW NAME]</p>
+      </div>
+    </div>
+
+    <div class="clip">
+      <video src="clip2.mp4" poster="clip2.jpg" controls playsinline muted preload="metadata"></video>
+      <div class="meta">
+        <p class="hook">[THE HOOK LINE YOU WROTE]</p>
+        <p class="src">Cut from [CREATOR / SHOW NAME]</p>
+      </div>
+    </div>
+
+    <div class="clip">
+      <video src="clip3.mp4" poster="clip3.jpg" controls playsinline muted preload="metadata"></video>
+      <div class="meta">
+        <p class="hook">[THE HOOK LINE YOU WROTE]</p>
+        <p class="src">Cut from [CREATOR / SHOW NAME]</p>
+      </div>
+    </div>
+
+  </div>
+
+  <h2>What it costs</h2>
+  <div class="services">
+    <div class="card">
+      <h3>Starter pack</h3>
+      <p class="price">$250</p>
+      <p>5 vertical clips from one episode. Hooks, captions, one round of revisions. 3-day turnaround.</p>
+    </div>
+    <div class="card">
+      <h3>Full episode</h3>
+      <p class="price">$450</p>
+      <p>10 clips from one episode, plus written captions for each platform. 5-day turnaround.</p>
+    </div>
+    <div class="card">
+      <h3>Monthly</h3>
+      <p class="price">$1,200/mo</p>
+      <p>4 episodes a month, 5 clips each. Priority turnaround, consistent look across every post.</p>
+    </div>
+  </div>
+
+  <footer>
+    <p>
+      [YOUR NAME] &middot;
+      <a href="mailto:[YOUR@EMAIL.COM]">[YOUR@EMAIL.COM]</a> &middot;
+      <a href="[YOUR TWITTER/IG/LINKEDIN URL]">[@yourhandle]</a>
+    </p>
+  </footer>
+
+</div>
+
+<script>
+  // If a clip file is missing, swap in a labelled placeholder instead of a
+  // broken black box. Keeps the page presentable before all 3 clips exist.
+  document.querySelectorAll('.clip video').forEach(function (v) {
+    v.addEventListener('error', function () {
+      var ph = document.createElement('div');
+      ph.className = 'placeholder';
+      ph.textContent = 'Add ' + v.getAttribute('src') + ' next to this file';
+      v.replaceWith(ph);
+    }, { once: true });
+  });
+</script>
+</body>
+</html>
