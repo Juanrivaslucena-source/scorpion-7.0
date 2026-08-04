@@ -1,0 +1,70 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://scorpion.agency/schemas/task-envelope.schema.json",
+  "title": "TaskEnvelope",
+  "description": "Everything a capability receives, and nothing else. A capability never receives the workflow it belongs to, sibling outputs not named on an edge, other clients' data, or any credential. That isolation is what makes every capability independently testable and replaceable.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "taskId", "jobId", "tenantId", "clientId",
+    "capabilityId", "capabilityVersion",
+    "input", "memoryContext", "constraints", "trace", "idempotencyKey"
+  ],
+  "properties": {
+    "taskId":  { "type": "string", "format": "uuid" },
+    "jobId":   { "type": "string", "format": "uuid" },
+    "tenantId": { "type": "string", "format": "uuid", "description": "The agency. The RLS boundary." },
+    "clientId": { "type": "string", "format": "uuid", "description": "The real estate client. A scoping key, not a security boundary." },
+
+    "capabilityId":      { "type": "string", "pattern": "^[a-z]+\\.[a-z0-9-]+$" },
+    "capabilityVersion": { "type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+$", "description": "Resolved concrete version. Running jobs pin their versions at start, so a rollout mid-run cannot produce mixed-version output within one deliverable." },
+
+    "input": {
+      "description": "Validated against the manifest's input schema before dispatch."
+    },
+
+    "memoryContext": {
+      "type": "object",
+      "description": "Pre-fetched by the orchestrator from the manifest's declared read scopes, delivered as an immutable snapshot. Agents cannot issue arbitrary memory queries, so scope enforcement is structural rather than advisory — and a task is reproducible from its envelope alone.",
+      "additionalProperties": false,
+      "required": ["scopes", "data"],
+      "properties": {
+        "scopes":     { "type": "array", "items": { "type": "string" } },
+        "data":       { "type": "object", "additionalProperties": true },
+        "resolvedAt": { "type": "string", "format": "date-time" },
+        "sizeBytes":  { "type": "integer", "description": "Monitored: this should stay ~constant as client history grows. If it does not, scoping has regressed." }
+      }
+    },
+
+    "constraints": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["deadline", "budgetUsd", "maxRetries", "locale"],
+      "properties": {
+        "deadline":   { "type": "string", "format": "date-time" },
+        "budgetUsd":  { "type": "number", "exclusiveMinimum": 0, "description": "Remaining budget for this task. Checked BEFORE dispatch, not after the bill." },
+        "maxRetries": { "type": "integer", "minimum": 0, "maximum": 5 },
+        "locale":     { "type": "string" }
+      }
+    },
+
+    "trace": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["correlationId", "parentTaskId", "attempt", "spanId"],
+      "properties": {
+        "correlationId": { "type": "string", "format": "uuid", "description": "Constant across the whole client request." },
+        "parentTaskId":  { "type": ["string", "null"], "format": "uuid" },
+        "attempt":       { "type": "integer", "minimum": 1 },
+        "spanId":        { "type": "string" }
+      }
+    },
+
+    "idempotencyKey": {
+      "type": "string",
+      "description": "Derived, never random: hash(jobId, capabilityId, canonical(input)). Same job + capability + input always yields the same key, so queue redeliveries, retries, and replays cannot double-publish or double-charge. Backed by a UNIQUE constraint on (job_id, idempotency_key)."
+    }
+  },
+
+  "$comment": "Deliberately absent: credentials, the workflow definition, sibling task outputs not named on an explicit edge, and any other client's data. A capability cannot discover the shape of the system it runs inside — which is precisely why it can be swapped for a different prompt, model, vendor, or a human."
+}

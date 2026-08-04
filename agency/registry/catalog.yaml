@@ -1,0 +1,327 @@
+# Capability Catalog — the machine-readable source of truth
+#
+# 99 capabilities. Every one appears exactly once and owns exactly one responsibility.
+# docs/architecture/01-layers-and-registry.md is the human-readable view of this file;
+# CI asserts the two agree.
+#
+# kind: agent     = makes a model call
+#       connector = deterministic, no model call
+#       hybrid    = deterministic tool, then model interpretation
+#
+# Derived from the original 100-item brief, minus 2 (Visual QA listed twice;
+# Memory Manager promoted to infrastructure), plus 1 (automation.file-storage,
+# required for media binaries — flagged as an addition, not smuggled in).
+
+version: 1.0.0
+totals: { capabilities: 99, agent: 57, connector: 23, hybrid: 19 }
+
+# Deliberately NOT capabilities. Both were listed in the brief; both are
+# infrastructure because every capability depends on them.
+infrastructure:
+  - id: orchestrator
+    was: "Project Manager"
+    why: >
+      Rule 2 states the Orchestrator IS the project manager. A separate PM agent
+      would duplicate it. The planning half survives as exec.delivery-planner,
+      which proposes a DAG and never executes one.
+  - id: memory
+    was: "Memory Manager"
+    why: >
+      Every capability reads memory, so it cannot be one capability's job.
+      Routing reads through an agent would put a model call, a queue hop, and a
+      failure mode in front of every lookup.
+
+capabilities:
+
+  # ─────────────── EXECUTIVE (6: 4A 2C) ───────────────
+  - { id: exec.ceo, kind: agent, layer: executive, tier: deep,
+      purpose: "Set quarterly account direction; approve or reject strategy shifts above a materiality threshold.",
+      dependencies: [analytics.performance-reporter] }
+  - { id: exec.delivery-planner, kind: agent, layer: executive, tier: deep,
+      purpose: "Decompose an unrecognized request into a proposed task DAG. Returns a plan; never executes it.",
+      note: "The one LLM planning path. Its output is schema-validated against the registry before any dispatch.",
+      dependencies: [] }
+  - { id: exec.operations-manager, kind: agent, layer: executive, tier: balanced,
+      purpose: "Triage failed and needs_human tasks; assign remediation or escalate. Owns the exception queue.",
+      dependencies: [] }
+  - { id: exec.client-success, kind: agent, layer: executive, tier: balanced,
+      purpose: "Assess account health; produce retention actions and check-in agendas.",
+      dependencies: [analytics.performance-reporter, exec.crm-manager] }
+  - { id: exec.crm-manager, kind: connector, layer: executive,
+      purpose: "CRUD over client, contact, and interaction records. Typed reads and writes only.",
+      dependencies: [automation.database-manager] }
+  - { id: exec.scheduling-manager, kind: connector, layer: executive,
+      purpose: "Own the account calendar: availability, bookings, reminders, timezone resolution.",
+      dependencies: [automation.notification] }
+
+  # ─────────────── INTAKE (10: 8A 2H) ───────────────
+  - { id: intake.lead-qualification, kind: agent, layer: intake, tier: fast,
+      purpose: "Score an inbound lead against ICP fit and budget signals; return qualify/disqualify with reasons.", dependencies: [] }
+  - { id: intake.discovery, kind: agent, layer: intake, tier: deep,
+      purpose: "Convert a discovery call transcript or intake form into structured business facts.", dependencies: [] }
+  - { id: intake.brand-extraction, kind: agent, layer: intake, tier: deep,
+      purpose: "Derive brand guidelines — voice, tone, vocabulary, forbidden words, visual identity — from existing client material.",
+      dependencies: [intake.discovery] }
+  - { id: intake.business-research, kind: hybrid, layer: intake, tier: balanced, tools: [automation.api-manager],
+      purpose: "Research the client's market, price bands, and inventory from public sources.", dependencies: [intake.discovery] }
+  - { id: intake.competitor-research, kind: hybrid, layer: intake, tier: balanced, tools: [automation.api-manager],
+      purpose: "Identify and profile 5-10 competing agents in the client's geography and analyze their content posture.",
+      dependencies: [intake.business-research] }
+  - { id: intake.audience-research, kind: agent, layer: intake, tier: balanced,
+      purpose: "Define audience segments: demographics, life stage, motivations, objections.", dependencies: [intake.business-research] }
+  - { id: intake.content-audit, kind: agent, layer: intake, tier: balanced,
+      purpose: "One-time historical review of existing content: what exists, what performed, what to retire.",
+      note: "Distinct from analytics.content-reviewer, which is recurring and per-post.",
+      dependencies: [analytics.collector] }
+  - { id: intake.offer-analysis, kind: agent, layer: intake, tier: balanced,
+      purpose: "Articulate what the client sells and on what terms.", dependencies: [intake.discovery] }
+  - { id: intake.usp-builder, kind: agent, layer: intake, tier: deep,
+      purpose: "Produce a defensible unique selling proposition from offer, competitor, and audience inputs.",
+      dependencies: [intake.offer-analysis, intake.competitor-research, intake.audience-research] }
+  - { id: intake.avatar-builder, kind: agent, layer: intake, tier: deep,
+      purpose: "Build 2-4 named buyer/seller avatars with objections, triggers, and language patterns.",
+      dependencies: [intake.audience-research] }
+
+  # ─────────────── STRATEGY (7: 6A 1H) ───────────────
+  - { id: strategy.marketing, kind: agent, layer: strategy, tier: deep,
+      purpose: "Set the account-level marketing thesis for a period: positioning, channel mix, budget split.",
+      dependencies: [intake.usp-builder, intake.avatar-builder] }
+  - { id: strategy.content, kind: agent, layer: strategy, tier: deep,
+      purpose: "Convert the marketing thesis into content pillars and a themed brief list for a period.",
+      dependencies: [strategy.marketing] }
+  - { id: strategy.campaign-planner, kind: agent, layer: strategy, tier: balanced,
+      purpose: "Sequence briefs into campaigns with a narrative arc, timing, and success metrics.", dependencies: [strategy.content] }
+  - { id: strategy.growth, kind: agent, layer: strategy, tier: deep,
+      purpose: "Identify the current growth constraint (reach, conversion, retention) and prescribe the lever.",
+      dependencies: [analytics.growth-predictor] }
+  - { id: strategy.platform, kind: agent, layer: strategy, tier: fast,
+      purpose: "Translate a brief into per-platform format constraints, ratios, lengths, and native conventions.",
+      dependencies: [strategy.content] }
+  - { id: strategy.trend-analyst, kind: hybrid, layer: strategy, tier: balanced, tools: [automation.api-manager],
+      purpose: "Surface currently-rising formats, audio, and topics relevant to the client's niche.", dependencies: [] }
+  - { id: strategy.seo, kind: agent, layer: strategy, tier: balanced,
+      purpose: "Keyword and topic strategy: cluster selection, search intent, priority.",
+      note: "Chooses targets. websites.seo-implementation implements them.",
+      dependencies: [intake.business-research] }
+
+  # ─────────────── WRITING (14: 13A 1H) ───────────────
+  - { id: writing.hook-writer, kind: agent, layer: writing, tier: fast,
+      purpose: "Opening lines for short-form video and posts. Returns ranked candidates, nothing else.",
+      memory_read: [brand.tone, brand.guidelines, content.winning_hooks, content.rejected_ideas],
+      dependencies: [strategy.content] }
+  - { id: writing.script-writer, kind: agent, layer: writing, tier: balanced,
+      purpose: "Spoken-word scripts for video, timed to a target duration.", dependencies: [writing.hook-writer] }
+  - { id: writing.story-writer, kind: agent, layer: writing, tier: balanced,
+      purpose: "Narrative long-form pieces: case studies, client stories, neighborhood features.", dependencies: [strategy.content] }
+  - { id: writing.carousel-writer, kind: agent, layer: writing, tier: fast,
+      purpose: "Slide-by-slide copy for multi-slide carousels.", dependencies: [strategy.content] }
+  - { id: writing.caption-writer, kind: agent, layer: writing, tier: fast,
+      purpose: "Post captions for a given platform and asset.", dependencies: [writing.script-writer] }
+  - { id: writing.cta-writer, kind: agent, layer: writing, tier: fast,
+      purpose: "Calls to action matched to funnel stage and platform affordance.", dependencies: [strategy.campaign-planner] }
+  - { id: writing.email-writer, kind: agent, layer: writing, tier: balanced,
+      purpose: "Email bodies for nurture, newsletter, and transactional sequences.",
+      note: "Templates must carry CAN-SPAM opt-out.", dependencies: [strategy.campaign-planner] }
+  - { id: writing.landing-page-copy, kind: agent, layer: writing, tier: balanced,
+      purpose: "Landing page copy blocks: hero, proof, objection, close.", dependencies: [intake.usp-builder] }
+  - { id: writing.ad-copy, kind: agent, layer: writing, tier: balanced,
+      purpose: "Paid ad copy variants within platform character and policy limits.", dependencies: [strategy.campaign-planner] }
+  - { id: writing.headline-generator, kind: agent, layer: writing, tier: fast,
+      purpose: "Headlines for articles, ads, and pages.", dependencies: [] }
+  - { id: writing.title-generator, kind: agent, layer: writing, tier: fast,
+      purpose: "Video and episode titles optimized for the destination platform.", dependencies: [strategy.seo] }
+  - { id: writing.description-generator, kind: agent, layer: writing, tier: fast,
+      purpose: "Long-form descriptions: YouTube, listing, page meta description.", dependencies: [strategy.seo] }
+  - { id: writing.hashtag-generator, kind: agent, layer: writing, tier: fast,
+      purpose: "Hashtag sets sized and mixed by reach tier for a given platform.", dependencies: [strategy.platform] }
+  - { id: writing.keyword-generator, kind: hybrid, layer: writing, tier: fast, tools: [automation.api-manager],
+      purpose: "Keyword candidates with volume and difficulty.", dependencies: [strategy.seo] }
+
+  # ─────────────── CREATIVE (8: 5A 3H) ───────────────
+  - { id: creative.director, kind: agent, layer: creative, tier: deep,
+      purpose: "Set the creative concept for a brief: the visual idea, not the execution.", dependencies: [strategy.content] }
+  - { id: creative.brand-director, kind: agent, layer: creative, tier: balanced,
+      purpose: "Enforce and evolve visual brand identity: palette, type, logo usage, treatment rules.",
+      dependencies: [intake.brand-extraction] }
+  - { id: creative.thumbnail-designer, kind: hybrid, layer: creative, tier: balanced, tools: [automation.api-manager, automation.file-storage],
+      purpose: "Thumbnail composition and generation.", dependencies: [creative.director] }
+  - { id: creative.graphic-designer, kind: hybrid, layer: creative, tier: balanced, tools: [automation.api-manager, automation.file-storage],
+      purpose: "Static graphics: quote cards, stat cards, listing cards.", dependencies: [creative.brand-director] }
+  - { id: creative.carousel-designer, kind: hybrid, layer: creative, tier: balanced, tools: [automation.api-manager, automation.file-storage],
+      purpose: "Visual layout for carousel slides, paired to carousel copy.", dependencies: [writing.carousel-writer] }
+  - { id: creative.image-prompt-engineer, kind: agent, layer: creative, tier: balanced,
+      purpose: "Convert a creative concept into a precise image-generation prompt. Produces text, not images.",
+      dependencies: [creative.director] }
+  - { id: creative.video-prompt-engineer, kind: agent, layer: creative, tier: balanced,
+      purpose: "Convert a shot into a precise video-generation prompt. Produces text, not video.",
+      dependencies: [video.shot-planner] }
+  - { id: creative.motion-director, kind: agent, layer: creative, tier: balanced,
+      purpose: "Specify motion language: pacing, camera movement, kinetic type behavior.", dependencies: [creative.director] }
+
+  # ─────────────── VIDEO (10: 7A 2H 1C) ───────────────
+  - { id: video.shot-planner, kind: agent, layer: video, tier: balanced,
+      purpose: "Break a script into a numbered shot list with intent per shot.", dependencies: [writing.script-writer] }
+  - { id: video.storyboard, kind: agent, layer: video, tier: balanced,
+      purpose: "Describe each shot's framing and composition as a storyboard entry.", dependencies: [video.shot-planner] }
+  - { id: video.higgsfield-prompt, kind: agent, layer: video, tier: balanced,
+      purpose: "Produce Higgsfield-specific generation prompts and parameters.",
+      note: "Vendor-specific by design, so the vendor is swappable in exactly one place.",
+      dependencies: [creative.video-prompt-engineer] }
+  - { id: video.broll-planner, kind: agent, layer: video, tier: fast,
+      purpose: "Specify supporting B-roll per shot, with sourcing instructions.", dependencies: [video.shot-planner] }
+  - { id: video.editing-planner, kind: agent, layer: video, tier: balanced,
+      purpose: "Produce the edit decision plan: cut points, ordering, pacing.", dependencies: [video.storyboard] }
+  - { id: video.transitions, kind: agent, layer: video, tier: fast,
+      purpose: "Specify transitions between cuts and their timing.", dependencies: [video.editing-planner] }
+  - { id: video.subtitle, kind: hybrid, layer: video, tier: fast, tools: [automation.api-manager],
+      purpose: "Generate and time-align captions.", dependencies: [writing.script-writer] }
+  - { id: video.sound-design, kind: agent, layer: video, tier: fast,
+      purpose: "Specify sound effects and audio treatment per beat.", dependencies: [video.editing-planner] }
+  - { id: video.music-selector, kind: hybrid, layer: video, tier: fast, tools: [automation.api-manager],
+      purpose: "Select licensed music matched to mood, pacing, and platform rights.", dependencies: [creative.motion-director] }
+  - { id: video.final-export-qa, kind: connector, layer: video,
+      purpose: "Verify the exported file: codec, resolution, aspect, duration, loudness, file size.",
+      note: "ffprobe. Fully deterministic.", dependencies: [] }
+
+  # ─────────────── PUBLISHING (8: 8C) ───────────────
+  # Nothing here reasons. This is where hallucination would be most expensive.
+  - { id: publishing.formatter, kind: connector, layer: publishing,
+      purpose: "Transform a finished asset and copy into the exact payload a target platform requires.",
+      dependencies: [strategy.platform] }
+  - { id: publishing.scheduler, kind: connector, layer: publishing,
+      purpose: "Resolve a publish time from calendar, cadence rules, and timezone; enqueue the publish job.",
+      dependencies: [exec.scheduling-manager] }
+  - { id: publishing.instagram, kind: connector, layer: publishing, credentials: [instagram.publish], dependencies: [publishing.formatter], purpose: "Publish to Instagram." }
+  - { id: publishing.tiktok, kind: connector, layer: publishing, credentials: [tiktok.publish], dependencies: [publishing.formatter], purpose: "Publish to TikTok." }
+  - { id: publishing.youtube-shorts, kind: connector, layer: publishing, credentials: [youtube.publish], dependencies: [publishing.formatter], purpose: "Publish to YouTube Shorts." }
+  - { id: publishing.facebook, kind: connector, layer: publishing, credentials: [facebook.publish], dependencies: [publishing.formatter], purpose: "Publish to Facebook." }
+  - { id: publishing.linkedin, kind: connector, layer: publishing, credentials: [linkedin.publish], dependencies: [publishing.formatter], purpose: "Publish to LinkedIn." }
+  - { id: publishing.pinterest, kind: connector, layer: publishing, credentials: [pinterest.publish], dependencies: [publishing.formatter], purpose: "Publish to Pinterest." }
+
+  # ─────────────── ANALYTICS (7: 2A 4H 1C) ───────────────
+  - { id: analytics.collector, kind: connector, layer: analytics,
+      credentials: [instagram.read, tiktok.read, youtube.read, facebook.read, linkedin.read, pinterest.read],
+      purpose: "Pull raw metrics from platform APIs on a schedule and write them to the metric tier. No interpretation.",
+      note: "Runs ~180k times/year at 500 clients. A connector, not an agent, for exactly that reason.",
+      dependencies: [] }
+  - { id: analytics.performance-reporter, kind: hybrid, layer: analytics, tier: deep, tools: [automation.database-manager],
+      purpose: "Turn metrics into a client-readable narrative report.", dependencies: [analytics.collector] }
+  - { id: analytics.content-reviewer, kind: agent, layer: analytics, tier: balanced,
+      purpose: "Per-post retrospective: what worked, what didn't, what to reuse. Recurring, post-publication.",
+      dependencies: [analytics.collector] }
+  - { id: analytics.ab-testing, kind: hybrid, layer: analytics, tier: balanced, tools: [automation.database-manager],
+      purpose: "Design variant tests and call winners with a stated significance rule.", dependencies: [analytics.collector] }
+  - { id: analytics.optimization, kind: agent, layer: analytics, tier: balanced,
+      purpose: "Convert review findings into concrete changes to briefs, hooks, or cadence.",
+      note: "WRITES content.winning_hooks. This is the learning loop — quality compounds without prompt edits.",
+      memory_write: [content.winning_hooks, content.winning_scripts],
+      dependencies: [analytics.content-reviewer] }
+  - { id: analytics.trend-tracker, kind: hybrid, layer: analytics, tier: fast, tools: [automation.database-manager],
+      purpose: "Track performance trajectory of the client's own content over time.", dependencies: [analytics.collector] }
+  - { id: analytics.growth-predictor, kind: hybrid, layer: analytics, tier: balanced, tools: [automation.database-manager],
+      purpose: "Forecast reach and follower trajectory with an explicit confidence interval.", dependencies: [analytics.trend-tracker] }
+
+  # ─────────────── SALES (8: 4A 2H 2C) ───────────────
+  - { id: sales.prospect-finder, kind: hybrid, layer: sales, tier: balanced, tools: [automation.api-manager],
+      purpose: "Find and rank agents matching the ICP.", dependencies: [] }
+  - { id: sales.cold-calling-assistant, kind: agent, layer: sales, tier: balanced,
+      purpose: "Produce call talk tracks, objection handling, and post-call summaries. Does NOT dial.",
+      dependencies: [intake.lead-qualification] }
+  - { id: sales.cold-email, kind: agent, layer: sales, tier: fast,
+      purpose: "Write cold outbound email sequences.", dependencies: [sales.prospect-finder] }
+  - { id: sales.follow-up, kind: agent, layer: sales, tier: fast,
+      purpose: "Write stage-appropriate follow-ups from pipeline state.", dependencies: [sales.pipeline-manager] }
+  - { id: sales.proposal-writer, kind: agent, layer: sales, tier: balanced,
+      purpose: "Write scoped proposals with deliverables and pricing.", dependencies: [intake.lead-qualification] }
+  - { id: sales.contract-generator, kind: hybrid, layer: sales, tier: deep, tools: [automation.database-manager],
+      purpose: "Assemble contracts from approved clause templates; flag any non-standard clause for human review.",
+      note: "Deliberately conservative. Generative contract drafting is a liability the architecture declines.",
+      dependencies: [sales.proposal-writer] }
+  - { id: sales.invoice, kind: connector, layer: sales,
+      purpose: "Generate and issue invoices; track payment state. Arithmetic and templating.",
+      dependencies: [automation.database-manager] }
+  - { id: sales.pipeline-manager, kind: connector, layer: sales,
+      purpose: "Own deal stage transitions as an explicit state machine.", dependencies: [exec.crm-manager] }
+
+  # ─────────────── WEBSITES (7: 4A 2C 1H) ───────────────
+  - { id: websites.planner, kind: agent, layer: websites, tier: balanced,
+      purpose: "Define site structure: pages, hierarchy, conversion paths.", dependencies: [intake.usp-builder] }
+  - { id: websites.designer, kind: agent, layer: websites, tier: balanced,
+      purpose: "Specify layout and component composition per page.", dependencies: [creative.brand-director] }
+  - { id: websites.copy, kind: agent, layer: websites, tier: balanced,
+      purpose: "Write on-page copy against the page spec.", dependencies: [writing.landing-page-copy] }
+  - { id: websites.seo-implementation, kind: agent, layer: websites, tier: fast,
+      purpose: "Implement on-page SEO: meta tags, schema.org markup, sitemaps, internal linking.",
+      note: "Implements what strategy.seo chose. Distinct responsibilities.",
+      dependencies: [strategy.seo] }
+  - { id: websites.accessibility-qa, kind: connector, layer: websites,
+      purpose: "Audit rendered pages for WCAG AA contrast, overflow, oversized icons, and text collision.",
+      note: "WRAPS the existing lib/audit-engine.js via packages/connectors/audit-adapter. Reused, not rebuilt.",
+      reuses: ../../lib/audit-engine.js,
+      dependencies: [] }
+  - { id: websites.performance-optimizer, kind: hybrid, layer: websites, tier: balanced, tools: [automation.api-manager],
+      purpose: "Measure Core Web Vitals and recommend fixes.", dependencies: [] }
+  - { id: websites.deployment, kind: connector, layer: websites, credentials: [host.deploy],
+      purpose: "Deploy a built site to its host and report the resulting URL and status.", dependencies: [] }
+
+  # ─────────────── AUTOMATION (8: 1A 7C) ───────────────
+  - { id: automation.workflow-builder, kind: agent, layer: automation, tier: deep,
+      purpose: "Author and validate new workflow DAG definitions from a described process.", dependencies: [] }
+  - { id: automation.zapier, kind: connector, layer: automation, credentials: [zapier.trigger],
+      purpose: "Trigger and manage Zapier zaps.", dependencies: [] }
+  - { id: automation.n8n, kind: connector, layer: automation, credentials: [n8n.trigger],
+      purpose: "Trigger and manage n8n workflows.", dependencies: [] }
+  - { id: automation.api-manager, kind: connector, layer: automation,
+      purpose: "Outbound HTTP with per-vendor auth, retry, rate limiting, and circuit breaking.",
+      note: "EVERY external call goes through here. Single place for provider circuit breakers.",
+      dependencies: [] }
+  - { id: automation.webhook-manager, kind: connector, layer: automation,
+      purpose: "Register, verify, and dispatch inbound and outbound webhooks.", dependencies: [] }
+  - { id: automation.database-manager, kind: connector, layer: automation,
+      purpose: "Schema and migration operations.",
+      note: "Narrowed from the brief to avoid overlapping the memory service.", dependencies: [] }
+  - { id: automation.notification, kind: connector, layer: automation, credentials: [email.send, sms.send, slack.post],
+      purpose: "Deliver notifications across email, SMS, Slack, and push.", dependencies: [] }
+  - { id: automation.file-storage, kind: connector, layer: automation, credentials: [storage.readwrite],
+      purpose: "Object storage operations for media assets: put, get, sign, expire.",
+      note: "ADDED — not in the original brief. Video and image capabilities produce binaries that cannot live in Postgres or in a task payload.",
+      dependencies: [] }
+
+  # ─────────────── QA (6: 3A 3H) ───────────────
+  # Every QA capability is fail-closed. None can be skipped by a workflow that publishes.
+  - { id: qa.fact-checker, kind: hybrid, layer: qa, tier: deep, tools: [automation.api-manager, automation.database-manager],
+      purpose: "Verify factual claims: prices, dates, statistics, market figures.", blocking: true, dependencies: [] }
+  - { id: qa.grammar, kind: hybrid, layer: qa, tier: fast, tools: [automation.api-manager],
+      purpose: "Grammar, spelling, and readability.", blocking: false, dependencies: [] }
+  - { id: qa.brand, kind: agent, layer: qa, tier: balanced,
+      purpose: "Verify adherence to the client's voice, tone, vocabulary, and forbidden-word list.",
+      blocking: true, dependencies: [intake.brand-extraction] }
+  - { id: qa.visual, kind: hybrid, layer: qa, tier: balanced, tools: [websites.accessibility-qa],
+      purpose: "Verify visual output. Web surfaces use the deterministic audit engine; images and video use a vision model.",
+      note: "DEDUPLICATED — was listed in both Creative and QA in the brief.",
+      blocking: true, dependencies: [creative.brand-director] }
+  - { id: qa.compliance, kind: agent, layer: qa, tier: deep,
+      purpose: "Verify Fair Housing language, license and brokerage attribution, disclosure requirements, and asset usage rights.",
+      note: >
+        NON-BYPASSABLE PUBLISH GATE. Enforced at four levels: workflow validation rejects any
+        definition where a publish node is reachable without it; plan validation rejects any
+        proposed DAG omitting it; publications.compliance_verdict_id is NOT NULL so the row is
+        uninsertable without a verdict; every verdict is retained 7 years. See ADR-0006.
+      blocking: true, bypassable: false, dependencies: [intake.discovery] }
+  - { id: qa.final-approval, kind: agent, layer: qa, tier: balanced,
+      purpose: "Aggregate all QA verdicts into a single release decision. The only capability permitted to mark an asset publishable.",
+      merge: worst_verdict, blocking: true, dependencies: [qa.fact-checker, qa.grammar, qa.brand, qa.visual, qa.compliance] }
+
+# ─────────────── CI lints (Phase 2) ───────────────
+lints:
+  - unique_ids
+  - id_pattern: "^[a-z]+\\.[a-z0-9-]+$"
+  - dependencies_resolve
+  - dependency_graph_acyclic
+  - no_duplicate_outputs_within_layer     # Rule 4
+  - catalog_matches_manifest_directories
+  - agents_and_hybrids_have_fixtures
+  - connectors_have_contract_tests
+  - prompt_within_token_budget            # Rule 1
+  - agents_declare_no_credentials         # ADR-0005
+  - publish_paths_traverse_compliance     # ADR-0006
