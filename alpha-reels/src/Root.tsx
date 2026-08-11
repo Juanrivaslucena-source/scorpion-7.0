@@ -6,6 +6,7 @@ import { HardCutReel } from './HardCutReel';
 import { RealBikeLineup } from './RealBikeLineup';
 import { RealBrandReel } from './RealBrandReel';
 import { BrandShowcase, showcaseDuration } from './BrandShowcase';
+import { FactoryReel, calcReelMetadata } from './FactoryReel';
 
 // 9:16 vertical, 15s @ 30fps.
 const WIDTH = 1080;
@@ -176,6 +177,30 @@ export const RemotionRoot: React.FC = () => {
         fps={FPS}
         width={WIDTH}
         height={HEIGHT}
+      />
+      {/* The Reel Factory renders through this one data-driven composition.
+          The factory passes an EDL (edit decision list) as props; size and
+          duration come from calcReelMetadata. The defaults below are just a
+          harmless placeholder so it opens in the Studio. */}
+      <Composition
+        id="FactoryReel"
+        component={FactoryReel}
+        calculateMetadata={calcReelMetadata}
+        durationInFrames={150}
+        fps={FPS}
+        width={WIDTH}
+        height={HEIGHT}
+        defaultProps={{
+          width: WIDTH,
+          height: HEIGHT,
+          fps: FPS,
+          accent: '#c6ff00',
+          totalFrames: 150,
+          audio: null,
+          segments: [
+            { clip: '', type: 'video' as const, startInClip: 0, seconds: 5, caption: 'NO GAS. ALL GO.', captionStyle: 'hook' as const, logo: '' },
+          ],
+        }}
       />
       <Composition
         id="JustDropped"

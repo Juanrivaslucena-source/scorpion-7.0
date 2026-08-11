@@ -11,3 +11,9 @@ realbikes/
 public/real/
 public/brands/
 public/al/
+# Reel Factory runtime artifacts (jobs, dropped media, staged clips)
+factory/jobs/
+factory/inbox/*
+!factory/inbox/.gitkeep
+public/factory/
+.env
