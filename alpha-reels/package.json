@@ -9,6 +9,7 @@
     "factory:new": "node factory/run.mjs new",
     "factory:watch": "node factory/run.mjs watch",
     "factory:list": "node factory/run.mjs list",
+    "dashboard": "node factory/server.mjs",
     "studio": "remotion studio src/index.ts"
   },
   "keywords": [],

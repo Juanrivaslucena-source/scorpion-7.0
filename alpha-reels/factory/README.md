@@ -37,10 +37,20 @@ node factory/run.mjs approve <jobId>
 # your reel lands in:  out/<jobId>.mp4
 ```
 
-Prefer drag-and-drop? Run the watcher and just drop files in `factory/inbox/`:
+### Prefer a dashboard? (recommended)
 
 ```bash
-node factory/run.mjs watch
+node factory/server.mjs      # then open http://localhost:4310
+```
+
+A browser panel in the Alpha Volt look: drag a clip in, watch the six agents
+light up as they work, read the proposed concept, hit **Approve & finish**, and
+play/download the reel — all without the terminal.
+
+### Prefer drag-and-drop into a folder?
+
+```bash
+node factory/run.mjs watch   # watches factory/inbox/
 ```
 
 ## Turning on the smart + AI parts
@@ -52,7 +62,7 @@ your shell):
 | Variable | What it turns on |
 |---|---|
 | `ANTHROPIC_API_KEY` | The **Idea** + **Edit** agents use Claude for real creative direction and smart in-points (instead of the built-in template). |
-| `HIGGSFIELD_ENABLED=1` + `HIGGSFIELD_API_KEY` | The **Generation** agent makes brand-new AI b-roll, and **QC** uses real virality scoring. See `lib/higgsfield.mjs` to wire the endpoints. |
+| `HIGGSFIELD_ENABLED=1` | The **Generation** agent makes brand-new AI b-roll (verified working: `seedance_2_5`, 9:16, ~32.5 credits / 5s). Two ways to connect it — via Jarvis's MCP or a REST key. See **`FULFILL.md`**. |
 
 Nothing to install for rendering — Remotion brings its own ffmpeg.
 
