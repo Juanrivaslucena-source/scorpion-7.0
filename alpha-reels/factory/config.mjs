@@ -14,19 +14,55 @@ export const config = {
   // This is who the reels are for. The Idea agent uses this to write on-brand
   // hooks, scripts and captions. Change it for a different client.
   brand: {
-    name: 'Alpha Volt',
-    business: 'Alpha Electric Bikes — electric bikes & scooters, Kissimmee FL',
-    audience: 'young riders, commuters, and bike-life fans in Central Florida',
-    // The voice guide. Keep it short and punchy — it steers the copy.
+    name: 'Alpha Volt Electric',
+    business: 'Electric motorcycles and e-bikes — dirt bikes, e-motos, performance electric',
+    audience:
+      'riders into electric dirt bikes, e-motos, wheelies, motocross, street riding, customization, tech and performance',
+    // The identity, in a line — steers the whole look and tone.
+    identity: 'Aggressive, premium, fast, tech-forward, youthful, authentic to moto culture. High-end automotive advertising, not generic e-bike marketing.',
+    // The voice guide. Confident, direct, sounds like people who ride.
     voice: [
-      'Bold, street, high-energy. Short punchy lines. No corporate filler.',
-      'Sell the feeling: freedom, speed, no gas, no traffic, look good doing it.',
-      'Always sound like a local shop that actually rides — never like an ad agency.',
+      'Confident and direct. Sound like people who genuinely understand motorcycles.',
+      'Short, concrete lines. Let the visuals and music carry it — no filler narration.',
     ].join(' '),
-    accent: '#c6ff00', // the neon-lime brand accent used on captions
-    hashtags: ['#ebike', '#electricbike', '#bikelife', '#kissimmee', '#orlando'],
-    cta: 'Financing available — DM to ride today.',
+    // Preferred phrasing to echo (tone reference, not mandatory copy).
+    preferredLines: [
+      'Instant torque.',
+      'Built for the dirt.',
+      "Quiet doesn't mean slow.",
+      'Charge. Ride. Repeat.',
+      'Which one are you taking?',
+      'Electric power without the compromise.',
+    ],
+    // Never write these — they read as corporate/AI filler.
+    banned: [
+      'the future is here', 'revolutionary', 'game changer', 'game-changer',
+      'unleash', 'elevate', 'next level', 'cutting-edge', 'seamless',
+    ],
+    accent: '#FFD400', // Alpha Volt yellow (black-and-yellow identity)
+    hashtags: ['#electricmoto', '#emoto', '#ebike', '#motocross', '#dirtbike', '#electricmotorcycle'],
+    cta: 'Which one are you taking?',
   },
+
+  // The 12 content pillars — the Idea agent picks the angle from these.
+  pillars: [
+    'Cinematic riding videos',
+    'Bike macro and product-detail edits',
+    'Model comparisons',
+    'Performance and specification breakdowns',
+    'Rider reactions and demonstrations',
+    'Educational electric-motorcycle content',
+    'Maintenance and ownership tips',
+    'Behind-the-scenes content',
+    'Lifestyle and motorcycle-culture content',
+    'Customer bikes and community content',
+    'Offers, inventory and calls to action',
+    'Trend-based edits that still match the brand',
+  ],
+
+  // Accuracy guardrail — the Idea agent must obey this.
+  accuracy:
+    'NEVER invent speed, range, power, battery capacity, charging time, price, availability, warranty, legal class or features. If a number is not confirmed from an approved product sheet, write [VERIFY] in its place. Never claim a model identity you cannot confirm.',
 
   // ----- Output format ---------------------------------------------------
   reel: {

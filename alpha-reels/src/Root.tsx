@@ -194,11 +194,11 @@ export const RemotionRoot: React.FC = () => {
           width: WIDTH,
           height: HEIGHT,
           fps: FPS,
-          accent: '#c6ff00',
+          accent: '#FFD400',
           totalFrames: 150,
           audio: null,
           segments: [
-            { clip: '', type: 'video' as const, startInClip: 0, seconds: 5, caption: 'NO GAS. ALL GO.', captionStyle: 'hook' as const, logo: '' },
+            { clip: '', type: 'video' as const, startInClip: 0, seconds: 5, caption: 'INSTANT TORQUE.', captionStyle: 'hook' as const, logo: '' },
           ],
         }}
       />
