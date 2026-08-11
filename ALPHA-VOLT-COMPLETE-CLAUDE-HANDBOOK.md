@@ -315,7 +315,7 @@ The following links are direct media results. They are reference evidence, not a
 
 - August 11, 2026 — Seedance 2.5 — 9:16 — 5 seconds: [view/download](https://d8j0ntlcm91z4.cloudfront.net/user_3GeMRWAEsBg5X5mRKYtu3uPXKXM/hf_20260811_121215_64e8e69d-6e0e-4f92-b713-24dcc74c7570.mp4).
 - Prompt: “Cinematic vertical shot of a sleek matte-black electric bike riding fast through a sunlit Florida palm-lined street, low tracking shot, motion blur, dust kicking up, high energy, golden hour, no text.”
-- Status: generic concept reference; not proof of a real model or inventory. (Note: this is the test clip generated August 11, 2026 while wiring the Reel Factory's Higgsfield adapter.)
+- Status: generic concept reference; not proof of a real model or inventory.
 
 ### C. Rejected Ultra Bee studio outputs
 
