@@ -13,35 +13,52 @@ export const config = {
   // ----- Brand -----------------------------------------------------------
   // This is who the reels are for. The Idea agent uses this to write on-brand
   // hooks, scripts and captions. Change it for a different client.
+  // Source of truth: ALPHA-VOLT-COMPLETE-CLAUDE-HANDBOOK.md (repo root).
+  // Read it before any Alpha Volt work — it carries the evidence boundaries.
   brand: {
-    name: 'Alpha Volt Electric',
-    business: 'Electric motorcycles and e-bikes — dirt bikes, e-motos, performance electric',
+    name: 'Alpha Volt', // brand shorthand; full legal name below
+    legalName: 'Alpha Volt & Electronics',
+    business: 'Electric bikes, scooters and dirt bikes — plus phones, gaming, computers, cameras and audio',
+    location: 'Kissimmee, FL — 2086 E Osceola Pkwy',
     audience:
-      'riders into electric dirt bikes, e-motos, wheelies, motocross, street riding, customization, tech and performance',
+      'local, working-class, heavily Spanish-speaking Central Florida riders and buyers; make Spanish-first / bilingual a normal choice, not decoration',
     // The identity, in a line — steers the whole look and tone.
-    identity: 'Aggressive, premium, fast, tech-forward, youthful, authentic to moto culture. High-end automotive advertising, not generic e-bike marketing.',
-    // The voice guide. Confident, direct, sounds like people who ride.
+    identity: 'Premium craft, accessible promise. Sharp, physical, aggressive, credible, modern — not a luxury boutique. Visuals may feel expensive; language stays direct, welcoming, attainable.',
+    // The voice guide. Confident, direct, bilingual, easy to understand.
     voice: [
-      'Confident and direct. Sound like people who genuinely understand motorcycles.',
-      'Short, concrete lines. Let the visuals and music carry it — no filler narration.',
+      'Direct, confident, energetic, local, easy to understand. Spanish-first or naturally bilingual for local conversion content.',
+      'Premium without sounding exclusive or corporate. Aggressive for action creative but commercially clean.',
+      'Specific copy beats empty slogans. Let visuals and music carry it — no filler narration.',
     ].join(' '),
-    // Preferred phrasing to echo (tone reference, not mandatory copy).
-    preferredLines: [
-      'Instant torque.',
-      'Built for the dirt.',
-      "Quiet doesn't mean slow.",
-      'Charge. Ride. Repeat.',
-      'Which one are you taking?',
-      'Electric power without the compromise.',
+    // Owner-approved offer language (access to an application/payment path —
+    // NOT a guarantee of approval, payment, availability or terms). Add
+    // qualification when the format allows ("Apply in store", "Terms apply").
+    offers: [
+      'No credit? No problem.',
+      'Easy payment.',
+      'From $50 down.',
+      'No credit required to apply.',
+      'Hablamos español.',
     ],
-    // Never write these — they read as corporate/AI filler.
+    // Preferred CTAs (bilingual). No unconfirmed phone number or hours, ever.
+    ctas: [
+      'Ven a verla en Kissimmee.',
+      'Pregunta qué hay disponible hoy.',
+      'Escríbenos por DM.',
+      'Solicita en tienda.',
+      'Ask what is on the floor today.',
+    ],
+    cta: 'Pregunta qué hay disponible hoy.',
+    // Accent = punctuation, not wallpaper (CTAs, markers, key numbers).
+    accent: '#ffc81e', // Alpha Volt yellow (per handbook §4)
+    ink: '#070807', // near-black
+    paper: '#f3f2ec', // off-white
+    hashtags: ['#alphavolt', '#kissimmee', '#electricmoto', '#ebike', '#dirtbike', '#surron'],
+    // Never write these — corporate/AI filler and unsupported hype.
     banned: [
       'the future is here', 'revolutionary', 'game changer', 'game-changer',
       'unleash', 'elevate', 'next level', 'cutting-edge', 'seamless',
     ],
-    accent: '#FFD400', // Alpha Volt yellow (black-and-yellow identity)
-    hashtags: ['#electricmoto', '#emoto', '#ebike', '#motocross', '#dirtbike', '#electricmotorcycle'],
-    cta: 'Which one are you taking?',
   },
 
   // The 12 content pillars — the Idea agent picks the angle from these.
@@ -60,9 +77,13 @@ export const config = {
     'Trend-based edits that still match the brand',
   ],
 
-  // Accuracy guardrail — the Idea agent must obey this.
-  accuracy:
+  // Accuracy guardrail — the Idea agent must obey this (handbook §6).
+  accuracy: [
     'NEVER invent speed, range, power, battery capacity, charging time, price, availability, warranty, legal class or features. If a number is not confirmed from an approved product sheet, write [VERIFY] in its place. Never claim a model identity you cannot confirm.',
+    'NEVER present AI-generated motorcycle imagery as real inventory. AI bikes are labeled CONCEPT content only — they cannot prove stock, condition, colorway, spec or price. When a bike is generated, disclose: "AI concept visual. Product and availability may vary — contact Alpha Volt for current inventory."',
+    'DO NOT publish phone numbers, store hours, live inventory/availability, prices, or any financing-approval / guaranteed-payment / guaranteed-eligibility claim — none are owner-confirmed. Offers describe access to apply, not approval.',
+    'Preserve exact motorcycle geometry before any style. A "completed" generation is not an approved one — it must pass the rubric in the handbook.',
+  ].join(' '),
 
   // ----- Output format ---------------------------------------------------
   reel: {

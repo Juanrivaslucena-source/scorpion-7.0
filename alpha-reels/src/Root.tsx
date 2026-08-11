@@ -194,7 +194,7 @@ export const RemotionRoot: React.FC = () => {
           width: WIDTH,
           height: HEIGHT,
           fps: FPS,
-          accent: '#FFD400',
+          accent: '#ffc81e',
           totalFrames: 150,
           audio: null,
           segments: [
