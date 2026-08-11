@@ -12,7 +12,8 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { config } from './config.mjs';
 import { newJob, load, listJobs } from './lib/jobs.mjs';
-import { runPipeline, approveAndContinue } from './orchestrator.mjs';
+import { runPipeline, approveAndContinue, rejectJob } from './orchestrator.mjs';
+import { readiness } from './coach.mjs';
 import { makeLog } from './lib/log.mjs';
 
 const log = makeLog('orchestrator');
@@ -34,10 +35,19 @@ async function main() {
     }
     case 'reject': {
       const state = load(arg);
-      state.status = 'rejected';
-      state.approvals[state.stage || 'idea'] = 'rejected';
-      fs.writeFileSync(path.join(state.dir, 'state.json'), JSON.stringify(state, null, 2));
-      log.warn(`job ${arg} rejected`);
+      const reason = process.argv.slice(4).join(' '); // optional: why you rejected
+      rejectJob(state, reason);
+      break;
+    }
+    case 'goal': {
+      const r = readiness();
+      const bar = (v) => '█'.repeat(Math.round(v * 20)).padEnd(20, '░');
+      console.log(`\n🎯 Autopilot goal — target ${r.targetDate}\n`);
+      console.log(`  Decisions       ${r.total}/${r.minDecisions}   (${r.approvals}✓ / ${r.rejections}✗)`);
+      console.log(`  Days elapsed    ${r.daysElapsed}/${r.windowDays}`);
+      console.log(`  Recent accuracy ${bar(r.recentAccuracy)} ${(r.recentAccuracy * 100) | 0}%  (target ${(r.accuracyTarget * 100) | 0}%)`);
+      console.log(`\n  Gates:  data ${r.gates.enoughDecisions ? '✓' : '·'}   accuracy ${r.gates.accurateEnough ? '✓' : '·'}   time ${r.gates.windowElapsed ? '✓' : '·'}`);
+      console.log(r.autopilot ? '\n  ✅ AUTOPILOT ENGAGED — reels post-ready without asking.\n' : r.ready ? '\n  🎉 Ready to engage on the next decision.\n' : '\n  Keep approving/rejecting — it learns you as you go.\n');
       break;
     }
     case 'list': {
@@ -65,9 +75,10 @@ async function main() {
 
   node factory/run.mjs new <file>       start a job (dissect → idea → pause for OK)
   node factory/run.mjs approve <jobId>  approve the concept and finish the reel
-  node factory/run.mjs reject  <jobId>  cancel a job
+  node factory/run.mjs reject  <jobId> [why]  reject (optionally say why — it learns)
   node factory/run.mjs list             list jobs
   node factory/run.mjs status  <jobId>  show a job + its proposal
+  node factory/run.mjs goal             show progress toward autopilot
   node factory/run.mjs watch            watch factory/inbox/ and auto-start jobs
 
 Drop files into: ${path.relative(process.cwd(), config.paths.inbox)}

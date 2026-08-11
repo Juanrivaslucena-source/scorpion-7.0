@@ -15,7 +15,8 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { config } from './config.mjs';
 import { newJob, load, listJobs } from './lib/jobs.mjs';
-import { runPipeline, approveAndContinue } from './orchestrator.mjs';
+import { runPipeline, approveAndContinue, rejectJob } from './orchestrator.mjs';
+import { readiness } from './coach.mjs';
 import { makeLog } from './lib/log.mjs';
 
 const log = makeLog('orchestrator');
@@ -64,6 +65,8 @@ function summarise(state) {
     verdict: qc?.verdict || '',
     hasVideo: !!state.artifacts.video && fs.existsSync(state.artifacts.video),
     awaitingApproval: state.status === 'awaiting-approval',
+    predicted: state.taste?.predicted || null,
+    predictedConf: state.taste?.predictedConf ?? null,
   };
 }
 
@@ -78,7 +81,12 @@ const server = http.createServer(async (req, res) => {
 
     // --- List jobs --------------------------------------------------------
     if (p === '/api/jobs' && req.method === 'GET') {
-      return send(res, 200, { jobs: listJobs().map(summarise), engines: engineStatus() });
+      return send(res, 200, { jobs: listJobs().map(summarise), engines: engineStatus(), goal: readiness() });
+    }
+
+    // --- Goal / autopilot progress ---------------------------------------
+    if (p === '/api/goal' && req.method === 'GET') {
+      return send(res, 200, readiness());
     }
 
     // --- One job ----------------------------------------------------------
@@ -109,8 +117,8 @@ const server = http.createServer(async (req, res) => {
     }
     if ((m = p.match(/^\/api\/jobs\/([^/]+)\/reject$/)) && req.method === 'POST') {
       const state = load(decodeURIComponent(m[1]));
-      state.status = 'rejected';
-      fs.writeFileSync(path.join(state.dir, 'state.json'), JSON.stringify(state, null, 2));
+      const reason = url.searchParams.get('reason') || '';
+      rejectJob(state, reason);
       return send(res, 200, { ok: true });
     }
 

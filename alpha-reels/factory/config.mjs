@@ -67,7 +67,21 @@ export const config = {
   // 'one'  -> pause once, after the Idea agent, for your OK (your choice).
   // 'two'  -> pause after Idea AND after the rough Edit.
   // 'none' -> fully automatic, no stops.
+  // NOTE: once the learning goal below is met, the Coach overrides this to
+  // 'none' automatically (autopilot). Until then, your setting stands.
   approvals: 'one',
+
+  // ----- The learning goal ----------------------------------------------
+  // You approve/reject reels for ~6 weeks; the Coach learns your taste and,
+  // once it can predict your call accurately over enough reels, flips the
+  // factory to autopilot on its own. See factory/coach.mjs.
+  goal: {
+    startedAt: '2026-08-11', // day coaching began
+    windowDays: 45, // "about a month and a half"
+    minDecisions: 40, // need at least this many approve/reject examples
+    accuracyTarget: 0.9, // predict your call 90%+ over the last 20 reels
+    autoActivate: true, // engage autopilot automatically when all gates pass
+  },
 
   // ----- Paths -----------------------------------------------------------
   paths: {

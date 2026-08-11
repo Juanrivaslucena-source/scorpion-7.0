@@ -19,6 +19,7 @@ import generate from './agents/generate.mjs';
 import edit from './agents/edit.mjs';
 import stitch from './agents/stitch.mjs';
 import qc from './agents/qc.mjs';
+import * as coach from './coach.mjs';
 
 const log = makeLog('orchestrator');
 const readJSON = (p) => JSON.parse(fs.readFileSync(p, 'utf8'));
@@ -37,7 +38,19 @@ export async function runPipeline(state) {
     const theIdea = readJSON(state.artifacts.idea);
 
     // --- APPROVAL GATE (your choice: pause once, after the idea) ---------
-    if (config.approvals !== 'none' && state.approvals.idea !== 'approved') {
+    // The Coach may have graduated us to autopilot ('none') once it learned
+    // your taste; until then your configured setting applies.
+    const approvals = coach.effectiveApprovals();
+    if (approvals !== 'none' && state.approvals.idea !== 'approved') {
+      // Record what the Coach *would* have decided, so we can score how well it
+      // predicts you — this is what unlocks autopilot.
+      try {
+        const p = await coach.predict(theIdea);
+        state.taste = { predicted: p.verdict, predictedConf: p.confidence, why: p.why };
+        save(state);
+        if (p.verdict !== 'unknown') log.info(`coach's guess: you'll ${p.verdict} (${Math.round(p.confidence * 100)}% — ${p.why})`);
+      } catch { /* prediction is best-effort */ }
+
       writeProposal(state, theIdea);
       state.status = 'awaiting-approval';
       state.stage = 'idea';
@@ -58,7 +71,7 @@ export async function runPipeline(state) {
     const edl = readJSON(state.artifacts.edl);
 
     // --- optional second gate (only if approvals === 'two') --------------
-    if (config.approvals === 'two' && state.approvals.edit !== 'approved') {
+    if (approvals === 'two' && state.approvals.edit !== 'approved') {
       state.status = 'awaiting-approval';
       state.stage = 'edit';
       save(state);
@@ -91,10 +104,28 @@ export async function runPipeline(state) {
 
 // Called by run.mjs when you approve a paused job — flips the flag and resumes.
 export async function approveAndContinue(state, gate) {
-  state.approvals[gate || state.stage || 'idea'] = 'approved';
+  const which = gate || state.stage || 'idea';
+  state.approvals[which] = 'approved';
   save(state);
+  // Teach the Coach: this is one more example of what you'd post.
+  if (which === 'idea') {
+    coach.recordDecision(state, 'approved');
+    coach.maybeEngageAutopilot(log);
+    coach.rebuildProfile().catch(() => {});
+  }
   log.ok('approved — resuming');
   return runPipeline(state);
+}
+
+// Called when you reject a paused job — records it as a "would not post" example.
+export function rejectJob(state, reason = '') {
+  state.status = 'rejected';
+  state.approvals[state.stage || 'idea'] = 'rejected';
+  save(state);
+  coach.recordDecision(state, 'rejected', reason);
+  coach.rebuildProfile().catch(() => {});
+  log.warn(`rejected — the coach learned from it (${coach.readiness().total} decisions so far)`);
+  return state;
 }
 
 function writeProposal(state, idea) {

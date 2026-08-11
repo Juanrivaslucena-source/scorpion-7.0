@@ -17,4 +17,8 @@ factory/inbox/*
 !factory/inbox/.gitkeep
 public/factory/
 public/factory-samples/
+# Your learned taste data (persists on your always-on host's disk; keep the folder)
+factory/taste/*
+!factory/taste/.gitkeep
+!factory/taste/README.md
 .env
